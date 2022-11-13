@@ -65,11 +65,12 @@ add_library(SiroGen83 # ar rcs libSiroGen83.a
 	SiroGen83/entity.h
 	SiroGen83/entity.cpp
 	SiroGen83/tile.h
-	SiroGen83/spritefactory.h
-	SiroGen83/spritefactory.cpp
+	SiroGen83/renderer.h
+	SiroGen83/renderer.cpp
 	SiroGen83/camera.h
 	SiroGen83/camera.cpp
 	SiroGen83/vector2.h
+	SiroGen83/sprite.h
 )
 
 # Test

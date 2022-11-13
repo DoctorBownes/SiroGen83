@@ -5,7 +5,7 @@
 
 class Scene : public Entity {
 public:
-	Entity entities[5];
+	Entity* entities[1];
 
 	Camera* GetCamera() { return _camera; };
 

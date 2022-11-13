@@ -1,6 +1,5 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <SiroGen83/vector2.h>
 
 class Camera {
 public:
@@ -14,7 +13,8 @@ public:
 
 	glm::mat4 GetProMat() { return projectionMatrix; };
 
-	Vector2 position;
+	float X = 0.0f;
+	float Y = 0.0f;
 
 private:
 	glm::mat4 cameraMatrix;

@@ -2,6 +2,8 @@
 
 #include <SiroGen83/scene.h>
 
+class Renderer;
+
 class World1 : public Scene {
 
 public:
@@ -10,5 +12,6 @@ public:
 	virtual void update() override;
 
 private:
+	Renderer* _instance = nullptr;
 };
 

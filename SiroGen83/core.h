@@ -1,7 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
+//#include <SiroGen83/renderer.h>
 
+class Renderer;
 class GLFWwindow;
 class Scene;
 
@@ -13,12 +14,8 @@ public:
 	void Run(Scene* scene);
 
 private:
-	Scene* CurrentScene = nullptr;
 	GLFWwindow* _window = nullptr;
 
-	GLuint shaderProgram = 0;
-
-	GLfloat VertexBuffer[24];
-	GLuint VertexVBO = 0;
+	Renderer* _instance = nullptr;
 };
 
