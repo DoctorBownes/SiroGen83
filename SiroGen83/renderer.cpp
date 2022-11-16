@@ -52,7 +52,7 @@ Renderer::Renderer() {
 
 void Renderer::RenderScene(Scene* scene) {
 
-    //spritefactory.SetMainscreen(scene.Screens, PositionLine)
+    //spritefactory.SetMainscreen(scene.Screens, scene->GetCamera()) //TODO implement int renderpos
 
     for (int i = 0; i < (sizeof(scene->entities) / sizeof(scene->entities[0])); i++) {
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(scene->entities[i]->position.x, scene->entities[i]->position.y, 0.0f));
@@ -126,6 +126,8 @@ void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char hei
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    pixelcanvas.clear();
 }
 
 void Renderer::RenderEntity(Entity* entity) {
