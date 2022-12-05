@@ -1,9 +1,8 @@
 struct Tile {
 	char* canvas;
-	char col;
 	char rot;
 };
 
-struct Screen {
-	Tile* screen[16 * 15];
+struct Nametable {
+	Tile* tiles[16 * 15];
 };

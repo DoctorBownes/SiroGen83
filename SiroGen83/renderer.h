@@ -1,10 +1,8 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <SiroGen83/scene.h>
 #include <vector>
-
-class Scene;
-class Entity;
 
 class Renderer {
 
@@ -32,10 +30,18 @@ private:
 
 	GLfloat VertexBuffer[24];
 
+	Nametable Maintables[4];
+
+	void SetMaintables(Nametable** nametables, int renderpos);
+
 	void RenderEntity(Entity* entity);
 
 	Renderer();
 
 	static Renderer* _instance;
+
+	unsigned int texture_buffer;
+
+	unsigned int vertex_buffer;
 };
 

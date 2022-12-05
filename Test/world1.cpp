@@ -1,6 +1,8 @@
 #include "world1.h"
-#include <SiroGen83/tile.h>
 #include <SiroGen83/renderer.h>
+#include <stdio.h>
+
+Entity* entity = new Entity();
 
 World1::World1() {
 	_instance = _instance->GetInstance();
@@ -42,14 +44,14 @@ World1::World1() {
 	};
 
 	Tile ar = {
-		air,0,0
+		air,0
 	};
 
 	Tile dr = {
-		drt,1,0
+		drt,1
 	};
 
-	Screen tl = {
+	Nametable tl = {
 		&dr,&ar,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr, 
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
@@ -68,7 +70,7 @@ World1::World1() {
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 	};
 
-	Screen td = {
+	Nametable td = {
 		&dr,&ar,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
@@ -94,11 +96,36 @@ World1::World1() {
 		0,1,1,1,0,
 		1,1,0,1,1,
 	};
-	Entity* entity = new Entity();
+
+	static char canvas2[256] = {
+		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
+		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+	};
 	_instance->GenerateSprite(entity, canvas, 5, 5);
-	entity->position.x = 0;
-	entities[0] = entity;
-	printf("%d\n", sizeof(*entity));
+	entities.push_front(entity);
+
+	Entity* entity2 = new Entity();
+	_instance->GenerateSprite(entity2, canvas2, 16, 16);
+	entity2->position.x = -120.0f;
+	entity2->position.y = 112.0f;
+	entities.push_front(entity2);
+
+
+
 
 	Screens[0] = &tl;
 	Screens[1] = &tl;
@@ -106,7 +133,7 @@ World1::World1() {
 	Screens[3] = &td;
 	Screens[4] = &tl;
 
-	GetCamera()->SetZoom(30.0f);
+	GetCamera()->SetZoom(4.5f);
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));
@@ -117,4 +144,6 @@ World1::World1() {
 }
 
 void World1::update() {
+	//entity->position.x += 0.5f;
+	//GetCamera()->X = entity->position.x;
 }

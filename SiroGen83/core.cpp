@@ -49,8 +49,8 @@ void Core::Run(Scene* scene) {
 
         scene->update();
 
-        for (int i = 0; i < (sizeof(scene->entities) / sizeof(scene->entities[0])); i++) {
-            scene->entities[0]->update();
+        for (Entity* it : scene->entities) {
+            it->update();
         }
 
         _instance->RenderScene(scene);

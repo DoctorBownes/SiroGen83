@@ -1,6 +1,6 @@
 #include "renderer.h"
-#include <SiroGen83/scene.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
 #include <stdio.h>
 
 const char* vertex_shader = "#version 330 core\n"
@@ -52,20 +52,81 @@ Renderer::Renderer() {
 
 void Renderer::RenderScene(Scene* scene) {
 
-    //spritefactory.SetMainscreen(scene.Screens, scene->GetCamera()) //TODO implement int renderpos
+    SetMaintables(scene->Screens, scene->renderpos); //TODO implement int renderpos
 
-    for (int i = 0; i < (sizeof(scene->entities) / sizeof(scene->entities[0])); i++) {
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(scene->entities[i]->position.x, scene->entities[i]->position.y, 0.0f));
+    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat();
+
+    GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+
+    glBindTexture(GL_TEXTURE_2D, texture_buffer);
+
+    GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
+    glEnableVertexAttribArray(vertexPositionID);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glVertexAttribPointer(
+        vertexPositionID,   // attribute 0. No particular reason for 0, but must match the layout in the shader.
+        4,                  // size
+        GL_FLOAT,           // type
+        GL_FALSE,           // normalized?
+        0,                  // stride
+        (void*)0            // array buffer offset
+    );
+    glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDisableVertexAttribArray(vertexPositionID);
+
+    for (Entity* it : scene->entities) {
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(it->position.x, it->position.y, 0.0f));
         
-        glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
+        MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
-        GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
+        MatrixID = glGetUniformLocation(shaderProgram, "MVP");
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-        if (scene->entities[i]->vertex_buffer) {
-            RenderEntity(scene->entities[i]);
+        if (it->vertex_buffer) {
+            RenderEntity(it);
         }
     }
+}
+
+void Renderer::SetMaintables(Nametable** nametables, int renderpos) {
+    VertexBuffer[0] = -0.5f * 256;
+    VertexBuffer[1] = 0.5f * 240;
+    VertexBuffer[2] = 0.0f;
+    VertexBuffer[3] = 0.0f;
+
+    VertexBuffer[4] = 0.5f * 256;
+    VertexBuffer[5] = 0.5f * 240;
+    VertexBuffer[6] = 1.0f;
+    VertexBuffer[7] = 0.0f;
+
+    VertexBuffer[8] = 0.5f * 256;
+    VertexBuffer[9] = -0.5f * 240;
+    VertexBuffer[10] = 1.0f;
+    VertexBuffer[11] = 1.0f;
+
+    VertexBuffer[12] = 0.5f * 256;
+    VertexBuffer[13] = -0.5f * 240;
+    VertexBuffer[14] = 1.0f;
+    VertexBuffer[15] = 1.0f;
+
+    VertexBuffer[16] = -0.5f * 256;
+    VertexBuffer[17] = -0.5f * 240;
+    VertexBuffer[18] = 0.0f;
+    VertexBuffer[19] = 1.0f;
+
+    VertexBuffer[20] = -0.5f * 256;
+    VertexBuffer[21] = 0.5f * 240;
+    VertexBuffer[22] = 0.0f;
+    VertexBuffer[23] = 0.0f;
+
+
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, (sizeof(VertexBuffer) / sizeof(VertexBuffer[0])) * 4, VertexBuffer, GL_STATIC_DRAW);
+
+    pixelcanvas.clear();
 }
 
 void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char height) {

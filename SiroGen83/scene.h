@@ -3,14 +3,17 @@
 #include <SiroGen83/entity.h>
 #include <SiroGen83/camera.h>
 #include <SiroGen83/tile.h>
+#include <forward_list>
 
 class Scene : public Entity {
 public:
-	Entity* entities[1];
+	std::forward_list<Entity*> entities;
 
 	Camera* GetCamera() { return _camera; };
 
-	Screen* Screens[16];
+	int renderpos = 0;
+
+	Nametable* Screens[16];
 
 private:
 	Camera* _camera = new Camera();
