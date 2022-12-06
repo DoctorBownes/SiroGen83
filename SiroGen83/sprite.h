@@ -1,5 +1,5 @@
 struct Sprite {
-	char* canvas;
+	char* pixels;
 	char width;
 	char height;
 	char rotation;

@@ -1,5 +1,5 @@
 struct Tile {
-	char* canvas;
+	char* pixels;
 	char rot;
 };
 

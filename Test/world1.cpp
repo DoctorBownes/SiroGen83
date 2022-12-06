@@ -6,53 +6,53 @@ Entity* entity = new Entity();
 
 World1::World1() {
 	_instance = _instance->GetInstance();
-	static char air[256] = {
-		1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	static char yin[256] = {
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
+		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
+		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	};
-	static char drt[256] = {
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	static char yang[256] = {
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,
+		0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
 	Tile ar = {
-		air,0
+		yin,0
 	};
 
 	Tile dr = {
-		drt,1
+		yang,1
 	};
 
 	Nametable tl = {
-		&dr,&ar,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr, 
+		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr, 
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
 		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
@@ -71,22 +71,22 @@ World1::World1() {
 	};
 
 	Nametable td = {
-		&dr,&ar,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
 	};
 
 	static char canvas[25] = {
@@ -98,7 +98,7 @@ World1::World1() {
 	};
 
 	static char canvas2[256] = {
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
 		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
@@ -113,27 +113,35 @@ World1::World1() {
 		1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,
 		1,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
 		1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
-		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	};
+
 	_instance->GenerateSprite(entity, canvas, 5, 5);
 	entities.push_front(entity);
 
 	Entity* entity2 = new Entity();
 	_instance->GenerateSprite(entity2, canvas2, 16, 16);
-	entity2->position.x = -120.0f;
-	entity2->position.y = 112.0f;
+	entity2->position.x = -248.0f;
+	entity2->position.y = 232.0f;
 	entities.push_front(entity2);
 
+	Nametable* barney[] = {
+	&tl,&tl,&td,
+	&td,&tl,&tl,
+	&tl,&tl,&td,
+	};
+	Nametables = barney;
 
+	printf("%d\n", (int)Nametables[0]->tiles[0]->pixels[0]);
 
+	//Screens[1] = &tl;
+	//Screens[2] = &td;
+	//Screens[3] = &td;
+	//Screens[4] = &tl;
 
-	Screens[0] = &tl;
-	Screens[1] = &tl;
-	Screens[2] = &td;
-	Screens[3] = &td;
-	Screens[4] = &tl;
-
-	GetCamera()->SetZoom(4.5f);
+	GetCamera()->SetZoom(2.0f); //4.5f = Pixel Perfect Zoom
+	GetCamera()->X = -120;
+	GetCamera()->Y = 120;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));

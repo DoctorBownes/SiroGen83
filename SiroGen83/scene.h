@@ -11,9 +11,9 @@ public:
 
 	Camera* GetCamera() { return _camera; };
 
-	int renderpos = 0;
+	Vector2 renderpos = {0,0};
 
-	Nametable* Screens[16];
+	Nametable** Nametables;
 
 private:
 	Camera* _camera = new Camera();

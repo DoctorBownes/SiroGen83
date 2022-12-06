@@ -32,7 +32,7 @@ private:
 
 	Nametable Maintables[4];
 
-	void SetMaintables(Nametable** nametables, int renderpos);
+	void SetMaintables(Scene* scene);
 
 	void RenderEntity(Entity* entity);
 
@@ -43,5 +43,7 @@ private:
 	unsigned int texture_buffer;
 
 	unsigned int vertex_buffer;
+
+	bool once = true;
 };
 
