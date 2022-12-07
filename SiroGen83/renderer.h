@@ -32,6 +32,8 @@ private:
 
 	Nametable Maintables[4];
 
+	Tile* MainTiles[960];
+
 	void SetMaintables(Scene* scene);
 
 	void RenderEntity(Entity* entity);

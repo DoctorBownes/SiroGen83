@@ -13,7 +13,10 @@ public:
 
 	Vector2 renderpos = {0,0};
 
-	Nametable** Nametables;
+	Nametable Nametables[256];
+
+	Tile ar;
+	Tile dr;
 
 private:
 	Camera* _camera = new Camera();

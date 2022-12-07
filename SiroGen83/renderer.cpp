@@ -25,6 +25,7 @@ const char* fragment_shader = "#version 330 core\n"
 Renderer* Renderer::_instance = 0;
 
 Renderer::Renderer() {
+
     //Shader stuff
     GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(VertexShader, 1, &vertex_shader, nullptr);
@@ -109,60 +110,86 @@ void Renderer::SetMaintables(Scene* scene) {
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
+    for (int i = 0; i < 959; i++) {
+        MainTiles[i] = &scene->dr;
+    }
+    MainTiles[959] = &scene->ar;
+
     if (once) {
-        int overwrite_pos = 0; //change overwrite_pos // + (y * width)
-        for (int y = 0; y < 16; y++) {
-            overwrite_pos = 0 + y; //change overwrite_pos // + (y * width)
-            for (int x = 0 + y; x < 240; x += 16) {
-                Maintables[0].tiles[overwrite_pos] = scene->Nametables[0]->tiles[x];
-                overwrite_pos += 32;
-            }
-        }
-        once = false;
+        //for (int w = 0; w < 4; w++) {
+
+        //}
+        //int overwrite_pos = 0; //change overwrite_pos // + (y * width)
+        //for (int y = 0; y < 16; y++) {
+        //    overwrite_pos = 0 + y; //change overwrite_pos // + (y * width)
+        //    for (int x = 0 + y; x < 245760; x += 16) {
+        //        testarray[overwrite_pos] = MainTiles[x];
+        //        overwrite_pos += 512;
+        //    }
+        //}
+        //once = false;
     }
 
-    char* tempcanvas = (char*)malloc(16 * 15 * 16 * 16 + 1);
+    //printf("\n%d", MainTiles[959]->pixels[0]);
+
+    //for (int i = 0; i < 960; i++) {
+    //    for (int j = 0; j < 16 * 16; j++) {
+    //        if (MainTiles[i]->pixels[j] == 0) {
+    //            pixelcanvas.push_back(255);
+    //            pixelcanvas.push_back(255);
+    //            pixelcanvas.push_back(255);
+    //            pixelcanvas.push_back(255);
+    //        }
+    //        else {
+    //            pixelcanvas.push_back(0);
+    //            pixelcanvas.push_back(0);
+    //            pixelcanvas.push_back(0);
+    //            pixelcanvas.push_back(255);
+    //        }
+    //    }
+    //}
+
+    char* tempcanvas = (char*)malloc(32 * 30 * 16 * 16 + 1);
     int var = 0;
     int var2 = 0;
     int var3 = 0;
-    for (int y = 1; y <= 15; y++)
+    for (int y = 1; y <= 30; y++)
     {
         for (int j = 1; j <= 16; j++)
         {
-            for (int x = 0 + var2; x < 16 * y; x++)
+            for (int x = 0 + var2; x < 32 * y; x++)
             {
                 for (int i = 0 + var; i < 16 * j; i++)
                 {
-                    if (scene->Nametables[0]->tiles[0]->pixels[0] == 1) {
-                        pixelcanvas.push_back(255);
-                        pixelcanvas.push_back(255);
-                        pixelcanvas.push_back(255);
-                        pixelcanvas.push_back(255);
-                    }
-                    else {
-                        pixelcanvas.push_back(0);
-                        pixelcanvas.push_back(0);
-                        pixelcanvas.push_back(0);
-                        pixelcanvas.push_back(255);
-                    }
+                    tempcanvas[var3] = MainTiles[x]->pixels[i];
                     var3++;
                 }
             }
             var += 16;
         }
         var = 0;
-        var2 += 16;
+        var2 += 32;
     }
-    //Firetruck this code ;)
-    free(tempcanvas);
+    //I hate this code ;)
+    
+    for (int c = 0; c < 512 * 480; c++) {
+        if (tempcanvas[c] == 0) {
 
-    //WIP
-    for (int i = 0; i < 184320; i++) {
+            pixelcanvas.push_back(255);
+            pixelcanvas.push_back(255);
+            pixelcanvas.push_back(255);
+            pixelcanvas.push_back(255);
+        }
+        else {
             pixelcanvas.push_back(0);
             pixelcanvas.push_back(0);
             pixelcanvas.push_back(0);
             pixelcanvas.push_back(255);
+        }
     }
+    
+    //texture = _instance->GetTexture(tempcanvas, width * TileSizes, height * TileSizes);
+    free(tempcanvas);
 
     glGenTextures(1, &texture_buffer);
     glBindTexture(GL_TEXTURE_2D, texture_buffer);
@@ -172,6 +199,13 @@ void Renderer::SetMaintables(Scene* scene) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 480, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    pixelcanvas[0] = 255;
+    pixelcanvas[1] = 0;
+    pixelcanvas[2] = 0;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 480, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
+   // glGenerateMipmap(GL_TEXTURE_2D);
 
     pixelcanvas.clear();
 
