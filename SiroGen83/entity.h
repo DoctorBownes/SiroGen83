@@ -9,6 +9,8 @@ public:
 
 	unsigned int vertex_buffer;
 
+	unsigned int uv_buffer;
+
 	Vector2 position{0,0};
 
 	virtual void update();

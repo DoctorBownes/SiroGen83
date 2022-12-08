@@ -22,13 +22,17 @@ public:
 
 	void GenerateSprite(Entity* entity, char* canvas, char width, char height);
 
+	void AddtoTileMap(Tile* tile, char position);
+
 private:
 
 	std::vector<unsigned char> pixelcanvas;
 
 	GLuint shaderProgram = 0;
 
-	GLfloat VertexBuffer[24];
+	GLfloat VertexBuffer[12];
+
+	GLfloat UVBuffer[12];
 
 	Nametable Maintables[4];
 
@@ -38,13 +42,19 @@ private:
 
 	void RenderEntity(Entity* entity);
 
+	char TileMap[96 * 16];//1536
+
+	std::vector<GLfloat>MT_UVBuffer;
+
 	Renderer();
 
 	static Renderer* _instance;
 
-	unsigned int texture_buffer;
+	unsigned int tilemap_texture_buffer;
 
 	unsigned int vertex_buffer;
+
+	unsigned int uv_buffer;
 
 	bool once = true;
 };

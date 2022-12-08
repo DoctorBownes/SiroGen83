@@ -1,6 +1,5 @@
 struct Tile {
-	char* pixels;
-	char rot;
+	char pixels[256];
 };
 
 struct Nametable {
