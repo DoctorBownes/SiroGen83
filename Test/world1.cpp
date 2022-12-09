@@ -116,42 +116,23 @@ World1::World1() {
 	_instance->AddtoTileMap(&ar,0);
 	//_instance->AddtoTileMap(&ar,1);
 
-	Nametable tl = {
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr, 
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-		&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,&dr,
-	};
-
 	Nametables[0] = {
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
-		&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,&ar,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
 	static char canvas[25] = {
@@ -192,9 +173,9 @@ World1::World1() {
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 
-	//GetCamera()->SetZoom(4.5f); //4.5f = Pixel Perfect Zoom 
+	GetCamera()->SetZoom(2.5f); //4.5f = Pixel Perfect Zoom 
 	//GetCamera()->X = -120;
-	//GetCamera()->Y =  120;
+	GetCamera()->Y =  -50;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));

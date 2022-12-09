@@ -46,6 +46,8 @@ private:
 
 	std::vector<GLfloat>MT_UVBuffer;
 
+	std::vector<GLfloat>MT_VertexBuffer;
+
 	Renderer();
 
 	static Renderer* _instance;

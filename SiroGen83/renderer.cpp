@@ -51,45 +51,61 @@ Renderer::Renderer() {
     glGenVertexArrays(1, &Init);
     glBindVertexArray(Init);
 
+    UVBuffer[0] = 0.0f;
+    UVBuffer[1] = 0.0f;
+    UVBuffer[2] = 1.0f;
+    UVBuffer[3] = 0.0f;
+    UVBuffer[4] = 1.0f;
+    UVBuffer[5] = 1.0f;
+    UVBuffer[6] = 1.0f;
+    UVBuffer[7] = 1.0f;
+    UVBuffer[8] = 0.0f;
+    UVBuffer[9] = 1.0f;
+    UVBuffer[10] = 0.0f;
+    UVBuffer[11] = 0.0f;
+
     //Set-up maintables
-    VertexBuffer[0] = -0.5f * 512;
-    VertexBuffer[1] = 0.5f * 480;
+    int z = 0;
+    for (int y = 0; y < 15; y++) {
+        for (int x = 0; x < 16; x++) {
+            MT_VertexBuffer.push_back((-0.5f + x) * 16);
+            MT_VertexBuffer.push_back((0.5f - y) * 16);
+            MT_VertexBuffer.push_back((0.5f + x) * 16);
+            MT_VertexBuffer.push_back((0.5f - y) * 16);
+            MT_VertexBuffer.push_back((0.5f + x) * 16);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16);
+            MT_VertexBuffer.push_back((0.5f + x) * 16);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16);
+            MT_VertexBuffer.push_back((-0.5f + x) * 16);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16);
+            MT_VertexBuffer.push_back((-0.5f + x) * 16);
+            MT_VertexBuffer.push_back((0.5f - y) * 16);
 
-    VertexBuffer[2] = 0.5f * 512;
-    VertexBuffer[3] = 0.5f * 480;
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back(0.167f);
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back(0.167f);
+            MT_UVBuffer.push_back(1.0f);
 
-    VertexBuffer[4] = 0.5f * 512;
-    VertexBuffer[5] = -0.5f * 480;
+            MT_UVBuffer.push_back(0.167f);
+            MT_UVBuffer.push_back(1.0f);
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back(1.0f);
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back(0.0f);
+        }
+    }
 
-    VertexBuffer[6] = 0.5f * 512;
-    VertexBuffer[7] = -0.5f * 480;
 
-    VertexBuffer[8] = -0.5f * 512;
-    VertexBuffer[9] = -0.5f * 480;
-
-    VertexBuffer[10] = -0.5f * 512;
-    VertexBuffer[11] = 0.5f * 480;
-
-    //UVBuffer[0] = 0.0f;
-    //UVBuffer[1] = 0.0f;
-    //UVBuffer[2] = 1.0f;
-    //UVBuffer[3] = 0.0f;
-
-    //UVBuffer[4] = 1.0f;
-    //UVBuffer[5] = 1.0f;
-    //UVBuffer[6] = 1.0f;
-    //UVBuffer[7] = 1.0f;
-
-    //UVBuffer[8] = 0.0f;
-    //UVBuffer[9] = 1.0f;
-    //UVBuffer[10] = 0.0f;
-    //UVBuffer[11] = 0.0f;
+    glGenBuffers(1, &uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
 
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof(VertexBuffer) / sizeof(VertexBuffer[0])) * 4, VertexBuffer, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
 
-    glGenBuffers(1, &uv_buffer);
 
     for (int i = 0; i < 96 * 16; i++) {
         pixelcanvas.push_back(0);
@@ -165,35 +181,8 @@ void Renderer::SetMaintables(Scene* scene) {
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    //UVBuffer[0] = 0.0f;
-    //UVBuffer[1] = 0.0f;
-    //UVBuffer[2] = 1.0f;
-    //UVBuffer[3] = 0.0f;
-
-    //UVBuffer[4] = 1.0f;
-    //UVBuffer[5] = 1.0f;
-    //UVBuffer[6] = 1.0f;
-    //UVBuffer[7] = 1.0f;
-
-    //UVBuffer[8] = 0.0f;
-    //UVBuffer[9] = 1.0f;
-    //UVBuffer[10] = 0.0f;
-    //UVBuffer[11] = 0.0f;
-
-   // for (int i = 0; i < 32 * 30; i++) {
-        MT_UVBuffer.push_back(0.0f);
-        MT_UVBuffer.push_back(0.0f);
-        MT_UVBuffer.push_back(0.167f * 2);
-        MT_UVBuffer.push_back(0.0f);
-        MT_UVBuffer.push_back(0.167f * 2);
-        MT_UVBuffer.push_back(1.0f);
-
-        MT_UVBuffer.push_back(0.167f * 2);
-        MT_UVBuffer.push_back(1.0f);
-        MT_UVBuffer.push_back(0.0f);
-        MT_UVBuffer.push_back(1.0f);
-        MT_UVBuffer.push_back(0.0f);
-        MT_UVBuffer.push_back(0.0f);
+   // for (int i = 0; i < 32 * 30; i++) 
+    //}
 
 
         //MT_UVBuffer.push_back(0.0f);
@@ -211,10 +200,6 @@ void Renderer::SetMaintables(Scene* scene) {
         //MT_UVBuffer.push_back(0.0f);
 
   //  }
-
-
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
 
@@ -265,21 +250,6 @@ void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char hei
 
     VertexBuffer[10] = -0.5f * width;
     VertexBuffer[11] = 0.5f * height;
-
-    UVBuffer[0] = 0.0f;
-    UVBuffer[1] = 0.0f;
-    UVBuffer[2] = 1.0f;
-    UVBuffer[3] = 0.0f;
-
-    UVBuffer[4] = 1.0f;
-    UVBuffer[5] = 1.0f;
-    UVBuffer[6] = 1.0f;
-    UVBuffer[7] = 1.0f;
-
-    UVBuffer[8] = 0.0f;
-    UVBuffer[9] = 1.0f;
-    UVBuffer[10] = 0.0f;
-    UVBuffer[11] = 0.0f;
 
     glGenBuffers(1, &entity->vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, entity->vertex_buffer);
