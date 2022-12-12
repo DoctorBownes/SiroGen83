@@ -24,7 +24,9 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
-	void SetUpMaintable(Nametable nametable);
+	void SetUpMaintable(Nametable* nametable);
+
+	void UpdateMaintable(Nametable* nametable, unsigned short tile);
 
 private:
 

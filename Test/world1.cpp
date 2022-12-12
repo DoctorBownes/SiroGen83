@@ -172,7 +172,7 @@ World1::World1() {
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 
-	GetCamera()->SetZoom(4.5f); //4.5f = Pixel Perfect Zoom 
+	GetCamera()->SetZoom(2.5f); //4.5f = Pixel Perfect Zoom 
 	//GetCamera()->X = -120;
 	GetCamera()->Y =  -50;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
@@ -185,6 +185,8 @@ World1::World1() {
 }
 
 void World1::update() {
+	Nametables[0].tiles[3] = 1;
+	_instance->UpdateMaintable(&Nametables[0],3);
 	//entity->position.x += 0.5f;
 	//GetCamera()->X = entity->position.x;
 }
