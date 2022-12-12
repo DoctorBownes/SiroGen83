@@ -24,6 +24,8 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
+	void SetUpMaintable(Nametable nametable);
+
 private:
 
 	std::vector<unsigned char> pixelcanvas;

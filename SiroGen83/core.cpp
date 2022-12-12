@@ -40,6 +40,8 @@ Core::Core() {
 }
 
 void Core::Run(Scene* scene) {
+
+    _instance->SetUpMaintable(scene->Nametables[0]);
     do {
 
         glClearColor(0.1f, 0.15f, 0.8f, 0.0f);

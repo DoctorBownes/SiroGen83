@@ -1,7 +1,7 @@
 struct Tile {
-	char pixels[256];
+	unsigned char pixels[256];
 };
 
 struct Nametable {
-	Tile* tiles[16 * 15];
+	unsigned char tiles[16 * 15];
 };

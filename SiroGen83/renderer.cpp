@@ -64,49 +64,6 @@ Renderer::Renderer() {
     UVBuffer[10] = 0.0f;
     UVBuffer[11] = 0.0f;
 
-    //Set-up maintables
-    int z = 0;
-    for (int y = 0; y < 15; y++) {
-        for (int x = 0; x < 16; x++) {
-            MT_VertexBuffer.push_back((-0.5f + x) * 16);
-            MT_VertexBuffer.push_back((0.5f - y) * 16);
-            MT_VertexBuffer.push_back((0.5f + x) * 16);
-            MT_VertexBuffer.push_back((0.5f - y) * 16);
-            MT_VertexBuffer.push_back((0.5f + x) * 16);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16);
-            MT_VertexBuffer.push_back((0.5f + x) * 16);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16);
-            MT_VertexBuffer.push_back((-0.5f + x) * 16);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16);
-            MT_VertexBuffer.push_back((-0.5f + x) * 16);
-            MT_VertexBuffer.push_back((0.5f - y) * 16);
-
-            MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back(0.167f);
-            MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back(0.167f);
-            MT_UVBuffer.push_back(1.0f);
-
-            MT_UVBuffer.push_back(0.167f);
-            MT_UVBuffer.push_back(1.0f);
-            MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back(1.0f);
-            MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back(0.0f);
-        }
-    }
-
-
-    glGenBuffers(1, &uv_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
-
-    glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
-
-
     for (int i = 0; i < 96 * 16; i++) {
         pixelcanvas.push_back(0);
         pixelcanvas.push_back(0);
@@ -124,6 +81,54 @@ Renderer::Renderer() {
     glGenerateMipmap(GL_TEXTURE_2D);
 
     pixelcanvas.clear();
+}
+
+void Renderer::SetUpMaintable(Nametable nametable) {
+
+    //Set-up maintables
+    int z = 0;
+    for (int y = 0; y < 15; y++) {
+        for (int x = 0; x < 16; x++) {
+            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+
+            MT_UVBuffer.push_back(0.0f + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f);
+            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(1.0f);
+
+            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(1.0f);
+            MT_UVBuffer.push_back(0.0f + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(1.0f);
+            MT_UVBuffer.push_back(0.0f + nametable.tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f);
+            z++;
+        }
+    }
+
+
+    glGenBuffers(1, &uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
+
+    glGenBuffers(1, &vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
+
+
 }
 
 void Renderer::RenderScene(Scene* scene) {
