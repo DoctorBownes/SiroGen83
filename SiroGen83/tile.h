@@ -4,4 +4,5 @@ struct Tile {
 
 struct Nametable {
 	unsigned char tiles[16 * 15];
+	unsigned char flipd[16 * 15];
 };

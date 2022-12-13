@@ -26,7 +26,9 @@ public:
 
 	void SetUpMaintable(Nametable* nametable);
 
-	void UpdateMaintable(Nametable* nametable, unsigned short tile);
+	void FlipTile(Nametable* nametable, unsigned char tile, bool hort, bool vert);
+
+	void UpdateMaintable(Nametable* nametable, unsigned char tile);
 
 private:
 
