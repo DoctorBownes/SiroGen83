@@ -158,7 +158,7 @@ void Renderer::EditTile(unsigned char tile) {
 
 }
 
-void Renderer::UpdateTile(unsigned char tile, unsigned char sprite, unsigned char flip) {
+void Renderer::UpdateMainTile(unsigned char tile, unsigned char sprite, unsigned char flip) {
     Maintables[0]->tiles[tile] = sprite;
     Maintables[0]->flip[tile] = flip;
     EditTile(tile);
@@ -177,7 +177,7 @@ void Renderer::RenderScene(Scene* scene) {
     //change overwrite_pos & x
     int overwrite_pos = 0; // + (y * width)
     for (int x = 0; x < 240; x += 16) {
-        UpdateTile(overwrite_pos, scene->Nametables[1].tiles[x], scene->Nametables[1].flip[x]);
+        UpdateMainTile(overwrite_pos, scene->Nametables[1].tiles[x], scene->Nametables[1].flip[x]);
         overwrite_pos += 16;
     }
 

@@ -207,11 +207,7 @@ World1::World1() {
 void World1::update() {
 	if (once) {
 		printf("hoi\n");
-		_instance->UpdateTile(3, 0, 3);
-		_instance->UpdateTile(4, 0, 3);
-		_instance->UpdateTile(5, 0, 3);
-		_instance->UpdateTile(6, 0, 3);
-		_instance->UpdateTile(7, 0, 3);
+		_instance->UpdateMainTile(3, 0);
 		once = false;
 	}
 	//entity->position.x += 0.5f;

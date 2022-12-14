@@ -27,14 +27,12 @@ public:
 
 	void SetUpMaintable(Nametable* nametable);
 
-	void UpdateTile(unsigned char tile, unsigned char sprite, unsigned char flip);
-
-	void EditTile(unsigned char tile);
-
+	void UpdateMainTile(unsigned char tile, unsigned char sprite, unsigned char flip = 0);
 
 private:
 	bool updatetiles = false;
 
+	void EditTile(unsigned char tile);
 	//std::forward_list<unsigned char>::iterator it;
 	//std::forward_list<unsigned char> TileQueue;
 
