@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <SiroGen83/scene.h>
+#include <list>
 #include <vector>
 
 class Renderer {
@@ -26,11 +27,15 @@ public:
 
 	void SetUpMaintable(Nametable* nametable);
 
-	void FlipTile(Nametable* nametable, unsigned char tile, bool hort, bool vert);
+	void UpdateTile(unsigned char tile);
 
-	void UpdateMaintable(Nametable* nametable, unsigned char tile);
+	void EditTile(unsigned char tile, unsigned char sprite, unsigned char flip);
+
+	void ProcessTileQueue();
 
 private:
+	std::forward_list<unsigned char>::iterator it;
+	std::forward_list<unsigned char> TileQueue;
 
 	std::vector<unsigned char> pixelcanvas;
 
@@ -40,9 +45,7 @@ private:
 
 	GLfloat UVBuffer[12];
 
-	Nametable Maintables[4];
-
-	Tile* MainTiles[960];
+	Nametable* Maintables[4];
 
 	void SetMaintables(Scene* scene);
 
@@ -63,7 +66,5 @@ private:
 	unsigned int vertex_buffer;
 
 	unsigned int uv_buffer;
-
-	bool once = true;
 };
 

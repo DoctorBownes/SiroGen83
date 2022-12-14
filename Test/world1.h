@@ -11,6 +11,11 @@ public:
 
 	virtual void update() override;
 
+	bool once = 1;
+
+	Tile wht;
+	Tile blk;
+
 private:
 	Renderer* _instance = nullptr;
 };

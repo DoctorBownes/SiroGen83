@@ -168,11 +168,11 @@ World1::World1() {
 	_instance->GenerateSprite(entity2, canvas2, 16, 16);
 	entity2->position.x = -248.0f;
 	entity2->position.y = 232.0f;
-	entities.push_front(entity2);
+	//entities.push_front(entity2);
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 
-	GetCamera()->SetZoom(2.5f); //4.5f = Pixel Perfect Zoom 
+	GetCamera()->SetZoom(3.5f); //4.5f = Pixel Perfect Zoom 
 	//GetCamera()->X = -120;
 	GetCamera()->Y =  -50;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
@@ -182,12 +182,13 @@ World1::World1() {
 	//printf("%d\n", (int)(*tl[1]).sprite[0]);
 	//Tile gro;
 	//gro.spriteTL = drt.spriteTL;
-	//Nametables[0].tiles[3] = 1;
-	//Nametables[0].flipd[3] = 3;
 }
 
 void World1::update() {
-	_instance->FlipTile(&Nametables[0], 3, true, false);
+	if (once) {
+		_instance->EditTile(3, 1, 3);
+		once = false;
+	}
 	//entity->position.x += 0.5f;
 	//GetCamera()->X = entity->position.x;
 }

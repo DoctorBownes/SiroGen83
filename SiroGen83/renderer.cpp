@@ -84,7 +84,9 @@ Renderer::Renderer() {
 }
 
 void Renderer::SetUpMaintable(Nametable* nametable) {
-    /**/
+    
+    Maintables[0] = nametable;
+
     //Set-up maintables
     int z = 0;
     for (int y = 0; y < 15; y++) {
@@ -103,18 +105,18 @@ void Renderer::SetUpMaintable(Nametable* nametable) {
             MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
             MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
 
-            MT_UVBuffer.push_back(0.0f + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back((1.0f / 6.0f) + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(0.0f);
-            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back((1.0f / 6.0f) + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(1.0f);
 
-            MT_UVBuffer.push_back((1.0f / 6.0f) + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back((1.0f / 6.0f) + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(1.0f);
-            MT_UVBuffer.push_back(0.0f + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(1.0f);
-            MT_UVBuffer.push_back(0.0f + nametable->tiles[z] * (1.0f / 6.0f));
+            MT_UVBuffer.push_back(0.0f + Maintables[0]->tiles[z] * (1.0f / 6.0f));
             MT_UVBuffer.push_back(0.0f);
             z++;
         }
@@ -132,101 +134,121 @@ void Renderer::SetUpMaintable(Nametable* nametable) {
 
 }
 
-void Renderer::FlipTile(Nametable* nametable, unsigned char tile, bool hort, bool vert) {
+void Renderer::UpdateTile(unsigned char tile) {
     unsigned short stile = tile * 12;
+    unsigned char flip = Maintables[0]->flip[tile];
 
-    MT_UVBuffer[stile + 0] = (0.0f + hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 1] = (0.0f + vert);
-    MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) - hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 3] = (0.0f + vert);
-    MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) - hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 5] = (1.0f - vert);
+    MT_UVBuffer[stile + 0] = (0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 8] = (0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 10] = (0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[0]->tiles[tile] * (1.0f / 6.0f));
 
-    MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) - hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 7] = (1.0f - vert);
-    MT_UVBuffer[stile + 8] = (0.0f + hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 9] = (1.0f - vert);
-    MT_UVBuffer[stile + 10] = (0.0f + hort * (1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 11] = (0.0f + vert);
+    flip >>= 1;
+
+    MT_UVBuffer[stile + 1] = (0.0f + (flip & 1));
+    MT_UVBuffer[stile + 3] = (0.0f + (flip & 1));
+    MT_UVBuffer[stile + 5] = (1.0f - (flip & 1));
+    MT_UVBuffer[stile + 7] = (1.0f - (flip & 1));
+    MT_UVBuffer[stile + 9] = (1.0f - (flip & 1));
+    MT_UVBuffer[stile + 11] = (0.0f + (flip & 1));
 
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
 
 }
 
-void Renderer::UpdateMaintable(Nametable* nametable, unsigned char tile) {
-    unsigned short stile = tile * 12;
+void Renderer::EditTile(unsigned char tile, unsigned char sprite, unsigned char flip) {
+    Maintables[0]->tiles[tile] = sprite;
+    Maintables[0]->flip[tile] = flip;
+    TileQueue.push_front(tile);
+    it = TileQueue.begin();
+}
 
-    switch (nametable->flipd[tile]) {
-    case 1: //FLIP HORT
-        MT_UVBuffer[stile + 0] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 1] = (0.0f);
-        MT_UVBuffer[stile + 2] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 3] = (0.0f);
-        MT_UVBuffer[stile + 4] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 5] = (1.0f);
-
-        MT_UVBuffer[stile + 6] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 7] = (1.0f);
-        MT_UVBuffer[stile + 8] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 9] = (1.0f);
-        MT_UVBuffer[stile + 10] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 11] = (0.0f);
-        break;
-    case 2: //FLIP VERT
-        MT_UVBuffer[stile + 0] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 1] = (1.0f);
-        MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 3] = (1.0f);
-        MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 5] = (0.0f);
-
-        MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 7] = (0.0f);
-        MT_UVBuffer[stile + 8] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 9] = (0.0f);
-        MT_UVBuffer[stile + 10] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 11] = (1.0f);
-        break;
-    case 3: // FLIP HORT + VERT
-        MT_UVBuffer[stile + 0] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 1] = (1.0f);
-        MT_UVBuffer[stile + 2] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 3] = (1.0f);
-        MT_UVBuffer[stile + 4] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 5] = (0.0f);
-
-        MT_UVBuffer[stile + 6] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 7] = (0.0f);
-        MT_UVBuffer[stile + 8] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 9] = (0.0f);
-        MT_UVBuffer[stile + 10] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 11] = (1.0f);
-        break;
-    default:
-        MT_UVBuffer[stile + 0] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 1] = (0.0f);
-        MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 3] = (0.0f);
-        MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 5] = (1.0f);
-
-        MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 7] = (1.0f);
-        MT_UVBuffer[stile + 8] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 9] = (1.0f);
-        MT_UVBuffer[stile + 10] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
-        MT_UVBuffer[stile + 11] = (0.0f);
-        break;
+void Renderer::ProcessTileQueue() {
+    while (it != TileQueue.end()) {
+        UpdateTile(*it);
+        TileQueue.remove(*it);
+        it = TileQueue.begin();
     }
-
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
 }
+
+//void Renderer::UpdateMaintable(Nametable* nametable, unsigned char tile) {
+//    unsigned short stile = tile * 12;
+//
+//    switch (nametable->flipd[tile]) {
+//    case 1: //FLIP HORT
+//        MT_UVBuffer[stile + 0] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 1] = (0.0f);
+//        MT_UVBuffer[stile + 2] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 3] = (0.0f);
+//        MT_UVBuffer[stile + 4] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 5] = (1.0f);
+//
+//        MT_UVBuffer[stile + 6] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 7] = (1.0f);
+//        MT_UVBuffer[stile + 8] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 9] = (1.0f);
+//        MT_UVBuffer[stile + 10] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 11] = (0.0f);
+//        break;
+//    case 2: //FLIP VERT
+//        MT_UVBuffer[stile + 0] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 1] = (1.0f);
+//        MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 3] = (1.0f);
+//        MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 5] = (0.0f);
+//
+//        MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 7] = (0.0f);
+//        MT_UVBuffer[stile + 8] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 9] = (0.0f);
+//        MT_UVBuffer[stile + 10] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 11] = (1.0f);
+//        break;
+//    case 3: // FLIP HORT + VERT
+//        MT_UVBuffer[stile + 0] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 1] = (1.0f);
+//        MT_UVBuffer[stile + 2] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 3] = (1.0f);
+//        MT_UVBuffer[stile + 4] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 5] = (0.0f);
+//
+//        MT_UVBuffer[stile + 6] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 7] = (0.0f);
+//        MT_UVBuffer[stile + 8] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 9] = (0.0f);
+//        MT_UVBuffer[stile + 10] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 11] = (1.0f);
+//        break;
+//    default:
+//        MT_UVBuffer[stile + 0] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 1] = (0.0f);
+//        MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 3] = (0.0f);
+//        MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 5] = (1.0f);
+//
+//        MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 7] = (1.0f);
+//        MT_UVBuffer[stile + 8] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 9] = (1.0f);
+//        MT_UVBuffer[stile + 10] = (0.0f + nametable->tiles[tile] * (1.0f / 6.0f));
+//        MT_UVBuffer[stile + 11] = (0.0f);
+//        break;
+//    }
+//
+//    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+//    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
+//}
 
 void Renderer::RenderScene(Scene* scene) {
 
     SetMaintables(scene); //TODO implement int renderpos
+
+    ProcessTileQueue();
 
     for (Entity* it : scene->entities) {
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(it->position.x, it->position.y, 0.0f));
@@ -278,26 +300,6 @@ void Renderer::SetMaintables(Scene* scene) {
 
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-   // for (int i = 0; i < 32 * 30; i++) 
-    //}
-
-
-        //MT_UVBuffer.push_back(0.0f);
-        //MT_UVBuffer.push_back(0.0f);
-        //MT_UVBuffer.push_back(0.167f * 32);
-        //MT_UVBuffer.push_back(0.0f);
-        //MT_UVBuffer.push_back(0.167f * 32);
-        //MT_UVBuffer.push_back(1.0f * 30);
-
-        //MT_UVBuffer.push_back(0.167f * 32);
-        //MT_UVBuffer.push_back(1.0f * 30);
-        //MT_UVBuffer.push_back(0.0f);
-        //MT_UVBuffer.push_back(1.0f * 30);
-        //MT_UVBuffer.push_back(0.0f);
-        //MT_UVBuffer.push_back(0.0f);
-
-  //  }
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
 

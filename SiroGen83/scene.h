@@ -15,9 +15,6 @@ public:
 
 	Nametable Nametables[256];
 
-	Tile wht;
-	Tile blk;
-
 private:
 	Camera* _camera = new Camera();
 };
