@@ -27,15 +27,16 @@ public:
 
 	void SetUpMaintable(Nametable* nametable);
 
-	void UpdateTile(unsigned char tile);
+	void UpdateTile(unsigned char tile, unsigned char sprite, unsigned char flip);
 
-	void EditTile(unsigned char tile, unsigned char sprite, unsigned char flip);
+	void EditTile(unsigned char tile);
 
-	void ProcessTileQueue();
 
 private:
-	std::forward_list<unsigned char>::iterator it;
-	std::forward_list<unsigned char> TileQueue;
+	bool updatetiles = false;
+
+	//std::forward_list<unsigned char>::iterator it;
+	//std::forward_list<unsigned char> TileQueue;
 
 	std::vector<unsigned char> pixelcanvas;
 
@@ -47,9 +48,12 @@ private:
 
 	Nametable* Maintables[4];
 
-	void SetMaintables(Scene* scene);
+	void RenderMaintables(Scene* scene);
 
 	void RenderEntity(Entity* entity);
+
+	//void ProcessTileQueue();
+
 
 	char TileMap[96 * 16];//1536
 
