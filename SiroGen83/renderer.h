@@ -27,12 +27,12 @@ public:
 
 	void SetUpMaintable(Nametable** nametables);
 
-	void UpdateMainTile(unsigned char tile, unsigned char sprite, unsigned char flip = 0);
+	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
 private:
 	bool updatetiles = false;
 
-	void EditTile(Nametable* Maintables, unsigned char tile, short test = 0);
+	void EditTile(unsigned short tile);
 	//std::forward_list<unsigned char>::iterator it;
 	//std::forward_list<unsigned char> TileQueue;
 
@@ -45,6 +45,9 @@ private:
 	GLfloat UVBuffer[12];
 
 	Nametable* Maintables[4];
+
+	char MainTiles[960];
+	char MainFlip[960];
 
 	void RenderMaintables(Scene* scene);
 
