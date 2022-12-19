@@ -117,7 +117,7 @@ World1::World1() {
 	_instance->AddtoTileMap(&blk,1);
 
 	Nametables[0] = new Nametable{
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -203,8 +203,8 @@ World1::World1() {
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 	renderpos.x = 2;
-	GetCamera()->SetZoom(1.5f); //4.5f = Pixel Perfect Zoom
-	GetCamera()->X = 120.0f;
+	GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
+	//GetCamera()->X = 0.0f;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));
@@ -218,13 +218,13 @@ World1::World1() {
 }
 
 void World1::update() {
-	GetCamera()->X += 0.05f;
+	//GetCamera()->X += 0.05f;
 	if (once) {
 		printf("hoi\n");
 		//TODO Fix this!
-		Nametables[0]->tiles[3 + (3 * 16)] = 0;
-		Nametables[0]->flip[3 + (3 * 16)] = 3;
-		_instance->UpdateMainTile(Nametables[0],3 + (3 * 16));
+		//Nametables[0]->tiles[3 + (3 * 16)] = 0;
+		//Nametables[0]->flip[3 + (3 * 16)] = 3;
+		//_instance->UpdateMainTile(Nametables[0],3 + (3 * 16));
 		once = false;
 	}
 	//entity->position.x += 0.5f;

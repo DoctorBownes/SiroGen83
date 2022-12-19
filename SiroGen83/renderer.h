@@ -27,12 +27,12 @@ public:
 
 	void SetUpMaintable(Nametable** nametables);
 
-	void UpdateMainTile(Nametable* nametable, unsigned short tile);
+	void UpdateMainTile(Nametable* nametable, unsigned short tile, unsigned char maintable);
 
 private:
 	bool updatetiles = false;
 
-	void EditTile(unsigned short tile);
+	void EditTile(unsigned short tile, unsigned char maintable);
 
 	std::vector<unsigned char> pixelcanvas;
 
