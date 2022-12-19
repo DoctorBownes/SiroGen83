@@ -33,8 +33,6 @@ private:
 	bool updatetiles = false;
 
 	void EditTile(unsigned short tile);
-	//std::forward_list<unsigned char>::iterator it;
-	//std::forward_list<unsigned char> TileQueue;
 
 	std::vector<unsigned char> pixelcanvas;
 
@@ -56,7 +54,7 @@ private:
 	//void ProcessTileQueue();
 
 
-	char TileMap[96 * 16];//1536
+	char TileMap[96 * 16];
 
 	std::vector<GLfloat>MT_UVBuffer;
 

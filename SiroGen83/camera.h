@@ -13,8 +13,8 @@ public:
 
 	glm::mat4 GetProMat() { return projectionMatrix; };
 
-	float X = 0.0f;
-	float Y = 0.0f;
+	float X = 120.0f;
+	float Y = -112.0f;
 
 private:
 	glm::mat4 cameraMatrix;

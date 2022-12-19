@@ -200,11 +200,22 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    //int renderposx = scene->renderpos.x;
-    int overwrite_pos = 31;// + (y * width)
-    for (int x = overwrite_pos; x < 240; x += 16) {
-        MainTiles[overwrite_pos] = scene->Nametables[0]->tiles[x];
-        MainFlip[overwrite_pos] = scene->Nametables[0]->flip[x];
+
+    if (scene->GetCamera()->X < 0) {
+       // scene->renderpos.x--;
+        scene->GetCamera()->X = 512;
+    }
+    else if (scene->GetCamera()->X > 512) {
+       // scene->renderpos.x++;
+        scene->GetCamera()->X = 0;
+    }
+
+    int renderposx = 3;//scene->renderpos.x;
+    int overwrite_pos = (scene->GetCamera()->X/* + 216*/) * 0.0625f;// + (y * width) + 336
+    printf("overwrite_pos: %d\n", overwrite_pos);
+    for (int x = 0; x < 240; x += 16) {
+        MainTiles[overwrite_pos] = scene->Nametables[renderposx]->tiles[x];
+        MainFlip[overwrite_pos] = scene->Nametables[renderposx]->flip[x];
         EditTile(overwrite_pos);
         overwrite_pos += 32;
     }
@@ -261,9 +272,9 @@ void Renderer::RenderMaintables(Scene* scene) {
     //if (updatetiles) {
         //updatetiles = false;
     //}
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f, 112.0f, 0.0f));
+    //glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f, 112.0f, 0.0f));
 
-    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
+    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat();
 
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
