@@ -180,9 +180,9 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		1,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,
-		1,1,0,0,0,0,0,0,0,0,1,1,1,1,0,0,
+		0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+		1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,
+		0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,
 		1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,0,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -202,8 +202,8 @@ World1::World1() {
 	//entities.push_front(entity2);
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
-	renderpos.x = 2;
-	GetCamera()->SetZoom(1.5f); //4.5f = Pixel Perfect Zoom
+	renderpos.x = 0;
+	GetCamera()->SetZoom(4.5f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 120.0f;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
@@ -218,7 +218,7 @@ World1::World1() {
 }
 
 void World1::update() {
-	GetCamera()->X += 0.05f;
+	GetCamera()->X += 0.2f;
 	if (once) {
 		printf("hoi\n");
 		//TODO Fix this!

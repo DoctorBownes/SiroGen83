@@ -69,5 +69,7 @@ private:
 	unsigned int vertex_buffer;
 
 	unsigned int uv_buffer;
+
+	int test = 16;
 };
 

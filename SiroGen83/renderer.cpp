@@ -165,12 +165,12 @@ void Renderer::EditTile(unsigned short tile) {
     unsigned short stile = tile * 12;
     unsigned char flip = MainFlip[tile];
 
-    MT_UVBuffer[stile + 0] = (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 0] =          (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
     MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
     MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
     MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 8] = (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 10] = (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 8] =          (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 10] =         (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
 
     flip >>= 1;
 
@@ -179,7 +179,7 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[stile + 5] = (1.0f - (flip & 1));
     MT_UVBuffer[stile + 7] = (1.0f - (flip & 1));
     MT_UVBuffer[stile + 9] = (1.0f - (flip & 1));
-    MT_UVBuffer[stile + 11] = (0.0f + (flip & 1));
+    MT_UVBuffer[stile +11] = (0.0f + (flip & 1));
 
    // updatetiles = true;
 
@@ -200,20 +200,31 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
+    int overwrite_pos = (scene->GetCamera()->X + 224) * 0.0625f;// + (y * width) + 336
 
     if (scene->GetCamera()->X < 0) {
        // scene->renderpos.x--;
         scene->GetCamera()->X = 512;
     }
     else if (scene->GetCamera()->X > 512) {
-       // scene->renderpos.x++;
         scene->GetCamera()->X = 0;
+        printf("512\n");
+    }
+    int renderposx = scene->renderpos.x;
+    test = 16;
+    if (overwrite_pos - test > 15) {
+        overwrite_pos -= 32;
+        //scene->renderpos.x++;
+        test = 0;
+    }
+    else if (overwrite_pos - test < 0) {
+        test -= 16;
     }
 
-    int renderposx = 3;//scene->renderpos.x;
-    int overwrite_pos = (scene->GetCamera()->X/* + 216*/) * 0.0625f;// + (y * width) + 336
+    printf("renderposx: %d\n", renderposx);
     printf("overwrite_pos: %d\n", overwrite_pos);
-    for (int x = 0; x < 240; x += 16) {
+    printf("overwrite_pos - test: %d\n", overwrite_pos - test);
+    for (int x = overwrite_pos - test; x < 240; x += 16) {
         MainTiles[overwrite_pos] = scene->Nametables[renderposx]->tiles[x];
         MainFlip[overwrite_pos] = scene->Nametables[renderposx]->flip[x];
         EditTile(overwrite_pos);
