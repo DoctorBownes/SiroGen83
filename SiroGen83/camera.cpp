@@ -21,8 +21,8 @@ void Camera::SetZoom(float amount) {
 
 void Camera::update() {
     cameraMatrix = glm::lookAt(
-        glm::vec3(X,Y, 1.0f) - offset, //position
-        glm::vec3(X, Y, 1.0f) - offset + glm::vec3(0.0f, 0.0f, -1.0f), //direction
+        glm::vec3(X,-Y, 1.0f) - offset, //position
+        glm::vec3(X,-Y, 1.0f) - offset + glm::vec3(0.0f, 0.0f, -1.0f), //direction
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
 }

@@ -32,7 +32,7 @@ public:
 private:
 	bool updatetiles = false;
 
-	void EditTile(unsigned short tile);
+	void EditTile(unsigned short tile, int test);
 
 	std::vector<unsigned char> pixelcanvas;
 
@@ -44,8 +44,8 @@ private:
 
 	Nametable* Maintables[4];
 
-	char MainTiles[960];
-	char MainFlip[960];
+	//char MainTiles[960];
+	//char MainFlip[960];
 
 	void RenderMaintables(Scene* scene);
 
@@ -70,6 +70,8 @@ private:
 
 	unsigned int uv_buffer;
 
-	int test = 16;
+	unsigned char N = 0;
+
+	unsigned char overwrite_pos = 0;
 };
 

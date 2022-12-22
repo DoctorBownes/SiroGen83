@@ -72,6 +72,10 @@ Renderer::Renderer() {
         pixelcanvas.push_back(255);
     }
 
+    for (int i = 0; i < 4; i++) {
+        Maintables[i] = new Nametable();
+    }
+
     glGenTextures(1, &tilemap_texture_buffer);
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -82,74 +86,78 @@ Renderer::Renderer() {
     glGenerateMipmap(GL_TEXTURE_2D);
 
     pixelcanvas.clear();
+
+    N = 0;
 }
 
 void Renderer::SetUpMaintable(Nametable** nametables) {
 
     //Set-up maintables
-	
-	int overwrite_pos = 0; //change overwrite_pos // + (y * width)
-	for (int y = 0; y < 16; y++) {
-		overwrite_pos = 0 + y; //change overwrite_pos // + (y * width)
-		for (int x = 0 + y; x < 240; x += 16) {
-			MainTiles[overwrite_pos] = nametables[0]->tiles[x];
-			MainFlip[overwrite_pos] = nametables[0]->flip[x];
-			overwrite_pos += 32;
-		}
-	}
-
-        overwrite_pos = 16; //change overwrite_pos // + (y * width)
-    for (int y = 0; y < 16; y++) {
-        overwrite_pos = 16 + y; //change overwrite_pos // + (y * width)
-        for (int x = 0 + y; x < 240; x += 16) {
-            MainTiles[overwrite_pos] = nametables[1]->tiles[x];
-            MainFlip[overwrite_pos] = nametables[1]->flip[x];
-            overwrite_pos += 32;
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 240; i++) {
+            Maintables[j]->tiles[i] = nametables[j & 1]->tiles[i];
+            Maintables[j]->flip[i] = nametables[j & 1]->flip[i];
         }
     }
 
-    overwrite_pos = 0 + (15 * 32); //change overwrite_pos // + (y * width)
-    for (int y = 0; y < 16; y++) {
-        overwrite_pos = 0 + (15 * 32) + y; //change overwrite_pos // + (y * width)
-        for (int x = 0 + y; x < 240; x += 16) {
-            MainTiles[overwrite_pos] = nametables[0]->tiles[x];
-            MainFlip[overwrite_pos] = nametables[0]->flip[x];
-            overwrite_pos += 32;
+    int test = 0;
+    for (N = 0; N < 4; N++) {
+        int z = 0;
+        for (int y = 0 + 15 * ((N >> 1) & 1); y < 15 + 15 * ((N >> 1) & 1); y++) {
+
+            for (int x = 0 + 16 * (N & 1); x < 16 + 16 * (N & 1); x++) {
+                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+
+                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+
+                //unsigned char flip = Maintables[N]->flip[z];
+                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
+                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
+                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
+                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
+                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
+                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
+                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
+                EditTile(z, test);
+                z++;
+                test++;
+            }
         }
     }
 
-    overwrite_pos = 16 + (15 * 32); //change overwrite_pos // + (y * width)
-    for (int y = 0; y < 16; y++) {
-        overwrite_pos = 16 + (15 * 32) + y; //change overwrite_pos // + (y * width)
-        for (int x = 0 + y; x < 240; x += 16) {
-            MainTiles[overwrite_pos] = nametables[1]->tiles[x];
-            MainFlip[overwrite_pos] = nametables[1]->flip[x];
-            overwrite_pos += 32;
-        }
-    }
+    //int z = 0;
+    //for (int y = 0; y < 30; y++) {
+    //    for (int x = 0; x < 32; x++) {
+    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
 
-
-    int z = 0;
-    for (int y = 0; y < 30; y++) {
-        for (int x = 0; x < 32; x++) {
-            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-
-            MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-            MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-            MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-
-            EditTile(z);
-            z++;
-        }
-    }
+    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
+    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
+    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
+    //    }
+    //}
 
     glGenBuffers(1, &uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
@@ -159,18 +167,19 @@ void Renderer::SetUpMaintable(Nametable** nametables) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
 
+    N = 0;
 }
 
-void Renderer::EditTile(unsigned short tile) {
-    unsigned short stile = tile * 12;
-    unsigned char flip = MainFlip[tile];
+void Renderer::EditTile(unsigned short tile, int test) {
+    unsigned short stile = test * 12;
+    unsigned char flip = Maintables[N]->flip[tile];
 
-    MT_UVBuffer[stile + 0] =          (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 2] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 4] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 6] = ((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 8] =          (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
-    MT_UVBuffer[stile + 10] =         (0.0f + (flip & 1) * (1.0f / 6.0f) + MainTiles[tile] * (1.0f / 6.0f));
+    MT_UVBuffer[stile + 0] =       (0.0f + (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
+    MT_UVBuffer[stile + 2] = ((0.16667f) - (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
+    MT_UVBuffer[stile + 4] = ((0.16667f) - (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
+    MT_UVBuffer[stile + 6] = ((0.16667f) - (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
+    MT_UVBuffer[stile + 8] =       (0.0f + (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
+    MT_UVBuffer[stile + 10] =      (0.0f + (flip & 1) * (0.16667f) + Maintables[N]->tiles[tile] * (0.16667f));
 
     flip >>= 1;
 
@@ -186,9 +195,9 @@ void Renderer::EditTile(unsigned short tile) {
 }
 
 void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
-    MainTiles[tile] = nametable->tiles[tile];
-    MainFlip[tile] = nametable->flip[tile];
-    EditTile(tile);
+    Maintables[N]->tiles[tile] = nametable->tiles[tile];
+    Maintables[N]->flip[tile] = nametable->flip[tile];
+    EditTile(tile, tile);
 }
 
 //void Renderer::ProcessTileQueue() {
@@ -200,35 +209,31 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    int overwrite_pos = (scene->GetCamera()->X + 224) * 0.0625f;// + (y * width) + 336
-
-    if (scene->GetCamera()->X < 0) {
-       // scene->renderpos.x--;
-        scene->GetCamera()->X = 512;
-    }
-    else if (scene->GetCamera()->X > 512) {
-        scene->GetCamera()->X = 0;
-        printf("512\n");
-    }
-    int renderposx = scene->renderpos.x;
-    test = 16;
-    if (overwrite_pos - test > 15) {
-        overwrite_pos -= 32;
-        //scene->renderpos.x++;
-        test = 0;
-    }
-    else if (overwrite_pos - test < 0) {
-        test -= 16;
-    }
-
-    printf("renderposx: %d\n", renderposx);
     printf("overwrite_pos: %d\n", overwrite_pos);
-    printf("overwrite_pos - test: %d\n", overwrite_pos - test);
-    for (int x = overwrite_pos - test; x < 240; x += 16) {
-        MainTiles[overwrite_pos] = scene->Nametables[renderposx]->tiles[x];
-        MainFlip[overwrite_pos] = scene->Nametables[renderposx]->flip[x];
-        EditTile(overwrite_pos);
-        overwrite_pos += 32;
+    printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
+
+
+    if (overwrite_pos == 240 && scene->GetCamera()->X == 1) {
+        if (N == 0) {
+            printf("Bam!\n");
+            scene->renderpos.x++;
+            N = 1;
+        }
+        else if (N == 1) {
+            printf("Bam!\n");
+            scene->renderpos.x++;
+            N = 0;
+        }
+    }
+
+    overwrite_pos = (scene->GetCamera()->X) * 0.0625f;// + (y * width) + 336
+
+    int renderposx = scene->renderpos.x;
+    for (int x = overwrite_pos; x < 240; x += 16) {
+        Maintables[N]->tiles[overwrite_pos] = scene->Nametables[renderposx]->tiles[x];
+        Maintables[N]->flip[overwrite_pos] = scene->Nametables[renderposx]->flip[x];
+        EditTile(overwrite_pos, overwrite_pos + 240 * N);
+        overwrite_pos += 16;
     }
 
     RenderMaintables(scene); //TODO implement int renderpos
@@ -280,12 +285,9 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
 
 void Renderer::RenderMaintables(Scene* scene) {
 
-    //if (updatetiles) {
-        //updatetiles = false;
-    //}
-    //glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f, 112.0f, 0.0f));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f - 256 * (N & 1), 112.0f + 240 * ((N >> 1) & 1), 0.0f));
 
-    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat();
+    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
