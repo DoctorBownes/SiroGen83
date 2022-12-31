@@ -61,6 +61,8 @@ add_library(SiroGen83 # ar rcs libSiroGen83.a
 	external/glad-3.3/src/glad.c
 	SiroGen83/core.h
 	SiroGen83/core.cpp
+	SiroGen83/input.h
+	SiroGen83/input.cpp
 	SiroGen83/scene.h
 	SiroGen83/entity.h
 	SiroGen83/entity.cpp

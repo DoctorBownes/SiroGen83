@@ -1,5 +1,6 @@
 #pragma once
 #include <SiroGen83/vector2.h>
+#include <SiroGen83/input.h>
 
 class Entity {
 public:
@@ -14,4 +15,9 @@ public:
 	Vector2 position{0,0};
 
 	virtual void update();
+
+	Input* GetInput() { return _instance; };
+
+private:
+	Input* _instance = _instance->GetInstance();
 };

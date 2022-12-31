@@ -1,9 +1,9 @@
 #include "core.h"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <SiroGen83/scene.h>
 #include <SiroGen83/camera.h>
 #include <SiroGen83/renderer.h>
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
 #include <stdio.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -41,7 +41,11 @@ Core::Core() {
 
 void Core::Run(Scene* scene) {
 
-    _instance->SetUpMaintable(scene->Nametables);
+    scene->GetInput()->Init(_window);
+
+    scene->GetCamera()->X |= scene->renderpos << 8;
+
+    _instance->SetUpMaintable(scene->Nametables, scene->renderpos);
 
     do {
 

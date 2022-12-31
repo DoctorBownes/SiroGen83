@@ -1,4 +1,4 @@
 struct Vector2 {
-	float x;
-	float y;
+	unsigned short x;
+	unsigned short y;
 };

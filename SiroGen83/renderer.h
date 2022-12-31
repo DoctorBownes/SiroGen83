@@ -25,7 +25,7 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
-	void SetUpMaintable(Nametable** nametables);
+	void SetUpMaintable(Nametable** nametables, unsigned char RenderPos);
 
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
@@ -72,6 +72,10 @@ private:
 
 	unsigned char N = 0;
 
-	unsigned char overwrite_pos = 0;
+	unsigned short overwrite_pos = 0;
+
+	unsigned short test = 0;
+
+	int renderposx = 2;
 };
 

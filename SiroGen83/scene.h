@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SiroGen83/entity.h>
 #include <SiroGen83/camera.h>
+#include <SiroGen83/entity.h>
 #include <SiroGen83/tile.h>
 #include <forward_list>
 
@@ -11,9 +11,11 @@ public:
 
 	Camera* GetCamera() { return _camera; };
 
-	Vector2 renderpos = {0,0};
+	unsigned char renderpos = 0;
 
 	Nametable* Nametables[256];
+
+	signed char scrolldir = 0;
 
 private:
 	Camera* _camera = new Camera();

@@ -13,8 +13,9 @@ public:
 
 	glm::mat4 GetProMat() { return projectionMatrix; };
 
-	unsigned char X = 0;
-	unsigned char Y = 0;
+	unsigned short X = 0;
+	unsigned short tX = 0;
+	unsigned short Y = 0;
 
 private:
 	glm::mat4 cameraMatrix;
