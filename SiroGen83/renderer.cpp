@@ -209,39 +209,61 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    //if (test == 0) {
-    //    test = 1;
-    //}
-    scene->renderpos = scene->GetCamera()->X + (((scene->scrolldir >> 8) & 1) * -432 ) + 336 >> 8;
-    overwrite_pos = (scene->GetCamera()->X + (((scene->scrolldir >> 8) & 1) * -432) + 336) & 0x1ff;// + (y * width) + 336
-    N = (overwrite_pos >> 8);
 
-    overwrite_pos *= 0.0625f;
-    overwrite_pos &= 0xf;
+    scene->renderpos = scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -432) + 336 >> 8;
+    overwrite_pos.x = (scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -432) + 336) & 0x1ff;// + (y * width) + 336
 
-    printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
-    printf("overwrite_pos: %d\n", overwrite_pos);
-    printf("scene->renderpos.x : %d\n", scene->renderpos);
-    printf("N: %d\n", N);
+    N = (overwrite_pos.x >> 8) & 1;
 
-    for (int x = overwrite_pos; x < 240; x += 16) {
-        Maintables[N]->tiles[overwrite_pos] = scene->Nametables[scene->renderpos]->tiles[x];
-        Maintables[N]->flip[overwrite_pos] = scene->Nametables[scene->renderpos]->flip[x];
-        EditTile(overwrite_pos, overwrite_pos + 240 * N);
-        overwrite_pos += 16;
+    overwrite_pos.x *= 0.0625f;
+    overwrite_pos.x &= 0xf;
+
+    //overwrite_pos.x += overwrite_pos.y * 16; //Key
+
+    //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
+    //printf("overwrite_pos: %d\n", overwrite_pos);
+   // printf("scene->renderpos.x : %d\n", scene->renderpos);
+
+    for (int x = overwrite_pos.x; x < 240; x += 16) {
+        Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
+        Maintables[N]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
+        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+        overwrite_pos.x += 16;
     }
-    //for (int x = overwrite_pos; x < 16; x++) {
-    //    Maintables[N]->tiles[overwrite_pos] = scene->Nametables[scene->renderpos.x]->tiles[x];
-    //    Maintables[N]->flip[overwrite_pos] = scene->Nametables[scene->renderpos.x]->flip[x];
-    //    EditTile(overwrite_pos, overwrite_pos + 240 * N);
-    //    overwrite_pos++;
-    //}
-    ////change overwrite_pos & x
-    //overwrite_pos = 0; // + (y * width)
-    //for (int x = 0; x < 16; x ++) {
-    //	cameravas[overwrite_pos] = canvas2[x];
-    //	overwrite_pos++;
-    //}
+    // scene->renderpos = scene->GetCamera()->Y >> 8;
+    // overwrite_pos += (((scene->GetCamera()->Y & 0xff) > 239) * 16);
+    // overwrite_pos *= 0.0625f;
+     //if ((scene->GetCamera()->Y & 0xff) > 239) {
+    //     if (test == 0) {
+    //         scene->GetCamera()->Y += 512 - (((scene->GetCamera()->scrolldir >> 8) & 1) * 1024);
+    //         test = 1;
+    //     }
+    // }
+    scene->renderpos = (scene->GetCamera()->Y + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256 >> 8) * 3; //Y * Width
+    overwrite_pos.y = (scene->GetCamera()->Y) + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256 & 0x1ff;
+    N += ((overwrite_pos.y >> 8) & 1) * 2;
+   overwrite_pos.y *= 0.0625f;
+   overwrite_pos.y &= 0xf;
+  //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y + 240);
+  //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
+  //printf("N: %d\n", N);
+   //printf("scene->renderpos.x : %d\n", scene->renderpos);
+
+    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+        Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
+        Maintables[N]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
+        EditTile(x, x + (240 * (N)));
+    }
+    /*
+   overwrite_pos *= 16;
+
+    for (int x = 0; x < 16; x++) {
+        printf("overwrite_pos: %d\n", overwrite_pos);
+        Maintables[N]->tiles[overwrite_pos] = scene->Nametables[2]->tiles[overwrite_pos];
+        Maintables[N]->flip[overwrite_pos] = scene->Nametables[2]->flip[overwrite_pos];
+        EditTile(overwrite_pos, overwrite_pos + 240 * N);
+        overwrite_pos++;
+    }*/
 
     RenderMaintables(scene); //TODO implement int renderpos
 

@@ -166,9 +166,9 @@ World1::World1() {
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
 		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
 		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
-		0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,
-		1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+		1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,
+		0,1,0,1,0,1,1,0,0,1,0,1,0,1,0,1,
+		1,0,1,0,1,0,1,0,0,1,1,0,1,0,1,0,
 	};
 
 	Nametables[3] = new Nametable{
@@ -279,6 +279,24 @@ World1::World1() {
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
 	};
 
+	Nametables[9] = new Nametable{
+	   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+		1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,
+		1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
+		1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,
+		1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,
+		1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
+	};
+
 	//Nametables[0]->tiles[3] = 0;
 	//Nametables[0]->flip[3] = 3;
 
@@ -292,9 +310,10 @@ World1::World1() {
 	//entities.push_front(entity2);
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
-	renderpos = 2;
-	GetCamera()->SetZoom(4.5f); //4.5f = Pixel Perfect Zoom
+	//renderpos = 8;
+	GetCamera()->SetZoom(1.5f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
+	GetCamera()->Y = 0;
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));
@@ -309,12 +328,20 @@ World1::World1() {
 
 void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::Left)) {
-		GetCamera()->X -= 1;
-		scrolldir = -1;
+		GetCamera()->X -= 4;
+		GetCamera()->scrolldir.x = -1;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		GetCamera()->X += 1;
-		scrolldir = 1;
+		GetCamera()->X += 4;
+		GetCamera()->scrolldir.x = 1;
+	}
+	else if (GetInput()->KeyDown(KeyCode::Up)) {
+		GetCamera()->Y -= 4;
+		GetCamera()->scrolldir.y = -1;
+	}
+	else if (GetInput()->KeyDown(KeyCode::Down)) {
+		GetCamera()->Y += 4;
+		GetCamera()->scrolldir.y = 1;
 	}
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
 		renderpos = 4;

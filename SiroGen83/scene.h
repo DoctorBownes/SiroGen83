@@ -15,8 +15,6 @@ public:
 
 	Nametable* Nametables[256];
 
-	signed char scrolldir = 0;
-
 private:
 	Camera* _camera = new Camera();
 };

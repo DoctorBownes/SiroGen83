@@ -20,11 +20,13 @@ void Camera::SetZoom(float amount) {
 }
 
 void Camera::update() {
-    //tX = X;
-    //tX &= 0x0ff;
+    if ((Y + (((scrolldir.y >> 8) & 1) * -256) + 256 & 0xff) > 239) {
+        Y += 16 - (((scrolldir.y >> 8) & 1) * 32);
+    }
+
     cameraMatrix = glm::lookAt(
-        glm::vec3(X & 0x1FF,-(Y & 0x1FF), 1.0f) - offset, //position
-        glm::vec3(X & 0x1FF,-(Y & 0x1FF), 1.0f) - offset + glm::vec3(0.0f, 0.0f, -1.0f), //direction
+        glm::vec3(X & 0x1FF,-((Y & 0x1ff) - 16 * (Y >> 8 & 1)), 1.0f) - offset, //position
+        glm::vec3(X & 0x1FF,-((Y & 0x1ff) - 16 * (Y >> 8 & 1)), 1.0f) - offset + glm::vec3(0.0f, 0.0f, -1.0f), //direction
         glm::vec3(0.0f, 1.0f, 0.0f)
     );
 }

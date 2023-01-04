@@ -72,7 +72,7 @@ private:
 
 	unsigned char N = 0;
 
-	unsigned short overwrite_pos = 0;
+	Vector2 overwrite_pos{0,0};
 
 	unsigned short test = 0;
 
