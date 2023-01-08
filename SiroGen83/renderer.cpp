@@ -210,18 +210,27 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 
 void Renderer::RenderScene(Scene* scene) {
 
-    scene->renderpos = scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -432) + 336 >> 8;
-    overwrite_pos.x = (scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -432) + 336) & 0x1ff;// + (y * width) + 336
-
-    N = (overwrite_pos.x >> 8) & 1;
+    scene->renderpos =(scene->GetCamera()->X >> 8) + ((scene->GetCamera()->Y >> 8) * 3);
+    overwrite_pos.x = (scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -256) + 256) & 0x1ff;
+    overwrite_pos.y = (scene->GetCamera()->Y + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256) & 0x1ff;
+    N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) & 1) * 2;
+    N &= 1;
 
     overwrite_pos.x *= 0.0625f;
     overwrite_pos.x &= 0xf;
 
+    overwrite_pos.y *= 0.0625f;
+    overwrite_pos.y &= 0xf;
+
+    //overwrite_posz *= 0.0625f;
+    //overwrite_posz &= 0xf;
     //overwrite_pos.x += overwrite_pos.y * 16; //Key
 
     //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
-    //printf("overwrite_pos: %d\n", overwrite_pos);
+    printf("overwrite_pos.x: %d\n", overwrite_pos.x);
+    printf("overwrite_pos.y: %d\n", overwrite_pos.y);
+    //printf("overwrite_posz: %d\n", overwrite_posz);
+    printf("N: %d\n", N);
    // printf("scene->renderpos.x : %d\n", scene->renderpos);
 
     for (int x = overwrite_pos.x; x < 240; x += 16) {
@@ -230,29 +239,16 @@ void Renderer::RenderScene(Scene* scene) {
         EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
         overwrite_pos.x += 16;
     }
-    // scene->renderpos = scene->GetCamera()->Y >> 8;
-    // overwrite_pos += (((scene->GetCamera()->Y & 0xff) > 239) * 16);
-    // overwrite_pos *= 0.0625f;
-     //if ((scene->GetCamera()->Y & 0xff) > 239) {
-    //     if (test == 0) {
-    //         scene->GetCamera()->Y += 512 - (((scene->GetCamera()->scrolldir >> 8) & 1) * 1024);
-    //         test = 1;
-    //     }
-    // }
-    scene->renderpos = (scene->GetCamera()->Y + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256 >> 8) * 3; //Y * Width
-    overwrite_pos.y = (scene->GetCamera()->Y) + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256 & 0x1ff;
-    N += ((overwrite_pos.y >> 8) & 1) * 2;
-   overwrite_pos.y *= 0.0625f;
-   overwrite_pos.y &= 0xf;
+
+    
   //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y + 240);
   //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
-  //printf("N: %d\n", N);
    //printf("scene->renderpos.x : %d\n", scene->renderpos);
 
     for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
         Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
         Maintables[N]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
-        EditTile(x, x + (240 * (N)));
+        EditTile(x, x + 240 * N);
     }
     /*
    overwrite_pos *= 16;
@@ -313,7 +309,7 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
 }
 
 void Renderer::RenderMaintables(Scene* scene) {
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f/* - 256.0f *( N & 1)*/, 112.0f, 0.0f));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f, 112.0f, 0.0f));
 
     glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 

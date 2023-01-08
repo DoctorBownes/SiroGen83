@@ -74,8 +74,6 @@ private:
 
 	Vector2 overwrite_pos{0,0};
 
-	unsigned short test = 0;
-
-	int renderposx = 2;
+	unsigned short overwrite_posz = 0;
 };
 
