@@ -21,7 +21,7 @@ void Camera::SetZoom(float amount) {
 
 void Camera::update(unsigned char mode) {
     if (((Y + scrolldir.y * 256) & 0xff) > 239) {
-        Y += 16 - (scrolldir.y * 32);
+        Y += -16 + scrolldir.y * 32;
     }
 
     offset = glm::vec3((256.0f + 1024.0f * (mode & 1)) / 2, (-240.0f - 480.0f * (mode & 2)) / 2, 0);

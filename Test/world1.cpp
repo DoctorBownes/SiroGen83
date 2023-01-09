@@ -310,8 +310,8 @@ World1::World1() {
 	//entities.push_front(entity2);
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
-	//renderpos = 8;
-	rendermode = 1;
+	renderpos = 0;
+	rendermode = 2;
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
