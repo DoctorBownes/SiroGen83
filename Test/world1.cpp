@@ -311,7 +311,7 @@ World1::World1() {
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 	//renderpos = 8;
-	rendermode = 2;
+	rendermode = 1;
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
@@ -330,7 +330,7 @@ World1::World1() {
 void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::Left)) {
 		GetCamera()->X -= 2;
-		GetCamera()->scrolldir.x = -1;
+		GetCamera()->scrolldir.x = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		GetCamera()->X += 2;
@@ -338,7 +338,7 @@ void World1::update() {
 	}
 	else if (GetInput()->KeyDown(KeyCode::Up)) {
 		GetCamera()->Y -= 2;
-		GetCamera()->scrolldir.y = -1;
+		GetCamera()->scrolldir.y = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Down)) {
 		GetCamera()->Y += 2;

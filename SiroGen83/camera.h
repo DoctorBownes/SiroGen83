@@ -1,9 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
 
-struct SCector2 {
-	signed char x;
-	signed char y;
+struct Bector2 {
+	bool x;
+	bool y;
 };
 
 class Camera {
@@ -22,7 +22,7 @@ public:
 
 	unsigned short Y = 0;
 
-	SCector2 scrolldir{0,0};
+	Bector2 scrolldir{0,0};
 
 	glm::vec3 offset;
 
