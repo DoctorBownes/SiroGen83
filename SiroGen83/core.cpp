@@ -8,7 +8,8 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    glViewport(0, 0, width, height);
+    //glViewport(0,0,width, height);
+    glViewport(width * 0.25f, height * 0, width * 0.5f, height);
 }
 
 Core::Core() {
@@ -55,12 +56,14 @@ void Core::Run(Scene* scene) {
 
         scene->update();
 
-        scene->GetCamera()->update();
-
         for (Entity* it : scene->entities) {
             it->update();
         }
 
+        scene->GetCamera()->update(scene->rendermode);
+        _instance->RenderScene(scene);
+
+        scene->GetCamera()->update();
         _instance->RenderScene(scene);
 
         glfwSwapBuffers(_window);

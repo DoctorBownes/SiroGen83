@@ -209,12 +209,12 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-
-    scene->renderpos =(scene->GetCamera()->X >> 8) + ((scene->GetCamera()->Y >> 8) * 3);
+    //TODO FIX 213
+    scene->renderpos =((scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -256) + 256) >> 8) + (((scene->GetCamera()->Y + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256) >> 8) * 3);
     overwrite_pos.x = (scene->GetCamera()->X + (((scene->GetCamera()->scrolldir.x >> 8) & 1) * -256) + 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + (((scene->GetCamera()->scrolldir.y >> 8) & 1) * -256) + 256) & 0x1ff;
     N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) & 1) * 2;
-    N &= 1;
+    N &= scene->rendermode;
 
     overwrite_pos.x *= 0.0625f;
     overwrite_pos.x &= 0xf;
