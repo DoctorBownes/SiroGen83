@@ -11,7 +11,7 @@ const char* vertex_shader = "#version 330 core\n"
 "out vec2 UV;\n"
 "void main()\n"
 "{\n"
-"	gl_Position = MVP * vec4(vertexPosition.x,vertexPosition.y,0.0f, 1.0f);\n"
+"	gl_Position = MVP * vec4(vertexPosition.x + 0.001f,vertexPosition.y + 0.001f,0.0f, 1.0f);\n"//+0.01f for wrapping
 "	UV = uvPosition;\n"
 "};\0";
 
@@ -178,8 +178,8 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_UVBuffer[stile + 2] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
     MT_UVBuffer[stile + 4] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
     MT_UVBuffer[stile + 6] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile + 8] =  (flip * 0.20001f + Maintables[N]->tiles[tile] * (0.20001f));//TODO FIX
-    MT_UVBuffer[stile +10] =  (flip * 0.20001f + Maintables[N]->tiles[tile] * (0.20001f));
+    MT_UVBuffer[stile + 8] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
+    MT_UVBuffer[stile +10] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
 
     flip = Maintables[N]->flip[tile];
     (flip >>= 1) &= 1;
@@ -228,7 +228,7 @@ void Renderer::RenderScene(Scene* scene) {
    // printf("overwrite_pos.y: %d\n", overwrite_pos.y);
     //printf("overwrite_posz: %d\n", overwrite_posz);
    // printf("N: %d\n", N);
-    printf("scene->renderpos : %d\n", scene->renderpos);
+    //printf("scene->renderpos : %d\n", scene->renderpos);
 
     for (int x = overwrite_pos.x; x < 240; x += 16) {
         Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
