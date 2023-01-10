@@ -54,7 +54,7 @@ private:
 	//void ProcessTileQueue();
 
 
-	char TileMap[96 * 16];
+	char TileMap[5 * 16 * 16];
 
 	std::vector<GLfloat>MT_UVBuffer;
 
