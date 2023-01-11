@@ -30,7 +30,6 @@ public:
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
 private:
-	bool updatetiles = false;
 
 	void EditTile(unsigned short tile, int test);
 

@@ -2,7 +2,7 @@
 #include <SiroGen83/vector2.h>
 #include <SiroGen83/input.h>
 
-class Entity {
+class Entity { //friend class Renderer
 public:
 	Entity();
 

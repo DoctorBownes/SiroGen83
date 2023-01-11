@@ -313,6 +313,24 @@ World1::World1() {
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
 	};
 
+	Nametables[255] = new Nametable{
+	   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+		1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,
+		1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
+		1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,
+		1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,
+		1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
+	};
+
 	//Nametables[0]->tiles[3] = 0;
 	//Nametables[0]->flip[3] = 3;
 
@@ -345,23 +363,25 @@ World1::World1() {
 
 void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::Left)) {
-		GetCamera()->X -= 1;
+		GetCamera()->X -= 2;
 		GetCamera()->scrolldir.x = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		GetCamera()->X += 1;
+		GetCamera()->X += 2;
 		GetCamera()->scrolldir.x = 1;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Up)) {
-		GetCamera()->Y -= 1;
+		GetCamera()->Y -= 2;
 		GetCamera()->scrolldir.y = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Down)) {
-		GetCamera()->Y += 1;
+		GetCamera()->Y += 2;
 		GetCamera()->scrolldir.y = 1;
 	}
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-		renderpos = 4;
+		Nametables[2]->tiles[1] = 1;
+		Nametables[2]->flip[1] = 1;
+		//_instance->UpdateMainTile(Nametables[0], 1);
 	}
 	//entity->position.x += 0.5f;
 	//GetCamera()->X = entity->position.x;

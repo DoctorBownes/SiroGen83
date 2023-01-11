@@ -230,11 +230,28 @@ void Renderer::RenderScene(Scene* scene) {
    // printf("N: %d\n", N);
     //printf("scene->renderpos : %d\n", scene->renderpos);
 
-    for (int x = overwrite_pos.x; x < 240; x += 16) {
-        Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-        Maintables[N]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
-        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-        overwrite_pos.x += 16;
+    if (scene->rendermode == 1) {
+        for (int x = overwrite_pos.x; x < 240; x += 16) {
+            Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
+            Maintables[N]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
+            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+
+            Maintables[N + 2]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
+            Maintables[N + 2]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
+            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * (N + 2));
+
+            overwrite_pos.x += 16;
+        }
+    }
+    else {
+        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+            Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
+            Maintables[N]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
+            EditTile(x, x + 240 * N);
+            Maintables[N + 1]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
+            Maintables[N + 1]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
+            EditTile(x, x + 240 * (N + 1));
+        }
     }
 
     
@@ -242,11 +259,6 @@ void Renderer::RenderScene(Scene* scene) {
   //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
    //printf("scene->renderpos.x : %d\n", scene->renderpos);
 
-    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-        Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-        Maintables[N]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
-        EditTile(x, x + 240 * N);
-    }
     /*
    overwrite_pos *= 16;
 
