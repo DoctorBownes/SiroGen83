@@ -46,7 +46,7 @@ void Core::Run(Scene* scene) {
 
     scene->GetCamera()->X |= scene->renderpos << 8;
 
-    _instance->SetUpMaintable(scene->Nametables, scene->renderpos);
+    _instance->SetUpMaintable(scene);
 
     do {
 
@@ -60,11 +60,21 @@ void Core::Run(Scene* scene) {
             it->update();
         }
 
-        scene->GetCamera()->update(scene->rendermode);
+
+        //glViewport(0 + 256 * (_instance->rendermode >> 1), 0 - 240 * (_instance->rendermode & 1), 1920, 1080);
+        //scene->GetCamera()->update(_instance->rendermode);
+        //_instance->RenderScene(scene);
+        //
+        //scene->GetCamera()->update();
+        //_instance->RenderScene(scene);
+        //
+        //glViewport(0, 0, 1920, 1080);
+        scene->GetCamera()->update(_instance->rendermode);
         _instance->RenderScene(scene);
 
         scene->GetCamera()->update();
         _instance->RenderScene(scene);
+       // glViewport(1920 * 0.0f, 1080 * 0, 1920 * 1.0f, 1080);
 
         glfwSwapBuffers(_window);
         glfwPollEvents();

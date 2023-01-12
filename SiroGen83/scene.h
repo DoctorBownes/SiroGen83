@@ -13,7 +13,7 @@ public:
 
 	unsigned char renderpos = 0;
 
-	unsigned char rendermode = 1;
+	//unsigned char rendermode = 1;
 
 	Nametable* Nametables[256];
 

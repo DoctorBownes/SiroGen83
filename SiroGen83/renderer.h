@@ -25,9 +25,14 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
-	void SetUpMaintable(Nametable** nametables, unsigned char RenderPos);
+	void SetUpMaintable(Scene* scene);
 
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
+
+	void SetRenderMode(Scene* scene, unsigned char mode);
+
+	unsigned char rendermode = 1;
+
 
 private:
 
@@ -41,7 +46,7 @@ private:
 
 	GLfloat UVBuffer[12];
 
-	Nametable* Maintables[4];
+	Nametable* Maintables[2];
 
 	//char MainTiles[960];
 	//char MainFlip[960];

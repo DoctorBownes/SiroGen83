@@ -295,41 +295,23 @@ World1::World1() {
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
 	};
 
-	Nametables[9] = new Nametable{
-	   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
-		1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,
-		1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
-		1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,
-		1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,
-		1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
-	};
-
-	Nametables[255] = new Nametable{
-	   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
-		1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,
-		1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
-		1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,
-		1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,
-		1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
-	};
+	//Nametables[255] = new Nametable{
+	//   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+	//	1,1,1,0,0,0,1,1,1,1,0,1,0,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,
+	//	1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
+	//	1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,
+	//	1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,
+	//	1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	//	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,}
+	//};
 
 	//Nametables[0]->tiles[3] = 0;
 	//Nametables[0]->flip[3] = 3;
@@ -345,10 +327,10 @@ World1::World1() {
 
 	//printf("%d\n", (int)Nametables[0].tiles[0]->pixels[0]);
 	renderpos = 0;
-	rendermode = 1;
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
-	GetCamera()->X = 0;
-	GetCamera()->Y = 0;
+	GetCamera()->X = 256;
+	GetCamera()->Y = 256;
+	//_instance->SetRenderMode(this,1);
 	//printf("%d\n", (int)(tl[0]).sprite[0]);
 	//printf("%d\n", (int)(tl[1]).sprite[0]);
 	//printf("%d\n", (int)(*tw[1]));
@@ -362,27 +344,34 @@ World1::World1() {
 }
 
 void World1::update() {
-	if (GetInput()->KeyDown(KeyCode::Left)) {
-		GetCamera()->X -= 2;
+	if (GetInput()->KeyDown(KeyCode::Left) && _instance->rendermode == 1) {
+		GetCamera()->X -= 1;
 		GetCamera()->scrolldir.x = 0;
 	}
-	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		GetCamera()->X += 2;
+	else if (GetInput()->KeyDown(KeyCode::Right) && _instance->rendermode == 1) {
+		GetCamera()->X += 1;
 		GetCamera()->scrolldir.x = 1;
 	}
-	else if (GetInput()->KeyDown(KeyCode::Up)) {
-		GetCamera()->Y -= 2;
+	else if (GetInput()->KeyDown(KeyCode::Up) && _instance->rendermode == 2) {
+		GetCamera()->Y -= 1;
 		GetCamera()->scrolldir.y = 0;
 	}
-	else if (GetInput()->KeyDown(KeyCode::Down)) {
-		GetCamera()->Y += 2;
+	else if (GetInput()->KeyDown(KeyCode::Down) && _instance->rendermode == 2) {
+		GetCamera()->Y += 1;
 		GetCamera()->scrolldir.y = 1;
 	}
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-		Nametables[2]->tiles[1] = 1;
-		Nametables[2]->flip[1] = 1;
+		if (_instance->rendermode == 1) {
+			_instance->SetRenderMode(this, 2);
+		}
+		else {
+			_instance->SetRenderMode(this, 1);
+		}
 		//_instance->UpdateMainTile(Nametables[0], 1);
 	}
+	//if (GetCamera()->Y >= 256) {
+	//	_instance->SetRenderMode(this,1);
+	//} 
 	//entity->position.x += 0.5f;
 	//GetCamera()->X = entity->position.x;
 }

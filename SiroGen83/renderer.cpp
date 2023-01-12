@@ -27,7 +27,8 @@ const char* fragment_shader = "#version 330 core\n"
 Renderer* Renderer::_instance = 0;
 
 Renderer::Renderer() {
-    MT_UVBuffer.resize(2880 * 4);
+    MT_UVBuffer.resize(2880 * 2);
+    MT_VertexBuffer.resize(2880 * 2);
     //Shader stuff
     GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(VertexShader, 1, &vertex_shader, nullptr);
@@ -72,7 +73,7 @@ Renderer::Renderer() {
         pixelcanvas.push_back(255);
     }
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
         Maintables[i] = new Nametable();
     }
 
@@ -90,89 +91,29 @@ Renderer::Renderer() {
     N = 0;
 }
 
-void Renderer::SetUpMaintable(Nametable** nametables, unsigned char RenderPos) {
-
+void Renderer::SetUpMaintable(Scene* scene) {
     //Set-up maintables
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < 2; j++) {
         for (int i = 0; i < 240; i++) {
-            Maintables[j]->tiles[i] = nametables[RenderPos + (j & 1)]->tiles[i];
-            Maintables[j]->flip[i] = nametables[RenderPos + (j & 1)]->flip[i];
+            Maintables[j]->tiles[i] = scene->Nametables[scene->renderpos + (j)]->tiles[i];
+            Maintables[j]->flips[i] = scene->Nametables[scene->renderpos + (j)]->flips[i];
         }
     }
-
-    int test = 0;
-    for (N = 0; N < 4; N++) {
-        int z = 0;
-        for (int y = 0 + 15 * ((N >> 1) & 1); y < 15 + 15 * ((N >> 1) & 1); y++) {
-
-            for (int x = 0 + 16 * (N & 1); x < 16 + 16 * (N & 1); x++) {
-                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-
-                MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-                MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-                MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-
-                //unsigned char flip = Maintables[N]->flip[z];
-                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
-                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
-                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
-                //MT_UVBuffer.push_back((1.0f / 6.0f) - (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
-                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(1.0f - ((flip >> 1) & 1));
-                //MT_UVBuffer.push_back(0.0f + (flip & 1) * (1.0f / 6.0f) + Maintables[N]->tiles[z] * (1.0f / 6.0f));
-                //MT_UVBuffer.push_back(0.0f + ((flip >> 1) & 1));
-                EditTile(z, test);
-                z++;
-                test++;
-            }
-        }
-    }
-
-    //int z = 0;
-    //for (int y = 0; y < 30; y++) {
-    //    for (int x = 0; x < 32; x++) {
-    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-
-    //        MT_VertexBuffer.push_back((0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((-0.5f - y) * 16.0f);
-    //        MT_VertexBuffer.push_back((-0.5f + x) * 16.0f);
-    //        MT_VertexBuffer.push_back((0.5f - y) * 16.0f);
-    //    }
-    //}
+    SetRenderMode(scene, rendermode);
 
     glGenBuffers(1, &uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
-
+    //printf("%d", MT_VertexBuffer.size());
     glGenBuffers(1, &vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
-
     N = 0;
 }
 
 void Renderer::EditTile(unsigned short tile, int test) {
     unsigned short stile = test * 12;
-    unsigned char flip = Maintables[N]->flip[tile] & 1;
+    unsigned char flip = Maintables[N]->flips[tile] & 1;
 
     MT_UVBuffer[stile + 0] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
     MT_UVBuffer[stile + 2] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
@@ -181,7 +122,7 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_UVBuffer[stile + 8] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
     MT_UVBuffer[stile +10] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
 
-    flip = Maintables[N]->flip[tile];
+    flip = Maintables[N]->flips[tile];
     (flip >>= 1) &= 1;
 
     MT_UVBuffer[stile + 1] =  flip;
@@ -194,8 +135,75 @@ void Renderer::EditTile(unsigned short tile, int test) {
 
 void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
     Maintables[N]->tiles[tile] = nametable->tiles[tile];
-    Maintables[N]->flip[tile] = nametable->flip[tile];
+    Maintables[N]->flips[tile] = nametable->flips[tile];
     EditTile(tile, tile);
+}
+
+void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
+    int i = 0;
+    if (mode == 1) {//when running in mode 2
+        for (N = 0; N < 2; N++) {
+            int z = 0;
+            for (int y = 0; y < 15; y++) {
+
+                for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
+                    MT_VertexBuffer[(i * 12) + 0] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 1] = ((0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 2] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 3] = ((0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 4] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 5] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 6] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 7] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 8] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 9] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 10] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 11] = ((0.5f - y) * 16.0f);
+
+                    EditTile(z, i);
+                    z++;
+                    i++;
+                }
+            }
+        }
+        scene->GetCamera()->X = scene->GetCamera()->Y;
+        scene->GetCamera()->Y = 0;
+    }
+    else {//when running in mode 1
+        for (N = 0; N < 2; N++) {
+            int z = 0;
+            for (int y = 0 + 15 * N; y < 15 + 15 * N; y++) {
+
+                for (int x = 0; x < 16; x++) {
+                    MT_VertexBuffer[(i * 12) + 0] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 1] = ((0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 2] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 3] = ((0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 4] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 5] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 6] = ((0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 7] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 8] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 9] = ((-0.5f - y) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 10] = ((-0.5f + x) * 16.0f);
+                    MT_VertexBuffer[(i * 12) + 11] = ((0.5f - y) * 16.0f);
+
+                    EditTile(z, i);
+                    z++;
+                    i++;
+                }
+            }
+        }
+        scene->GetCamera()->Y = scene->GetCamera()->X;
+        scene->GetCamera()->X = 0;
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
+
+    rendermode = mode;
 }
 
 //void Renderer::ProcessTileQueue() {
@@ -207,50 +215,45 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    scene->renderpos =((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);
+    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);//TODO FIX
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
-    N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) & 1) * 2;
-    N &= scene->rendermode;
-
-    overwrite_pos.x *= 0.0625f;
-    overwrite_pos.x &= 0xf;
-
-    overwrite_pos.y *= 0.0625f;
-    overwrite_pos.y &= 0xf;
-
     //overwrite_posz *= 0.0625f;
     //overwrite_posz &= 0xf;
     //overwrite_pos.x += overwrite_pos.y * 16; //Key
 
     //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
-   // printf("overwrite_pos.x: %d\n", overwrite_pos.x);
-   // printf("overwrite_pos.y: %d\n", overwrite_pos.y);
+    //printf("overwrite_pos.x: %d\n", overwrite_pos.x);
+    //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
     //printf("overwrite_posz: %d\n", overwrite_posz);
-   // printf("N: %d\n", N);
-    //printf("scene->renderpos : %d\n", scene->renderpos);
+    printf("scene->renderpos : %d\n", scene->renderpos);
 
-    if (scene->rendermode == 1) {
+    if (rendermode == 1) {
+
+        N = (overwrite_pos.x >> 8) & 1;
+        // printf("N: %d\n", N);
+        overwrite_pos.x *= 0.0625f;
+        overwrite_pos.x &= 0xf;
+
         for (int x = overwrite_pos.x; x < 240; x += 16) {
             Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
+            Maintables[N]->flips[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flips[x];
             EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-
-            Maintables[N + 2]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N + 2]->flip[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flip[x];
-            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * (N + 2));
 
             overwrite_pos.x += 16;
         }
     }
     else {
+
+        N = (overwrite_pos.y >> 8) & 1;
+
+        overwrite_pos.y *= 0.0625f;
+        overwrite_pos.y &= 0xf;
+
         for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
             Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
+            Maintables[N]->flips[x] = scene->Nametables[scene->renderpos]->flips[x];
             EditTile(x, x + 240 * N);
-            Maintables[N + 1]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N + 1]->flip[x] = scene->Nametables[scene->renderpos]->flip[x];
-            EditTile(x, x + 240 * (N + 1));
         }
     }
 
