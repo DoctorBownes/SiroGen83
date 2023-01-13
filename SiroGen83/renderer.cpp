@@ -140,6 +140,12 @@ void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
 }
 
 void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
+    for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 240; i++) {
+            Maintables[j]->tiles[i] = scene->Nametables[scene->renderpos + (j)]->tiles[i];
+            Maintables[j]->flips[i] = scene->Nametables[scene->renderpos + (j)]->flips[i];
+        }
+    }
     int i = 0;
     if (mode == 1) {//when running in mode 2
         for (N = 0; N < 2; N++) {
@@ -166,10 +172,13 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
                 }
             }
         }
-        scene->GetCamera()->X = scene->GetCamera()->Y;
-        scene->GetCamera()->Y = 0;
+        if (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0xff) > 239) {
+            scene->GetCamera()->Y += -16 + scene->GetCamera()->scrolldir.y * 32;
+        }
+        scene->GetCamera()->scrolldir.y = (scene->GetCamera()->Y >> 8) & 1;
+        scene->GetCamera()->Y = 0 + 512 * (scene->GetCamera()->Y >> 9);
     }
-    else {//when running in mode 1
+    else {//set rendermode to 2
         for (N = 0; N < 2; N++) {
             int z = 0;
             for (int y = 0 + 15 * N; y < 15 + 15 * N; y++) {
@@ -194,8 +203,9 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
                 }
             }
         }
-        scene->GetCamera()->Y = scene->GetCamera()->X;
-        scene->GetCamera()->X = 0;
+        //scene->GetCamera()->Y = scene->GetCamera()->X;
+        scene->GetCamera()->scrolldir.x = (scene->GetCamera()->X >> 8) & 1;
+        scene->GetCamera()->X = 0 + 512 * (scene->GetCamera()->X >> 9);
     }
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
@@ -226,7 +236,9 @@ void Renderer::RenderScene(Scene* scene) {
     //printf("overwrite_pos.x: %d\n", overwrite_pos.x);
     //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
     //printf("overwrite_posz: %d\n", overwrite_posz);
-    printf("scene->renderpos : %d\n", scene->renderpos);
+    //printf("scene->renderpos : %d\n", scene->renderpos);
+    //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X >> 8);
+    //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y >> 8);
 
     if (rendermode == 1) {
 

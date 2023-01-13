@@ -31,7 +31,7 @@ public:
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	unsigned char rendermode = 1;
+	unsigned char rendermode = 2;
 
 
 private:
