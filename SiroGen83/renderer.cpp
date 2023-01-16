@@ -27,6 +27,7 @@ const char* fragment_shader = "#version 330 core\n"
 Renderer* Renderer::_instance = 0;
 
 Renderer::Renderer() {
+    //Setup Maintables
     MT_UVBuffer.resize(2880 * 2);
     MT_VertexBuffer.resize(2880 * 2);
     //Shader stuff
@@ -87,27 +88,9 @@ Renderer::Renderer() {
     glGenerateMipmap(GL_TEXTURE_2D);
 
     pixelcanvas.clear();
-
-    N = 0;
-}
-
-void Renderer::SetUpMaintable(Scene* scene) {
-    //Set-up maintables
-    for (int j = 0; j < 2; j++) {
-        for (int i = 0; i < 240; i++) {
-            Maintables[j]->tiles[i] = scene->Nametables[scene->renderpos + (j)]->tiles[i];
-            Maintables[j]->flips[i] = scene->Nametables[scene->renderpos + (j)]->flips[i];
-        }
-    }
-    SetRenderMode(scene, rendermode);
-
     glGenBuffers(1, &uv_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
-    //printf("%d", MT_VertexBuffer.size());
     glGenBuffers(1, &vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
+
     N = 0;
 }
 
@@ -212,7 +195,6 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
-
     rendermode = mode;
 }
 
@@ -312,18 +294,10 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
     }
 
     for (int i = 0; i < 5 * 16 * 16; i++) {
-        if (TileMap[i] == 1) {
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(255);
-        }
-        else {
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-        }
+        pixelcanvas.push_back(((TileMap[i] >> 4) & 3) * 85);
+        pixelcanvas.push_back(((TileMap[i] >> 2) & 3) * 85);
+        pixelcanvas.push_back(((TileMap[i] >> 0) & 3) * 85);
+        pixelcanvas.push_back((~(TileMap[i] >> 6) & 1) * 255);
     }
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
@@ -400,19 +374,11 @@ void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char hei
     glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
 
     for (int i = 0; i < width * height; i++) {
-        if (canvas[i] == 1) {
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-            pixelcanvas.push_back(255);
-        } else {
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(0);
-            pixelcanvas.push_back(255);
-        }
+        pixelcanvas.push_back(((canvas[i] >> 4) & 3) * 85);
+        pixelcanvas.push_back(((canvas[i] >> 2) & 3) * 85);
+        pixelcanvas.push_back(((canvas[i] >> 0) & 3) * 85);
+        pixelcanvas.push_back((~(canvas[i] >> 6) & 1) * 255);
     }
-
     glGenTextures(1, &entity->texture_buffer);
     glBindTexture(GL_TEXTURE_2D, entity->texture_buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);

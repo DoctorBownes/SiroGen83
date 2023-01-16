@@ -25,8 +25,6 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
-	void SetUpMaintable(Scene* scene);
-
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
