@@ -29,7 +29,7 @@ public:
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	unsigned char rendermode = 2;
+	unsigned char rendermode = 1;
 
 
 private:
@@ -39,6 +39,8 @@ private:
 	std::vector<unsigned char> pixelcanvas;
 
 	GLuint shaderProgram = 0;
+
+	GLuint palette = 0;
 
 	GLfloat VertexBuffer[12];
 

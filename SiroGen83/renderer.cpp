@@ -11,17 +11,16 @@ const char* vertex_shader = "#version 330 core\n"
 "out vec2 UV;\n"
 "void main()\n"
 "{\n"
-"	gl_Position = MVP * vec4(vertexPosition.x + 0.001f,vertexPosition.y + 0.001f,0.0f, 1.0f);\n"//+0.01f for wrapping
+"	gl_Position = MVP * vec4(vertexPosition.x ,vertexPosition.y,0.0f, 1.0f);\n"
 "	UV = uvPosition;\n"
 "};\0";
 
 const char* fragment_shader = "#version 330 core\n"
 "in vec2 UV;\n"
-"out vec4 FragColor;\n"
 "uniform sampler2D myTextureSampler;\n"
 "void main()\n"
 "{\n"
-"	FragColor = texture2D(myTextureSampler, UV);\n"
+"	gl_FragColor = texture2D(myTextureSampler, UV);\n"
 "};\0";
 
 Renderer* Renderer::_instance = 0;
@@ -67,27 +66,18 @@ Renderer::Renderer() {
     UVBuffer[10] = 0.0f;
     UVBuffer[11] = 0.0f;
 
-    for (int i = 0; i < 5 * 16 * 16; i++) {
-        pixelcanvas.push_back(0);
-        pixelcanvas.push_back(0);
-        pixelcanvas.push_back(0);
-        pixelcanvas.push_back(255);
-    }
-
     for (int i = 0; i < 2; i++) {
         Maintables[i] = new Nametable();
     }
 
     glGenTextures(1, &tilemap_texture_buffer);
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 5 * 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 5 * 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)0);
 
-    pixelcanvas.clear();
     glGenBuffers(1, &uv_buffer);
     glGenBuffers(1, &vertex_buffer);
 
@@ -301,13 +291,13 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
     }
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 5 * 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 5 * 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, pixelcanvas.data());
 
     pixelcanvas.clear();
 }
 
 void Renderer::RenderMaintables(Scene* scene) {
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.0f, 112.0f, 0.0f));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.001f, 112.001f, 0.0f));
 
     glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
