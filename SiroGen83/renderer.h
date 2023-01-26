@@ -40,7 +40,7 @@ private:
 
 	GLuint shaderProgram = 0;
 
-	GLuint palette = 0;
+	GLuint PaletteSampler = 0;
 
 	GLfloat VertexBuffer[12];
 

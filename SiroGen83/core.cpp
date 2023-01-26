@@ -50,7 +50,7 @@ void Core::Run(Scene* scene) {
 
     do {
 
-        glClearColor(0.1f, 1.0f, 0.8f, 0.0f);
+        glClearColor(36.0f / 255.0f, 24.0f / 255.0f, 144.0f / 255.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
