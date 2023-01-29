@@ -5,6 +5,10 @@
 #include <list>
 #include <vector>
 
+struct Palette {
+	Color colors[9];
+};
+
 class Renderer {
 
 public:
@@ -31,6 +35,8 @@ public:
 
 	unsigned char rendermode = 1;
 
+	Palette BackgroundColors;
+	Palette ForgroundColors;
 
 private:
 
@@ -64,6 +70,8 @@ private:
 
 	std::vector<GLfloat>MT_VertexBuffer;
 
+	std::vector<GLfloat>MT_PaletteBuffer;
+
 	Renderer();
 
 	static Renderer* _instance;
@@ -73,6 +81,8 @@ private:
 	unsigned int vertex_buffer;
 
 	unsigned int uv_buffer;
+
+	unsigned int palette_buffer;
 
 	unsigned char N = 0;
 

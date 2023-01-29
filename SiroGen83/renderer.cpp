@@ -8,24 +8,28 @@ const char* vertex_shader =
 "#version 330 core\n"
 "layout(location = 0) in vec2 vertexPosition;\n"
 "layout(location = 1) in vec2 uvPosition;\n"
+"layout(location = 2) in vec2 PaletteOffset;\n"
 "uniform mat4 MVP;\n"
 "out vec2 UV;\n"
+"out vec2 PL;\n"
 "void main()\n"
 "{\n"
 "	gl_Position = MVP * vec4(vertexPosition.x ,vertexPosition.y,0.0f, 1.0f);\n"
 "	UV = uvPosition;\n"
+"	PL = PaletteOffset;\n"
 "};\0";
 
 const char* fragment_shader = 
 "#version 330 core\n"
 "in vec2 UV;\n"
+"in vec2 PL;\n"
 "out vec4 FragColor;\n"
 "uniform sampler2D myTextureSampler;\n"
 "uniform sampler1D myPaletteSampler;\n"
 "void main()\n"
 "{\n"
-"	vec4 index = texture2D(myTextureSampler, UV);\n"
-"   vec4 texel = texelFetch(myPaletteSampler, int(index.r * 255),0);\n"
+"	float index = texture2D(myTextureSampler, UV).r;\n"
+"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255) + int(PL.x * 4), 0);\n"
 "	FragColor = texel;\n"
 "};\0";
 
@@ -35,20 +39,54 @@ Renderer::Renderer() {
     //Setup Maintables
     MT_UVBuffer.resize(2880 * 2);
     MT_VertexBuffer.resize(2880 * 2);
+    MT_PaletteBuffer.resize(1440);
     //Shader stuff
+    GLint Result = GL_FALSE;
+    int InfoLogLength;
+
+
+    // Compile Vertex Shader
     GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(VertexShader, 1, &vertex_shader, nullptr);
     glCompileShader(VertexShader);
 
+    // Check Vertex Shader
+    glGetShaderiv(VertexShader, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(VertexShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0) {
+        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+        glGetShaderInfoLog(VertexShader, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
+        printf("%s", &VertexShaderErrorMessage[0]);
+    }
+
+    // Compile Fragment Shader
     GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(FragmentShader, 1, &fragment_shader, nullptr);
     glCompileShader(FragmentShader);
 
-    shaderProgram = glCreateProgram();
+    // Check Fragment Shader
+    glGetShaderiv(FragmentShader, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(FragmentShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0) {
+        std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
+        glGetShaderInfoLog(FragmentShader, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
+        printf("%s", &FragmentShaderErrorMessage[0]);
+    }
 
+    // Link the program
+    shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, VertexShader);
     glAttachShader(shaderProgram, FragmentShader);
     glLinkProgram(shaderProgram);
+
+    // Check the program
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
+    glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0) {
+        std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+        glGetProgramInfoLog(shaderProgram, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
+        printf("%s", &ProgramErrorMessage[0]);
+    }
 
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
@@ -84,7 +122,7 @@ Renderer::Renderer() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 5 * 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
-    unsigned char PaletteColors[4 * 4]{
+    unsigned char PaletteColors[4 * 4 * 4]{
         0,
         0,
         0,
@@ -105,6 +143,66 @@ Renderer::Renderer() {
         72,
         255,
 
+        0,
+        0,
+        0,
+        0,
+
+        255,
+        0,
+        0,
+        255,
+
+        0,
+        255,
+        0,
+        255,
+
+        0,
+        0,
+        255,
+        255,
+
+        0,
+        0,
+        0,
+        0,
+
+        0,
+        255,
+        255,
+        255,
+
+        255,
+        0,
+        255,
+        255,
+
+        255,
+        255,
+        0,
+        255,
+
+        0,
+        0,
+        0,
+        0,
+
+        0,
+        0,
+        0,
+        255,
+
+        116,
+        0,
+        116,
+        255,
+
+        76,
+        0,
+        72,
+        255,
+
     };
 
     glActiveTexture(GL_TEXTURE1);
@@ -114,11 +212,12 @@ Renderer::Renderer() {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, PaletteColors);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, PaletteColors);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     glGenBuffers(1, &uv_buffer);
     glGenBuffers(1, &vertex_buffer);
+    glGenBuffers(1, &palette_buffer);
 
     N = 0;
 }
@@ -143,6 +242,7 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_UVBuffer[stile + 7] = !flip;
     MT_UVBuffer[stile + 9] = !flip;
     MT_UVBuffer[stile +11] =  flip;
+
 }
 
 void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
@@ -158,6 +258,7 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
             Maintables[j]->flips[i] = scene->Nametables[scene->renderpos + (j)]->flips[i];
         }
     }
+
     int i = 0;
     if (mode == 1) {//when running in mode 2
         for (N = 0; N < 2; N++) {
@@ -219,11 +320,15 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
         scene->GetCamera()->scrolldir.x = (scene->GetCamera()->X >> 8) & 1;
         scene->GetCamera()->X = 0 + 512 * (scene->GetCamera()->X >> 9);
     }
+
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_VertexBuffer.size() * 4, MT_VertexBuffer.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_PaletteBuffer.size() * 4, MT_PaletteBuffer.data(), GL_STATIC_DRAW);
     rendermode = mode;
 }
 
@@ -236,7 +341,7 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);//TODO FIX
+    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
     //overwrite_posz *= 0.0625f;
@@ -263,6 +368,7 @@ void Renderer::RenderScene(Scene* scene) {
             Maintables[N]->flips[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flips[x];
             EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
 
+            MT_PaletteBuffer[overwrite_pos.x] = (Maintables[N]->flips[x] >> 2);
             overwrite_pos.x += 16;
         }
     }
@@ -303,12 +409,12 @@ void Renderer::RenderScene(Scene* scene) {
         
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
-        GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
-        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+       // GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
+        //glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-        if (it->vertex_buffer) {
-            RenderEntity(it);
-        }
+        //if (it->vertex_buffer) {
+        //    RenderEntity(it);
+        //}
     }
 }
 
@@ -342,6 +448,17 @@ void Renderer::RenderMaintables(Scene* scene) {
     //glBindTexture(GL_TEXTURE_1D, PaletteSampler);
     //glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
+    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
+    glEnableVertexAttribArray(paletteID);
+    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
+    glVertexAttribPointer(
+        paletteID,
+        2,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        (void*)0
+    );
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(vertexPositionID);
@@ -370,6 +487,7 @@ void Renderer::RenderMaintables(Scene* scene) {
     glDrawArrays(GL_TRIANGLES, 0, MT_UVBuffer.size() / 2); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
+    glDisableVertexAttribArray(paletteID);
 }
 
 void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char height) {
