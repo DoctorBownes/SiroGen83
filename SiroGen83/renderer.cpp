@@ -8,10 +8,10 @@ const char* vertex_shader =
 "#version 330 core\n"
 "layout(location = 0) in vec2 vertexPosition;\n"
 "layout(location = 1) in vec2 uvPosition;\n"
-"layout(location = 2) in vec2 PaletteOffset;\n"
+"layout(location = 2) in float PaletteOffset;\n"
 "uniform mat4 MVP;\n"
 "out vec2 UV;\n"
-"out vec2 PL;\n"
+"out float PL;\n"
 "void main()\n"
 "{\n"
 "	gl_Position = MVP * vec4(vertexPosition.x ,vertexPosition.y,0.0f, 1.0f);\n"
@@ -22,14 +22,14 @@ const char* vertex_shader =
 const char* fragment_shader = 
 "#version 330 core\n"
 "in vec2 UV;\n"
-"in vec2 PL;\n"
+"in float PL;\n"
 "out vec4 FragColor;\n"
 "uniform sampler2D myTextureSampler;\n"
 "uniform sampler1D myPaletteSampler;\n"
 "void main()\n"
 "{\n"
 "	float index = texture2D(myTextureSampler, UV).r;\n"
-"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255) + int(PL.x * 4), 0);\n"
+"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255) + int(PL * 4), 0);\n"
 "	FragColor = texel;\n"
 "};\0";
 
@@ -39,7 +39,7 @@ Renderer::Renderer() {
     //Setup Maintables
     MT_UVBuffer.resize(2880 * 2);
     MT_VertexBuffer.resize(2880 * 2);
-    MT_PaletteBuffer.resize(1440);
+    MT_PaletteBuffer.resize(2880);
     //Shader stuff
     GLint Result = GL_FALSE;
     int InfoLogLength;
@@ -148,19 +148,19 @@ Renderer::Renderer() {
         0,
         0,
 
-        255,
-        0,
-        0,
-        255,
-
-        0,
-        255,
+        134,
+        32,
         0,
         255,
 
-        0,
-        0,
+        22,
+        59,
+        33,
         255,
+
+        0,
+        129,
+        222,
         255,
 
         0,
@@ -168,18 +168,18 @@ Renderer::Renderer() {
         0,
         0,
 
-        0,
-        255,
-        255,
-        255,
-
-        255,
-        0,
-        255,
+        154,
+        23,
+        3,
         255,
 
+        85,
+        132,
+        99,
         255,
-        255,
+
+        111,
+        111,
         0,
         255,
 
@@ -225,6 +225,7 @@ Renderer::Renderer() {
 void Renderer::EditTile(unsigned short tile, int test) {
     unsigned short stile = test * 12;
     unsigned char flip = Maintables[N]->flips[tile] & 1;
+    unsigned char color = (Maintables[N]->flips[tile] >> 2) & 3;
 
     MT_UVBuffer[stile + 0] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
     MT_UVBuffer[stile + 2] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
@@ -243,6 +244,14 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_UVBuffer[stile + 9] = !flip;
     MT_UVBuffer[stile +11] =  flip;
 
+    MT_PaletteBuffer[test * 6 + 0] = color;
+    MT_PaletteBuffer[test * 6 + 1] = color;
+    MT_PaletteBuffer[test * 6 + 2] = color;
+    MT_PaletteBuffer[test * 6 + 3] = color;
+    MT_PaletteBuffer[test * 6 + 4] = color;
+    MT_PaletteBuffer[test * 6 + 5] = color;
+   // printf("MT_PaletteBuffer[stile + 0]: %f\n", MT_PaletteBuffer[stile + 0]);
+   // printf("Maintables[N]->flips[tile]: %f\n", Maintables[N]->flips[tile] >> 2);
 }
 
 void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
@@ -329,6 +338,7 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
 
     glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_PaletteBuffer.size() * 4, MT_PaletteBuffer.data(), GL_STATIC_DRAW);
+
     rendermode = mode;
 }
 
@@ -368,7 +378,6 @@ void Renderer::RenderScene(Scene* scene) {
             Maintables[N]->flips[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flips[x];
             EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
 
-            MT_PaletteBuffer[overwrite_pos.x] = (Maintables[N]->flips[x] >> 2);
             overwrite_pos.x += 16;
         }
     }
@@ -448,17 +457,6 @@ void Renderer::RenderMaintables(Scene* scene) {
     //glBindTexture(GL_TEXTURE_1D, PaletteSampler);
     //glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
-    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
-    glEnableVertexAttribArray(paletteID);
-    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glVertexAttribPointer(
-        paletteID,
-        2,
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        (void*)0
-    );
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(vertexPositionID);
@@ -483,6 +481,18 @@ void Renderer::RenderMaintables(Scene* scene) {
         GL_FALSE,           // normalized?
         0,                  // stride
         (void*)0            // array buffer offset
+    );
+    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
+    glEnableVertexAttribArray(paletteID);
+    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
+    glBufferData(GL_ARRAY_BUFFER, MT_PaletteBuffer.size() * 4, MT_PaletteBuffer.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(
+        paletteID,
+        1,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        (void*)0
     );
     glDrawArrays(GL_TRIANGLES, 0, MT_UVBuffer.size() / 2); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);

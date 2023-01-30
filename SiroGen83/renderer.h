@@ -6,7 +6,7 @@
 #include <vector>
 
 struct Palette {
-	Color colors[9];
+	Color colors[12];
 };
 
 class Renderer {
