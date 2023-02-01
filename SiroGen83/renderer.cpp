@@ -29,7 +29,7 @@ const char* fragment_shader =
 "void main()\n"
 "{\n"
 "	float index = texture2D(myTextureSampler, UV).r;\n"
-"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255) + int(PL * 4), 0);\n"
+"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255 + PL * 4), 0);\n"
 "	FragColor = texel;\n"
 "};\0";
 
@@ -40,9 +40,23 @@ Renderer::Renderer() {
     MT_UVBuffer.resize(2880 * 2);
     MT_VertexBuffer.resize(2880 * 2);
     MT_PaletteBuffer.resize(2880);
+    TileMap.resize(256 * 16 * 16);
+
+    //Initialize forground and background palettes
+    unsigned char PaletteColors[] = {
+        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+    };
+    for (int i = 0; i < 64; i++) {
+        bg_PaletteColors[i] = PaletteColors[i];
+        fg_PaletteColors[i] = PaletteColors[i];
+    }
+
     //Shader stuff
-    GLint Result = GL_FALSE;
-    int InfoLogLength;
+    //GLint Result = GL_FALSE;
+    //int InfoLogLength;
 
 
     // Compile Vertex Shader
@@ -51,13 +65,13 @@ Renderer::Renderer() {
     glCompileShader(VertexShader);
 
     // Check Vertex Shader
-    glGetShaderiv(VertexShader, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(VertexShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
-        glGetShaderInfoLog(VertexShader, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
-        printf("%s", &VertexShaderErrorMessage[0]);
-    }
+    //glGetShaderiv(VertexShader, GL_COMPILE_STATUS, &Result);
+    //glGetShaderiv(VertexShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    //if (InfoLogLength > 0) {
+    //    std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+    //    glGetShaderInfoLog(VertexShader, InfoLogLength, nullptr, &VertexShaderErrorMessage[0]);
+    //    printf("%s", &VertexShaderErrorMessage[0]);
+    //}
 
     // Compile Fragment Shader
     GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -65,13 +79,13 @@ Renderer::Renderer() {
     glCompileShader(FragmentShader);
 
     // Check Fragment Shader
-    glGetShaderiv(FragmentShader, GL_COMPILE_STATUS, &Result);
-    glGetShaderiv(FragmentShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
-        glGetShaderInfoLog(FragmentShader, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
-        printf("%s", &FragmentShaderErrorMessage[0]);
-    }
+    //glGetShaderiv(FragmentShader, GL_COMPILE_STATUS, &Result);
+    //glGetShaderiv(FragmentShader, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    //if (InfoLogLength > 0) {
+    //    std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
+    //    glGetShaderInfoLog(FragmentShader, InfoLogLength, nullptr, &FragmentShaderErrorMessage[0]);
+    //    printf("%s", &FragmentShaderErrorMessage[0]);
+    //}
 
     // Link the program
     shaderProgram = glCreateProgram();
@@ -80,13 +94,13 @@ Renderer::Renderer() {
     glLinkProgram(shaderProgram);
 
     // Check the program
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
-    glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    if (InfoLogLength > 0) {
-        std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-        glGetProgramInfoLog(shaderProgram, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
-        printf("%s", &ProgramErrorMessage[0]);
-    }
+    //glGetProgramiv(shaderProgram, GL_LINK_STATUS, &Result);
+    //glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    //if (InfoLogLength > 0) {
+    //    std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+    //    glGetProgramInfoLog(shaderProgram, InfoLogLength, nullptr, &ProgramErrorMessage[0]);
+    //    printf("%s", &ProgramErrorMessage[0]);
+    //}
 
     glDeleteShader(VertexShader);
     glDeleteShader(FragmentShader);
@@ -119,91 +133,8 @@ Renderer::Renderer() {
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 5 * 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-
-    unsigned char PaletteColors[4 * 4 * 4]{
-        0,
-        0,
-        0,
-        0,
-
-        0,
-        0,
-        0,
-        255,
-
-        116,
-        116,
-        116,
-        255,
-
-        76,
-        220,
-        72,
-        255,
-
-        0,
-        0,
-        0,
-        0,
-
-        134,
-        32,
-        0,
-        255,
-
-        22,
-        59,
-        33,
-        255,
-
-        0,
-        129,
-        222,
-        255,
-
-        0,
-        0,
-        0,
-        0,
-
-        154,
-        23,
-        3,
-        255,
-
-        85,
-        132,
-        99,
-        255,
-
-        111,
-        111,
-        0,
-        255,
-
-        0,
-        0,
-        0,
-        0,
-
-        0,
-        0,
-        0,
-        255,
-
-        116,
-        0,
-        116,
-        255,
-
-        76,
-        0,
-        72,
-        255,
-
-    };
 
     glActiveTexture(GL_TEXTURE1);
     glGenTextures(1, &PaletteSampler);
@@ -212,7 +143,7 @@ Renderer::Renderer() {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, PaletteColors);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) 0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     glGenBuffers(1, &uv_buffer);
@@ -224,18 +155,19 @@ Renderer::Renderer() {
 
 void Renderer::EditTile(unsigned short tile, int test) {
     unsigned short stile = test * 12;
-    unsigned char flip = Maintables[N]->flips[tile] & 1;
-    unsigned char color = (Maintables[N]->flips[tile] >> 2) & 3;
+    unsigned char flip = (Maintables[N]->attributes[tile] >> 2) & 1;
+    unsigned char color = Maintables[N]->attributes[tile] & 3;
+    float MapSize = 1.0f / (TileMap.size() / 256.0f);
 
-    MT_UVBuffer[stile + 0] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile + 2] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile + 4] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile + 6] = (!flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile + 8] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
-    MT_UVBuffer[stile +10] =  (flip * 0.2f + Maintables[N]->tiles[tile] * (0.2f));
+    MT_UVBuffer[stile + 0] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 2] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 4] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 6] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 8] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile +10] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
 
-    flip = Maintables[N]->flips[tile];
-    (flip >>= 1) &= 1;
+    flip = Maintables[N]->attributes[tile];
+    (flip >>= 3) &= 1;
 
     MT_UVBuffer[stile + 1] =  flip;
     MT_UVBuffer[stile + 3] =  flip;
@@ -244,27 +176,81 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_UVBuffer[stile + 9] = !flip;
     MT_UVBuffer[stile +11] =  flip;
 
-    MT_PaletteBuffer[test * 6 + 0] = color;
-    MT_PaletteBuffer[test * 6 + 1] = color;
-    MT_PaletteBuffer[test * 6 + 2] = color;
-    MT_PaletteBuffer[test * 6 + 3] = color;
-    MT_PaletteBuffer[test * 6 + 4] = color;
-    MT_PaletteBuffer[test * 6 + 5] = color;
-   // printf("MT_PaletteBuffer[stile + 0]: %f\n", MT_PaletteBuffer[stile + 0]);
-   // printf("Maintables[N]->flips[tile]: %f\n", Maintables[N]->flips[tile] >> 2);
+    stile /= 2;
+
+    MT_PaletteBuffer[stile + 0] = color;
+    MT_PaletteBuffer[stile + 1] = color;
+    MT_PaletteBuffer[stile + 2] = color;
+    MT_PaletteBuffer[stile + 3] = color;
+    MT_PaletteBuffer[stile + 4] = color;
+    MT_PaletteBuffer[stile + 5] = color;
 }
 
 void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
     Maintables[N]->tiles[tile] = nametable->tiles[tile];
-    Maintables[N]->flips[tile] = nametable->flips[tile];
+    Maintables[N]->attributes[tile] = nametable->attributes[tile];
     EditTile(tile, tile);
+}
+
+void Renderer::UpdatePalettes() {
+
+    bg_PaletteColors[4]  = BackgroundPalette[0].colors[0].r;
+    bg_PaletteColors[5]  = BackgroundPalette[0].colors[0].g;
+    bg_PaletteColors[6]  = BackgroundPalette[0].colors[0].b;
+
+    bg_PaletteColors[8]  = BackgroundPalette[0].colors[1].r;
+    bg_PaletteColors[9]  = BackgroundPalette[0].colors[1].g;
+    bg_PaletteColors[10] = BackgroundPalette[0].colors[1].b;
+
+    bg_PaletteColors[12] = BackgroundPalette[0].colors[2].r;
+    bg_PaletteColors[13] = BackgroundPalette[0].colors[2].g;
+    bg_PaletteColors[14] = BackgroundPalette[0].colors[2].b;
+
+    bg_PaletteColors[20] = BackgroundPalette[1].colors[0].r;
+    bg_PaletteColors[21] = BackgroundPalette[1].colors[0].g;
+    bg_PaletteColors[22] = BackgroundPalette[1].colors[0].b;
+
+    bg_PaletteColors[24] = BackgroundPalette[1].colors[1].r;
+    bg_PaletteColors[25] = BackgroundPalette[1].colors[1].g;
+    bg_PaletteColors[26] = BackgroundPalette[1].colors[1].b;
+
+    bg_PaletteColors[28] = BackgroundPalette[1].colors[2].r;
+    bg_PaletteColors[29] = BackgroundPalette[1].colors[2].g;
+    bg_PaletteColors[30] = BackgroundPalette[1].colors[2].b;
+
+    bg_PaletteColors[36] = BackgroundPalette[2].colors[0].r;
+    bg_PaletteColors[37] = BackgroundPalette[2].colors[0].g;
+    bg_PaletteColors[38] = BackgroundPalette[2].colors[0].b;
+
+    bg_PaletteColors[40] = BackgroundPalette[2].colors[1].r;
+    bg_PaletteColors[41] = BackgroundPalette[2].colors[1].g;
+    bg_PaletteColors[42] = BackgroundPalette[2].colors[1].b;
+
+    bg_PaletteColors[44] = BackgroundPalette[2].colors[2].r;
+    bg_PaletteColors[45] = BackgroundPalette[2].colors[2].g;
+    bg_PaletteColors[46] = BackgroundPalette[2].colors[2].b;
+
+    bg_PaletteColors[52] = BackgroundPalette[3].colors[0].r;
+    bg_PaletteColors[53] = BackgroundPalette[3].colors[0].g;
+    bg_PaletteColors[54] = BackgroundPalette[3].colors[0].b;
+
+    bg_PaletteColors[56] = BackgroundPalette[3].colors[1].r;
+    bg_PaletteColors[57] = BackgroundPalette[3].colors[1].g;
+    bg_PaletteColors[58] = BackgroundPalette[3].colors[1].b;
+
+    bg_PaletteColors[60] = BackgroundPalette[3].colors[2].r;
+    bg_PaletteColors[61] = BackgroundPalette[3].colors[2].g;
+    bg_PaletteColors[62] = BackgroundPalette[3].colors[2].b;
+
+    glBindTexture(GL_TEXTURE_1D, PaletteSampler);
+    glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 4 * 4, GL_RGBA, GL_UNSIGNED_BYTE, bg_PaletteColors);
 }
 
 void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     for (int j = 0; j < 2; j++) {
         for (int i = 0; i < 240; i++) {
             Maintables[j]->tiles[i] = scene->Nametables[scene->renderpos + (j)]->tiles[i];
-            Maintables[j]->flips[i] = scene->Nametables[scene->renderpos + (j)]->flips[i];
+            Maintables[j]->attributes[i] = scene->Nametables[scene->renderpos + (j)]->attributes[i];
         }
     }
 
@@ -375,7 +361,7 @@ void Renderer::RenderScene(Scene* scene) {
 
         for (int x = overwrite_pos.x; x < 240; x += 16) {
             Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->flips[overwrite_pos.x] = scene->Nametables[scene->renderpos]->flips[x];
+            Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
             EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
 
             overwrite_pos.x += 16;
@@ -390,7 +376,7 @@ void Renderer::RenderScene(Scene* scene) {
 
         for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
             Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->flips[x] = scene->Nametables[scene->renderpos]->flips[x];
+            Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
             EditTile(x, x + 240 * N);
         }
     }
@@ -428,17 +414,19 @@ void Renderer::RenderScene(Scene* scene) {
 }
 
 void Renderer::AddtoTileMap(Tile* tile, char position) {
+    //TileMap.resize(512/*TileMap.size() + 16 * 16*/);
     int overwrite_pos = (position * 16); //change overwrite_pos // + (y * width)
     for (int y = 0; y < 16; y++) {
         overwrite_pos = (position * 16) + y; //change overwrite_pos // + (y * width)
         for (int x = 0 + y; x < 256; x += 16) {
             TileMap[overwrite_pos] = tile->pixels[x];
-            overwrite_pos += 5 * 16;
+            overwrite_pos += (TileMap.size() / 256) * 16;
         }
     }
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 5 * 16, 16, GL_RED, GL_UNSIGNED_BYTE, TileMap);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 16, 16, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
 }
 
 void Renderer::RenderMaintables(Scene* scene) {

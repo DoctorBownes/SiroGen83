@@ -9,7 +9,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     //glViewport(0,0,width, height);
-    glViewport(width * 0.25f, height * 0, width * 0.5f, height);
+    glViewport((width - 1024) / 2 , (height - 960) / 2, 1024, 960);
 }
 
 Core::Core() {
@@ -22,7 +22,7 @@ Core::Core() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    _window = glfwCreateWindow(1920, 1080, "SiroGen83", NULL, NULL);
+    _window = glfwCreateWindow(1024, 960, "SiroGen83", NULL, NULL);
 
     if (_window == NULL) {
         fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -46,11 +46,13 @@ void Core::Run(Scene* scene) {
 
     scene->GetCamera()->X |= scene->renderpos << 8;
 
+    _instance->UpdatePalettes();
+
     _instance->SetRenderMode(scene, _instance->rendermode);
 
     do {
 
-        glClearColor(36.0f / 255.0f, 24.0f / 255.0f, 144.0f / 255.0f, 0.0f);
+        glClearColor(_instance->BackgroundColor.r * 0.00392f, _instance->BackgroundColor.g * 0.00392f, _instance->BackgroundColor.b * 0.00392f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -60,21 +62,11 @@ void Core::Run(Scene* scene) {
             it->update();
         }
 
-
-        //glViewport(0 + 256 * (_instance->rendermode >> 1), 0 - 240 * (_instance->rendermode & 1), 1920, 1080);
-        //scene->GetCamera()->update(_instance->rendermode);
-        //_instance->RenderScene(scene);
-        //
-        //scene->GetCamera()->update();
-        //_instance->RenderScene(scene);
-        //
-        //glViewport(0, 0, 1920, 1080);
         scene->GetCamera()->update(_instance->rendermode);
         _instance->RenderScene(scene);
 
         scene->GetCamera()->update();
         _instance->RenderScene(scene);
-       // glViewport(1920 * 0.0f, 1080 * 0, 1920 * 1.0f, 1080);
 
         glfwSwapBuffers(_window);
         glfwPollEvents();

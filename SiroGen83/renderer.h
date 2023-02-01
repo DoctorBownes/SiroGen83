@@ -6,7 +6,7 @@
 #include <vector>
 
 struct Palette {
-	Color colors[12];
+	Color colors[3];
 };
 
 class Renderer {
@@ -31,14 +31,20 @@ public:
 
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
+	void UpdatePalettes();
+
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
 	unsigned char rendermode = 1;
 
-	Palette BackgroundColors;
-	Palette ForgroundColors;
+	Color BackgroundColor;
+
+	Palette BackgroundPalette[4];
+	Palette ForgroundPalette[4];
 
 private:
+	unsigned char bg_PaletteColors[4 * 4 * 4];
+	unsigned char fg_PaletteColors[4 * 4 * 4];
 
 	void EditTile(unsigned short tile, int test);
 
@@ -54,17 +60,11 @@ private:
 
 	Nametable* Maintables[2];
 
-	//char MainTiles[960];
-	//char MainFlip[960];
-
 	void RenderMaintables(Scene* scene);
 
 	void RenderEntity(Entity* entity);
 
-	//void ProcessTileQueue();
-
-
-	char TileMap[5 * 16 * 16];
+	std::vector<unsigned char>TileMap;
 
 	std::vector<GLfloat>MT_UVBuffer;
 
@@ -76,18 +76,16 @@ private:
 
 	static Renderer* _instance;
 
-	unsigned int tilemap_texture_buffer;
+	GLuint tilemap_texture_buffer;
 
-	unsigned int vertex_buffer;
+	GLuint vertex_buffer;
 
-	unsigned int uv_buffer;
+	GLuint uv_buffer;
 
-	unsigned int palette_buffer;
+	GLuint palette_buffer;
 
 	unsigned char N = 0;
 
 	Vector2 overwrite_pos{0,0};
-
-	unsigned short overwrite_posz = 0;
 };
 
