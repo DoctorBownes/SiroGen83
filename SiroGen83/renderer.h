@@ -35,7 +35,7 @@ public:
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	unsigned char rendermode = 1;
+	GLubyte rendermode = 1;
 
 	Color BackgroundColor;
 
@@ -43,8 +43,8 @@ public:
 	Palette ForgroundPalette[4];
 
 private:
-	unsigned char bg_PaletteColors[4 * 4 * 4];
-	unsigned char fg_PaletteColors[4 * 4 * 4];
+	GLubyte bg_PaletteColors[4 * 4 * 4];
+	GLubyte fg_PaletteColors[4 * 4 * 4];
 
 	void EditTile(unsigned short tile, int test);
 
@@ -64,7 +64,7 @@ private:
 
 	void RenderEntity(Entity* entity);
 
-	std::vector<unsigned char>TileMap;
+	std::vector<GLubyte>TileMap;
 
 	std::vector<GLfloat>MT_UVBuffer;
 
@@ -84,7 +84,7 @@ private:
 
 	GLuint palette_buffer;
 
-	unsigned char N = 0;
+	GLubyte N = 0;
 
 	Vector2 overwrite_pos{0,0};
 };
