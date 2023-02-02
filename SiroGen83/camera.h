@@ -10,8 +10,6 @@ class Camera {
 public:
 	Camera();
 
-	void SetZoom(float amount);
-
 	void update(unsigned char mode = 0);
 
 	glm::mat4 GetCamMat() { return cameraMatrix; };

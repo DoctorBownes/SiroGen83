@@ -1,6 +1,6 @@
+#pragma once
 struct Sprite {
-	char* pixels;
-	char width;
-	char height;
-	char rotation;
+	unsigned char width;
+	unsigned char height;
+	unsigned char pixels[24 * 24];
 };

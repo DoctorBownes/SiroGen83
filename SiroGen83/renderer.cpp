@@ -1,5 +1,7 @@
 #include "renderer.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <SiroGen83/entity.h>
+#include <SiroGen83/scene.h>
 #include <vector>
 #include <cmath>
 #include <stdio.h>
@@ -137,13 +139,23 @@ Renderer::Renderer() {
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glGenTextures(1, &PaletteSampler);
-    glBindTexture(GL_TEXTURE_1D, PaletteSampler);
+    glGenTextures(1, &bg_PaletteSampler);
+    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
+
+    glActiveTexture(GL_TEXTURE1);
+    glGenTextures(1, &fg_PaletteSampler);
+    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     glGenBuffers(1, &uv_buffer);
@@ -242,8 +254,59 @@ void Renderer::UpdatePalettes() {
     bg_PaletteColors[61] = BackgroundPalette[3].colors[2].g;
     bg_PaletteColors[62] = BackgroundPalette[3].colors[2].b;
 
-    glBindTexture(GL_TEXTURE_1D, PaletteSampler);
+    fg_PaletteColors[4] = ForgroundPalette[0].colors[0].r;
+    fg_PaletteColors[5] = ForgroundPalette[0].colors[0].g;
+    fg_PaletteColors[6] = ForgroundPalette[0].colors[0].b;
+
+    fg_PaletteColors[8] = ForgroundPalette[0].colors[1].r;
+    fg_PaletteColors[9] = ForgroundPalette[0].colors[1].g;
+    fg_PaletteColors[10] = ForgroundPalette[0].colors[1].b;
+
+    fg_PaletteColors[12] = ForgroundPalette[0].colors[2].r;
+    fg_PaletteColors[13] = ForgroundPalette[0].colors[2].g;
+    fg_PaletteColors[14] = ForgroundPalette[0].colors[2].b;
+
+    fg_PaletteColors[20] = ForgroundPalette[1].colors[0].r;
+    fg_PaletteColors[21] = ForgroundPalette[1].colors[0].g;
+    fg_PaletteColors[22] = ForgroundPalette[1].colors[0].b;
+
+    fg_PaletteColors[24] = ForgroundPalette[1].colors[1].r;
+    fg_PaletteColors[25] = ForgroundPalette[1].colors[1].g;
+    fg_PaletteColors[26] = ForgroundPalette[1].colors[1].b;
+
+    fg_PaletteColors[28] = ForgroundPalette[1].colors[2].r;
+    fg_PaletteColors[29] = ForgroundPalette[1].colors[2].g;
+    fg_PaletteColors[30] = ForgroundPalette[1].colors[2].b;
+
+    fg_PaletteColors[36] = ForgroundPalette[2].colors[0].r;
+    fg_PaletteColors[37] = ForgroundPalette[2].colors[0].g;
+    fg_PaletteColors[38] = ForgroundPalette[2].colors[0].b;
+
+    fg_PaletteColors[40] = ForgroundPalette[2].colors[1].r;
+    fg_PaletteColors[41] = ForgroundPalette[2].colors[1].g;
+    fg_PaletteColors[42] = ForgroundPalette[2].colors[1].b;
+
+    fg_PaletteColors[44] = ForgroundPalette[2].colors[2].r;
+    fg_PaletteColors[45] = ForgroundPalette[2].colors[2].g;
+    fg_PaletteColors[46] = ForgroundPalette[2].colors[2].b;
+
+    fg_PaletteColors[52] = ForgroundPalette[3].colors[0].r;
+    fg_PaletteColors[53] = ForgroundPalette[3].colors[0].g;
+    fg_PaletteColors[54] = ForgroundPalette[3].colors[0].b;
+
+    fg_PaletteColors[56] = ForgroundPalette[3].colors[1].r;
+    fg_PaletteColors[57] = ForgroundPalette[3].colors[1].g;
+    fg_PaletteColors[58] = ForgroundPalette[3].colors[1].b;
+
+    fg_PaletteColors[60] = ForgroundPalette[3].colors[2].r;
+    fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
+    fg_PaletteColors[62] = ForgroundPalette[3].colors[2].b;
+
+    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
     glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 4 * 4, GL_RGBA, GL_UNSIGNED_BYTE, bg_PaletteColors);
+
+    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
+    glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 4 * 4, GL_RGBA, GL_UNSIGNED_BYTE, fg_PaletteColors);
 }
 
 void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
@@ -352,34 +415,34 @@ void Renderer::RenderScene(Scene* scene) {
     //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X >> 8);
     //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y >> 8);
 
-    if (rendermode == 1) {
-
-        N = (overwrite_pos.x >> 8) & 1;
-        // printf("N: %d\n", N);
-        overwrite_pos.x *= 0.0625f;
-        overwrite_pos.x &= 0xf;
-
-        for (int x = overwrite_pos.x; x < 240; x += 16) {
-            Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
-            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-
-            overwrite_pos.x += 16;
-        }
-    }
-    else {
-
-        N = (overwrite_pos.y >> 8) & 1;
-
-        overwrite_pos.y *= 0.0625f;
-        overwrite_pos.y &= 0xf;
-
-        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-            Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
-            EditTile(x, x + 240 * N);
-        }
-    }
+    //if (rendermode == 1) {
+    //
+    //    N = (overwrite_pos.x >> 8) & 1;
+    //    // printf("N: %d\n", N);
+    //    overwrite_pos.x *= 0.0625f;
+    //    overwrite_pos.x &= 0xf;
+    //
+    //    for (int x = overwrite_pos.x; x < 240; x += 16) {
+    //        Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
+    //        Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
+    //        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+    //
+    //        overwrite_pos.x += 16;
+    //    }
+    //}
+    //else {
+    //
+    //    N = (overwrite_pos.y >> 8) & 1;
+    //
+    //    overwrite_pos.y *= 0.0625f;
+    //    overwrite_pos.y &= 0xf;
+    //
+    //    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+    //        Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
+    //        Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
+    //        EditTile(x, x + 240 * N);
+    //    }
+    //}
 
     
   //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y + 240);
@@ -404,12 +467,12 @@ void Renderer::RenderScene(Scene* scene) {
         
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
-       // GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
-        //glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+        GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-        //if (it->vertex_buffer) {
-        //    RenderEntity(it);
-        //}
+        if (it->vertex_buffer) {
+            RenderEntity(it);
+        }
     }
 }
 
@@ -437,14 +500,13 @@ void Renderer::RenderMaintables(Scene* scene) {
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-    //glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    //glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-    //
-    //glActiveTexture(GL_TEXTURE1);
-    //glBindTexture(GL_TEXTURE_1D, PaletteSampler);
-    //glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(vertexPositionID);
@@ -463,7 +525,7 @@ void Renderer::RenderMaintables(Scene* scene) {
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(
-        uvPositionID,   // attribute 0. No particular reason for 0, but must match the layout in the shader.
+        uvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
         GL_FLOAT,           // type
         GL_FALSE,           // normalized?
@@ -473,7 +535,6 @@ void Renderer::RenderMaintables(Scene* scene) {
     GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
     glEnableVertexAttribArray(paletteID);
     glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_PaletteBuffer.size() * 4, MT_PaletteBuffer.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(
         paletteID,
         1,
@@ -488,25 +549,25 @@ void Renderer::RenderMaintables(Scene* scene) {
     glDisableVertexAttribArray(paletteID);
 }
 
-void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char height) {
+void Renderer::GenerateSprite(Entity* entity, Sprite* sprite) {
 
-    VertexBuffer[0] = -0.5f * width;
-    VertexBuffer[1] = 0.5f * height;
+    VertexBuffer[0] = -0.5f * sprite->width;
+    VertexBuffer[1] = 0.5f * sprite->height;
 
-    VertexBuffer[2] = 0.5f * width;
-    VertexBuffer[3] = 0.5f * height;
+    VertexBuffer[2] = 0.5f * sprite->width;
+    VertexBuffer[3] = 0.5f * sprite->height;
 
-    VertexBuffer[4] = 0.5f * width;
-    VertexBuffer[5] = -0.5f * height;
+    VertexBuffer[4] = 0.5f * sprite->width;
+    VertexBuffer[5] = -0.5f * sprite->height;
 
-    VertexBuffer[6] = 0.5f * width;
-    VertexBuffer[7] = -0.5f * height;
+    VertexBuffer[6] = 0.5f * sprite->width;
+    VertexBuffer[7] = -0.5f * sprite->height;
 
-    VertexBuffer[8] = -0.5f * width;
-    VertexBuffer[9] = -0.5f * height;
+    VertexBuffer[8] = -0.5f * sprite->width;
+    VertexBuffer[9] = -0.5f * sprite->height;
 
-    VertexBuffer[10] = -0.5f * width;
-    VertexBuffer[11] = 0.5f * height;
+    VertexBuffer[10] = -0.5f * sprite->width;
+    VertexBuffer[11] = 0.5f * sprite->height;
 
     glGenBuffers(1, &entity->vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, entity->vertex_buffer);
@@ -516,25 +577,36 @@ void Renderer::GenerateSprite(Entity* entity, char* canvas, char width, char hei
     glBindBuffer(GL_ARRAY_BUFFER, entity->uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
 
-    for (int i = 0; i < width * height; i++) {
-        pixelcanvas.push_back(canvas[i]);
-    }
+    PaletteBuffer[0] = entity->attributes;
+    PaletteBuffer[1] = entity->attributes;
+    PaletteBuffer[2] = entity->attributes;
+    PaletteBuffer[3] = entity->attributes;
+    PaletteBuffer[4] = entity->attributes;
+    PaletteBuffer[5] = entity->attributes;
+
+    glGenBuffers(1, &entity->palette_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, entity->palette_buffer);
+    glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
 
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &entity->texture_buffer);
     glBindTexture(GL_TEXTURE_2D, entity->texture_buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, pixelcanvas.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, sprite->width, sprite->height, 0, GL_RED, GL_UNSIGNED_BYTE, sprite->pixels);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
-    pixelcanvas.clear();
+
 }
 
 void Renderer::RenderEntity(Entity* entity) {
-    //glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, entity->texture_buffer);
-   // glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(vertexPositionID);
@@ -558,6 +630,17 @@ void Renderer::RenderEntity(Entity* entity) {
         GL_FALSE,           // normalized?
         0,                  // stride
         (void*)0            // array buffer offset
+    );
+    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
+    glEnableVertexAttribArray(paletteID);
+    glBindBuffer(GL_ARRAY_BUFFER, entity->palette_buffer);
+    glVertexAttribPointer(
+        paletteID,
+        1,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        (void*)0
     );
     glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);

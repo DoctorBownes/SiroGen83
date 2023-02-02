@@ -1,3 +1,4 @@
+#pragma once
 struct Tile {
 	unsigned char pixels[256];
 };

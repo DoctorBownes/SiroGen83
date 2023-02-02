@@ -8,11 +8,15 @@ public:
 
 	unsigned int texture_buffer;
 
+	unsigned int palette_buffer;
+
 	unsigned int vertex_buffer;
 
 	unsigned int uv_buffer;
 
 	Vector2 position{0,0};
+
+	unsigned char attributes = 0;
 
 	virtual void update();
 

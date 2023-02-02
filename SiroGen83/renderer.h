@@ -1,9 +1,14 @@
 #pragma once
 
 #include <glad/glad.h>
-#include <SiroGen83/scene.h>
+#include <SiroGen83/tile.h>
+#include <SiroGen83/vector2.h>
+#include <SiroGen83/sprite.h>
 #include <list>
 #include <vector>
+
+class Scene;
+class Entity;
 
 struct Palette {
 	Color colors[3];
@@ -25,7 +30,7 @@ public:
 
 	void RenderScene(Scene* scene);
 
-	void GenerateSprite(Entity* entity, char* canvas, char width, char height);
+	void GenerateSprite(Entity* entity, Sprite* sprite);
 
 	void AddtoTileMap(Tile* tile, char position);
 
@@ -52,11 +57,15 @@ private:
 
 	GLuint shaderProgram = 0;
 
-	GLuint PaletteSampler = 0;
+	GLuint bg_PaletteSampler = 0;
+
+	GLuint fg_PaletteSampler = 0;
 
 	GLfloat VertexBuffer[12];
 
 	GLfloat UVBuffer[12];
+
+	GLfloat PaletteBuffer[6];
 
 	Nametable* Maintables[2];
 
