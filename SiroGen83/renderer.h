@@ -47,6 +47,7 @@ public:
 	Palette BackgroundPalette[4];
 	Palette ForgroundPalette[4];
 
+
 private:
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];

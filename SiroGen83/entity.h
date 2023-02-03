@@ -6,14 +6,6 @@ class Entity { //friend class Renderer
 public:
 	Entity();
 
-	unsigned int texture_buffer;
-
-	unsigned int palette_buffer;
-
-	unsigned int vertex_buffer;
-
-	unsigned int uv_buffer;
-
 	Vector2 position{0,0};
 
 	unsigned char attributes = 0;
@@ -22,6 +14,17 @@ public:
 
 	Input* GetInput() { return _instance; };
 
+	friend class Renderer;
+
 private:
+
+	unsigned int texture_buffer;
+
+	unsigned int palette_buffer;
+
+	unsigned int vertex_buffer;
+
+	unsigned int uv_buffer;
+
 	Input* _instance = _instance->GetInstance();
 };

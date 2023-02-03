@@ -113,6 +113,19 @@ Renderer::Renderer() {
     glGenVertexArrays(1, &Init);
     glBindVertexArray(Init);
 
+    for (GLuint i = 1; i < 5; i++) {
+        PaletteBuffer[0] = (i - 1);
+        PaletteBuffer[1] = (i - 1);
+        PaletteBuffer[2] = (i - 1);
+        PaletteBuffer[3] = (i - 1);
+        PaletteBuffer[4] = (i - 1);
+        PaletteBuffer[5] = (i - 1);
+
+        glGenBuffers(1, &i);
+        glBindBuffer(GL_ARRAY_BUFFER, i);
+        glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
+
+    }
     UVBuffer[0] = 0.0f;
     UVBuffer[1] = 0.0f;
     UVBuffer[2] = 1.0f;
@@ -209,11 +222,9 @@ void Renderer::UpdatePalettes() {
     bg_PaletteColors[4]  = BackgroundPalette[0].colors[0].r;
     bg_PaletteColors[5]  = BackgroundPalette[0].colors[0].g;
     bg_PaletteColors[6]  = BackgroundPalette[0].colors[0].b;
-
     bg_PaletteColors[8]  = BackgroundPalette[0].colors[1].r;
     bg_PaletteColors[9]  = BackgroundPalette[0].colors[1].g;
     bg_PaletteColors[10] = BackgroundPalette[0].colors[1].b;
-
     bg_PaletteColors[12] = BackgroundPalette[0].colors[2].r;
     bg_PaletteColors[13] = BackgroundPalette[0].colors[2].g;
     bg_PaletteColors[14] = BackgroundPalette[0].colors[2].b;
@@ -221,11 +232,9 @@ void Renderer::UpdatePalettes() {
     bg_PaletteColors[20] = BackgroundPalette[1].colors[0].r;
     bg_PaletteColors[21] = BackgroundPalette[1].colors[0].g;
     bg_PaletteColors[22] = BackgroundPalette[1].colors[0].b;
-
     bg_PaletteColors[24] = BackgroundPalette[1].colors[1].r;
     bg_PaletteColors[25] = BackgroundPalette[1].colors[1].g;
     bg_PaletteColors[26] = BackgroundPalette[1].colors[1].b;
-
     bg_PaletteColors[28] = BackgroundPalette[1].colors[2].r;
     bg_PaletteColors[29] = BackgroundPalette[1].colors[2].g;
     bg_PaletteColors[30] = BackgroundPalette[1].colors[2].b;
@@ -233,11 +242,9 @@ void Renderer::UpdatePalettes() {
     bg_PaletteColors[36] = BackgroundPalette[2].colors[0].r;
     bg_PaletteColors[37] = BackgroundPalette[2].colors[0].g;
     bg_PaletteColors[38] = BackgroundPalette[2].colors[0].b;
-
     bg_PaletteColors[40] = BackgroundPalette[2].colors[1].r;
     bg_PaletteColors[41] = BackgroundPalette[2].colors[1].g;
     bg_PaletteColors[42] = BackgroundPalette[2].colors[1].b;
-
     bg_PaletteColors[44] = BackgroundPalette[2].colors[2].r;
     bg_PaletteColors[45] = BackgroundPalette[2].colors[2].g;
     bg_PaletteColors[46] = BackgroundPalette[2].colors[2].b;
@@ -245,23 +252,19 @@ void Renderer::UpdatePalettes() {
     bg_PaletteColors[52] = BackgroundPalette[3].colors[0].r;
     bg_PaletteColors[53] = BackgroundPalette[3].colors[0].g;
     bg_PaletteColors[54] = BackgroundPalette[3].colors[0].b;
-
     bg_PaletteColors[56] = BackgroundPalette[3].colors[1].r;
     bg_PaletteColors[57] = BackgroundPalette[3].colors[1].g;
     bg_PaletteColors[58] = BackgroundPalette[3].colors[1].b;
-
     bg_PaletteColors[60] = BackgroundPalette[3].colors[2].r;
     bg_PaletteColors[61] = BackgroundPalette[3].colors[2].g;
     bg_PaletteColors[62] = BackgroundPalette[3].colors[2].b;
 
-    fg_PaletteColors[4] = ForgroundPalette[0].colors[0].r;
-    fg_PaletteColors[5] = ForgroundPalette[0].colors[0].g;
-    fg_PaletteColors[6] = ForgroundPalette[0].colors[0].b;
-
-    fg_PaletteColors[8] = ForgroundPalette[0].colors[1].r;
-    fg_PaletteColors[9] = ForgroundPalette[0].colors[1].g;
+    fg_PaletteColors[4]  = ForgroundPalette[0].colors[0].r;
+    fg_PaletteColors[5]  = ForgroundPalette[0].colors[0].g;
+    fg_PaletteColors[6]  = ForgroundPalette[0].colors[0].b;
+    fg_PaletteColors[8]  = ForgroundPalette[0].colors[1].r;
+    fg_PaletteColors[9]  = ForgroundPalette[0].colors[1].g;
     fg_PaletteColors[10] = ForgroundPalette[0].colors[1].b;
-
     fg_PaletteColors[12] = ForgroundPalette[0].colors[2].r;
     fg_PaletteColors[13] = ForgroundPalette[0].colors[2].g;
     fg_PaletteColors[14] = ForgroundPalette[0].colors[2].b;
@@ -269,11 +272,9 @@ void Renderer::UpdatePalettes() {
     fg_PaletteColors[20] = ForgroundPalette[1].colors[0].r;
     fg_PaletteColors[21] = ForgroundPalette[1].colors[0].g;
     fg_PaletteColors[22] = ForgroundPalette[1].colors[0].b;
-
     fg_PaletteColors[24] = ForgroundPalette[1].colors[1].r;
     fg_PaletteColors[25] = ForgroundPalette[1].colors[1].g;
     fg_PaletteColors[26] = ForgroundPalette[1].colors[1].b;
-
     fg_PaletteColors[28] = ForgroundPalette[1].colors[2].r;
     fg_PaletteColors[29] = ForgroundPalette[1].colors[2].g;
     fg_PaletteColors[30] = ForgroundPalette[1].colors[2].b;
@@ -281,11 +282,9 @@ void Renderer::UpdatePalettes() {
     fg_PaletteColors[36] = ForgroundPalette[2].colors[0].r;
     fg_PaletteColors[37] = ForgroundPalette[2].colors[0].g;
     fg_PaletteColors[38] = ForgroundPalette[2].colors[0].b;
-
     fg_PaletteColors[40] = ForgroundPalette[2].colors[1].r;
     fg_PaletteColors[41] = ForgroundPalette[2].colors[1].g;
     fg_PaletteColors[42] = ForgroundPalette[2].colors[1].b;
-
     fg_PaletteColors[44] = ForgroundPalette[2].colors[2].r;
     fg_PaletteColors[45] = ForgroundPalette[2].colors[2].g;
     fg_PaletteColors[46] = ForgroundPalette[2].colors[2].b;
@@ -293,13 +292,11 @@ void Renderer::UpdatePalettes() {
     fg_PaletteColors[52] = ForgroundPalette[3].colors[0].r;
     fg_PaletteColors[53] = ForgroundPalette[3].colors[0].g;
     fg_PaletteColors[54] = ForgroundPalette[3].colors[0].b;
-
     fg_PaletteColors[56] = ForgroundPalette[3].colors[1].r;
     fg_PaletteColors[57] = ForgroundPalette[3].colors[1].g;
     fg_PaletteColors[58] = ForgroundPalette[3].colors[1].b;
-
     fg_PaletteColors[60] = ForgroundPalette[3].colors[2].r;
-    fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
+    //fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
     fg_PaletteColors[62] = ForgroundPalette[3].colors[2].b;
 
     glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
@@ -463,7 +460,7 @@ void Renderer::RenderScene(Scene* scene) {
     RenderMaintables(scene); //TODO implement int renderpos
 
     for (Entity* it : scene->entities) {
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(it->position.x, it->position.y, 0.0f));
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 120.001f, -it->position.y + 112.001f, 0.0f));
         
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
@@ -550,6 +547,9 @@ void Renderer::RenderMaintables(Scene* scene) {
 }
 
 void Renderer::GenerateSprite(Entity* entity, Sprite* sprite) {
+    glDeleteBuffers(1, &entity->vertex_buffer);
+    glDeleteBuffers(1, &entity->uv_buffer);
+    glDeleteBuffers(1, &entity->palette_buffer);
 
     VertexBuffer[0] = -0.5f * sprite->width;
     VertexBuffer[1] = 0.5f * sprite->height;
@@ -577,16 +577,7 @@ void Renderer::GenerateSprite(Entity* entity, Sprite* sprite) {
     glBindBuffer(GL_ARRAY_BUFFER, entity->uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
 
-    PaletteBuffer[0] = entity->attributes;
-    PaletteBuffer[1] = entity->attributes;
-    PaletteBuffer[2] = entity->attributes;
-    PaletteBuffer[3] = entity->attributes;
-    PaletteBuffer[4] = entity->attributes;
-    PaletteBuffer[5] = entity->attributes;
-
-    glGenBuffers(1, &entity->palette_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
+    entity->palette_buffer = entity->attributes + 1;
 
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &entity->texture_buffer);
@@ -595,8 +586,6 @@ void Renderer::GenerateSprite(Entity* entity, Sprite* sprite) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, sprite->width, sprite->height, 0, GL_RED, GL_UNSIGNED_BYTE, sprite->pixels);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-
-
 }
 
 void Renderer::RenderEntity(Entity* entity) {
@@ -645,4 +634,5 @@ void Renderer::RenderEntity(Entity* entity) {
     glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
+    glDisableVertexAttribArray(paletteID);
 }
