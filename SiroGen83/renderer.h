@@ -30,7 +30,9 @@ public:
 
 	void RenderScene(Scene* scene);
 
-	void GenerateSprite(Entity* entity, Sprite* sprite);
+	void AddSpritetoMemory(Sprite* sprite, GLuint position);
+
+	void SetSpritetoEntity(Entity* entity, GLuint position);
 
 	void AddtoTileMap(Tile* tile, char position);
 
@@ -91,6 +93,8 @@ private:
 	GLuint vertex_buffer;
 
 	GLuint uv_buffer;
+
+	GLuint spr_uv_buffer;
 
 	GLuint palette_buffer;
 

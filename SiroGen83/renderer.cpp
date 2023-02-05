@@ -126,6 +126,7 @@ Renderer::Renderer() {
         glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
 
     }
+
     UVBuffer[0] = 0.0f;
     UVBuffer[1] = 0.0f;
     UVBuffer[2] = 1.0f;
@@ -138,6 +139,10 @@ Renderer::Renderer() {
     UVBuffer[9] = 1.0f;
     UVBuffer[10] = 0.0f;
     UVBuffer[11] = 0.0f;
+
+    glGenBuffers(1, &spr_uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, spr_uv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
 
     for (int i = 0; i < 2; i++) {
         Maintables[i] = new Nametable();
@@ -296,7 +301,7 @@ void Renderer::UpdatePalettes() {
     fg_PaletteColors[57] = ForgroundPalette[3].colors[1].g;
     fg_PaletteColors[58] = ForgroundPalette[3].colors[1].b;
     fg_PaletteColors[60] = ForgroundPalette[3].colors[2].r;
-    //fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
+    fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
     fg_PaletteColors[62] = ForgroundPalette[3].colors[2].b;
 
     glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
@@ -473,6 +478,54 @@ void Renderer::RenderScene(Scene* scene) {
     }
 }
 
+void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
+    VertexBuffer[0] = -0.5f * sprite->width;
+    VertexBuffer[1] = 0.5f * sprite->height;
+
+    VertexBuffer[2] = 0.5f * sprite->width;
+    VertexBuffer[3] = 0.5f * sprite->height;
+
+    VertexBuffer[4] = 0.5f * sprite->width;
+    VertexBuffer[5] = -0.5f * sprite->height;
+
+    VertexBuffer[6] = 0.5f * sprite->width;
+    VertexBuffer[7] = -0.5f * sprite->height;
+
+    VertexBuffer[8] = -0.5f * sprite->width;
+    VertexBuffer[9] = -0.5f * sprite->height;
+
+    VertexBuffer[10] = -0.5f * sprite->width;
+    VertexBuffer[11] = 0.5f * sprite->height;
+
+
+    position += 4;
+
+    glDeleteTextures(1, &position);
+
+    position += 5;
+
+    glDeleteBuffers(1, &position);
+
+
+    glGenBuffers(1, &position);
+    glBindBuffer(GL_ARRAY_BUFFER, position);
+    glBufferData(GL_ARRAY_BUFFER, (sizeof(VertexBuffer) / sizeof(VertexBuffer[0])) * 4, VertexBuffer, GL_STATIC_DRAW);
+
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &position);
+    glBindTexture(GL_TEXTURE_2D, position);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, sprite->width, sprite->height, 0, GL_RED, GL_UNSIGNED_BYTE, sprite->pixels);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
+}
+
+void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
+    entity->texture_buffer = position + 4;
+    entity->vertex_buffer = position + 9;
+    entity->palette_buffer = entity->attributes + 1;
+}
+
 void Renderer::AddtoTileMap(Tile* tile, char position) {
     //TileMap.resize(512/*TileMap.size() + 16 * 16*/);
     int overwrite_pos = (position * 16); //change overwrite_pos // + (y * width)
@@ -546,49 +599,8 @@ void Renderer::RenderMaintables(Scene* scene) {
     glDisableVertexAttribArray(paletteID);
 }
 
-void Renderer::GenerateSprite(Entity* entity, Sprite* sprite) {
-    glDeleteBuffers(1, &entity->vertex_buffer);
-    glDeleteBuffers(1, &entity->uv_buffer);
-    glDeleteBuffers(1, &entity->palette_buffer);
-
-    VertexBuffer[0] = -0.5f * sprite->width;
-    VertexBuffer[1] = 0.5f * sprite->height;
-
-    VertexBuffer[2] = 0.5f * sprite->width;
-    VertexBuffer[3] = 0.5f * sprite->height;
-
-    VertexBuffer[4] = 0.5f * sprite->width;
-    VertexBuffer[5] = -0.5f * sprite->height;
-
-    VertexBuffer[6] = 0.5f * sprite->width;
-    VertexBuffer[7] = -0.5f * sprite->height;
-
-    VertexBuffer[8] = -0.5f * sprite->width;
-    VertexBuffer[9] = -0.5f * sprite->height;
-
-    VertexBuffer[10] = -0.5f * sprite->width;
-    VertexBuffer[11] = 0.5f * sprite->height;
-
-    glGenBuffers(1, &entity->vertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof(VertexBuffer) / sizeof(VertexBuffer[0])) * 4, VertexBuffer, GL_STATIC_DRAW);
-
-    glGenBuffers(1, &entity->uv_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
-
-    entity->palette_buffer = entity->attributes + 1;
-
-    glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &entity->texture_buffer);
-    glBindTexture(GL_TEXTURE_2D, entity->texture_buffer);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, sprite->width, sprite->height, 0, GL_RED, GL_UNSIGNED_BYTE, sprite->pixels);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-}
-
 void Renderer::RenderEntity(Entity* entity) {
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, entity->texture_buffer);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
@@ -611,7 +623,7 @@ void Renderer::RenderEntity(Entity* entity) {
 
     GLuint uvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(uvPositionID);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, spr_uv_buffer);
     glVertexAttribPointer(
         uvPositionID,   // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size

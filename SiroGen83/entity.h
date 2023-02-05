@@ -24,7 +24,5 @@ private:
 
 	unsigned int vertex_buffer;
 
-	unsigned int uv_buffer;
-
 	Input* _instance = _instance->GetInstance();
 };
