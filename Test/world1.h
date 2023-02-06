@@ -8,5 +8,7 @@ public:
 	World1();
 
 	virtual void update() override;
+
+	double starttime = 0.0;
 };
 

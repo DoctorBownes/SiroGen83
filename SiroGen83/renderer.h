@@ -7,6 +7,16 @@
 #include <list>
 #include <vector>
 
+#define PALETTE_ZERO 0
+#define PALETTE_ONE 1
+#define PALETTE_TWO 2
+#define PALETTE_THREE 3
+
+#define FLIP_NONE 0
+#define FLIP_HORT 4
+#define FLIP_VERT 8
+#define FLIP_DIAG 12
+
 class Scene;
 class Entity;
 
@@ -32,7 +42,7 @@ public:
 
 	void AddSpritetoMemory(Sprite* sprite, GLuint position);
 
-	void SetSpritetoEntity(Entity* entity, GLuint position);
+	void SetSpritetoEntity(Entity* entity, GLuint position, GLuint attribute = 0);
 
 	void AddtoTileMap(Tile* tile, char position);
 
@@ -48,7 +58,6 @@ public:
 
 	Palette BackgroundPalette[4];
 	Palette ForgroundPalette[4];
-
 
 private:
 	GLubyte bg_PaletteColors[4 * 4 * 4];
@@ -93,8 +102,6 @@ private:
 	GLuint vertex_buffer;
 
 	GLuint uv_buffer;
-
-	GLuint spr_uv_buffer;
 
 	GLuint palette_buffer;
 

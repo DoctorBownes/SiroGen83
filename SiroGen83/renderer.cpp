@@ -126,23 +126,28 @@ Renderer::Renderer() {
         glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
 
     }
+    for (float y = 0.0f; y < 2.0f; y++) {
+        for (float x = 0.0f; x < 2.0f; x++) {
+            GLuint uv_buffer = 0;
+            UVBuffer[0] = 0.0f + x;
+            UVBuffer[1] = 0.0f + y;
+            UVBuffer[2] = 1.0f - x;
+            UVBuffer[3] = 0.0f + y;
+            UVBuffer[4] = 1.0f - x;
+            UVBuffer[5] = 1.0f - y;
+            UVBuffer[6] = 1.0f - x;
+            UVBuffer[7] = 1.0f - y;
+            UVBuffer[8] = 0.0f + x;
+            UVBuffer[9] = 1.0f - y;
+            UVBuffer[10]= 0.0f + x;
+            UVBuffer[11]= 0.0f + y;
 
-    UVBuffer[0] = 0.0f;
-    UVBuffer[1] = 0.0f;
-    UVBuffer[2] = 1.0f;
-    UVBuffer[3] = 0.0f;
-    UVBuffer[4] = 1.0f;
-    UVBuffer[5] = 1.0f;
-    UVBuffer[6] = 1.0f;
-    UVBuffer[7] = 1.0f;
-    UVBuffer[8] = 0.0f;
-    UVBuffer[9] = 1.0f;
-    UVBuffer[10] = 0.0f;
-    UVBuffer[11] = 0.0f;
+            glGenBuffers(1, &uv_buffer);
+            glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+            glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
 
-    glGenBuffers(1, &spr_uv_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, spr_uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (sizeof(UVBuffer) / sizeof(UVBuffer[0])) * 4, UVBuffer, GL_STATIC_DRAW);
+        }
+    }
 
     for (int i = 0; i < 2; i++) {
         Maintables[i] = new Nametable();
@@ -465,8 +470,11 @@ void Renderer::RenderScene(Scene* scene) {
     RenderMaintables(scene); //TODO implement int renderpos
 
     for (Entity* it : scene->entities) {
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 120.001f, -it->position.y + 112.001f, 0.0f));
-        
+        if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
+            it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
+        }
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 120.001f, -(it->position.y & 511) + 112.001f, 0.0f));
+
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
         GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
@@ -502,7 +510,7 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
 
     glDeleteTextures(1, &position);
 
-    position += 5;
+    position += 8;
 
     glDeleteBuffers(1, &position);
 
@@ -520,10 +528,11 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 }
 
-void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
+void Renderer::SetSpritetoEntity(Entity* entity, GLuint position, GLuint attribute) {
     entity->texture_buffer = position + 4;
-    entity->vertex_buffer = position + 9;
-    entity->palette_buffer = entity->attributes + 1;
+    entity->vertex_buffer = position + 12;
+    entity->uv_buffer = (attribute >> 2) + 5;
+    entity->palette_buffer = (attribute + 1) & 3;
 }
 
 void Renderer::AddtoTileMap(Tile* tile, char position) {
@@ -623,7 +632,7 @@ void Renderer::RenderEntity(Entity* entity) {
 
     GLuint uvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(uvPositionID);
-    glBindBuffer(GL_ARRAY_BUFFER, spr_uv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, entity->uv_buffer);
     glVertexAttribPointer(
         uvPositionID,   // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
