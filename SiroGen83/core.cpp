@@ -31,6 +31,7 @@ Core::Core() {
     }
     glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
     glfwMakeContextCurrent(_window);
+    //glfwSwapInterval(0);
 
     if (!gladLoadGL()) {
         fprintf(stderr, "Failed to initialize GLAD.\n");
@@ -41,6 +42,7 @@ Core::Core() {
 }
 
 void Core::Run(Scene* scene) {
+    double starttime = 0.0;
 
     scene->GetInput()->Init(_window);
 
@@ -48,27 +50,32 @@ void Core::Run(Scene* scene) {
 
     _instance->UpdatePalettes();
 
-    _instance->SetRenderMode(scene, _instance->rendermode);
+    _instance->SetRenderMode(scene, _instance->GetRenderMode());
 
     do {
 
-        glClearColor(_instance->BackgroundColor.r * 0.00392f, _instance->BackgroundColor.g * 0.00392f, _instance->BackgroundColor.b * 0.00392f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        if (glfwGetTime() - starttime > 0.0164f) {//60 FPS CAP
+            glClearColor(_instance->BackgroundColor.r * 0.00392f, _instance->BackgroundColor.g * 0.00392f, _instance->BackgroundColor.b * 0.00392f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        scene->update();
+            scene->update();
 
-        for (Entity* it : scene->entities) {
-            it->update();
+            for (Entity* it : scene->entities) {
+                it->update();
+            }
+
+            scene->GetCamera()->update(_instance->GetRenderMode());
+            _instance->RenderScene(scene);
+
+            scene->GetCamera()->update();
+            _instance->RenderScene(scene);
+
+
+            glfwSwapBuffers(_window);
+            glfwPollEvents();
+
+            starttime = glfwGetTime();
         }
-
-        scene->GetCamera()->update(_instance->rendermode);
-        _instance->RenderScene(scene);
-
-        scene->GetCamera()->update();
-        _instance->RenderScene(scene);
-
-        glfwSwapBuffers(_window);
-        glfwPollEvents();
     } while (!glfwWindowShouldClose(_window));
 }

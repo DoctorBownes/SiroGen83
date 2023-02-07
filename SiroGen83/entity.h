@@ -15,13 +15,17 @@ public:
 	friend class Renderer;
 
 private:
-	unsigned int texture_buffer;
+	float starttime = 0.0;
 
-	unsigned int palette_buffer;
+	unsigned char frame = 0;
 
-	unsigned int vertex_buffer;
+	unsigned short texture_buffer;
 
-	unsigned int uv_buffer;
+	unsigned short palette_buffer;
+
+	unsigned short vertex_buffer;
+
+	unsigned short uv_buffer;
 
 	Input* _instance = _instance->GetInstance();
 };

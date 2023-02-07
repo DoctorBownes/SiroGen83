@@ -42,7 +42,9 @@ public:
 
 	void AddSpritetoMemory(Sprite* sprite, GLuint position);
 
-	void SetSpritetoEntity(Entity* entity, GLuint position, GLuint attribute = 0);
+	void SetSpritetoEntity(Entity* entity, GLuint position);
+
+	void SetAttributetoEntity(Entity* entity, GLuint attribute);
 
 	void AddtoTileMap(Tile* tile, char position);
 
@@ -52,7 +54,9 @@ public:
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	GLubyte rendermode = 1;
+	GLubyte GetRenderMode() { return rendermode; };
+
+	void PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe = 0);
 
 	Color BackgroundColor;
 
@@ -60,6 +64,9 @@ public:
 	Palette ForgroundPalette[4];
 
 private:
+	GLubyte rendermode = 1;
+
+
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];
 

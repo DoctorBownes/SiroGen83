@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLFW/glfw3.h>
 #include <SiroGen83/entity.h>
 #include <SiroGen83/scene.h>
 #include <vector>
@@ -398,6 +399,19 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     rendermode = mode;
 }
 
+void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
+    SetSpritetoEntity(entity, animation->sprites[entity->frame]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
+    if (glfwGetTime() - entity->starttime > animation->framerate) {
+        SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
+
+        if (entity->frame > endframe) {
+            entity->frame = beginframe;
+        }
+
+        entity->starttime = glfwGetTime();
+    }
+}
+
 //void Renderer::ProcessTileQueue() {
 //    while (it != TileQueue.end()) {
 //        EditTile(*it);
@@ -528,9 +542,12 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 }
 
-void Renderer::SetSpritetoEntity(Entity* entity, GLuint position, GLuint attribute) {
+void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
     entity->texture_buffer = position + 4;
     entity->vertex_buffer = position + 12;
+}
+
+void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
     entity->uv_buffer = (attribute >> 2) + 5;
     entity->palette_buffer = (attribute + 1) & 3;
 }
