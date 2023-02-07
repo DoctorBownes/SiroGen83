@@ -3,7 +3,7 @@
 
 Entity* entity = new Entity();
 Entity* entity2 = new Entity();
-Animation animation = Animation{ 0.15f, 1, 2, 3};
+Animation animation = Animation{ 0.15f, 1, 2, 0,4};
 
 World1::World1() {
 
@@ -398,6 +398,40 @@ World1::World1() {
 		0,3,2,2,2,3,0,0,0,0,3,3,2,2,2,0,
 		0,0,3,3,3,0,0,0,0,0,0,3,3,3,3,0,
 	};
+	Sprite jojospr2 = Sprite{ 16,32,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,3,3,3,0,0,0,0,0,
+0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,0,
+0,0,0,0,0,0,3,3,3,3,3,3,0,0,0,0,
+0,0,0,0,0,3,3,1,3,1,1,3,0,0,0,0,
+0,0,0,0,0,3,3,1,1,2,2,0,0,0,0,0,
+0,0,0,0,3,3,3,1,1,1,1,0,0,0,0,0,
+0,0,0,0,3,2,2,2,1,1,2,0,0,0,0,0,
+0,0,0,3,2,2,2,2,2,1,1,0,0,0,0,0,
+0,0,3,1,0,2,2,2,2,2,2,3,0,0,0,0,
+0,3,1,1,1,0,2,3,3,3,3,1,3,0,0,0,
+0,3,1,1,1,1,3,3,3,3,3,3,1,3,0,0,
+0,3,1,1,1,1,3,3,3,3,3,3,1,3,0,0,
+0,3,1,1,1,1,1,3,3,2,1,3,1,3,0,0,
+0,0,3,1,1,1,2,2,2,1,1,1,3,0,0,0,
+0,0,3,1,1,1,2,2,1,2,1,3,0,0,0,0,
+0,0,0,3,3,2,3,3,3,3,3,0,0,0,0,0,
+0,0,0,0,0,3,3,3,3,1,0,0,0,0,0,0,
+0,0,0,0,0,2,1,1,1,1,0,0,0,0,0,0,
+0,0,0,0,0,3,3,3,3,3,2,0,0,0,0,0,
+0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,0,
+0,0,0,0,0,0,3,3,2,3,3,3,0,0,0,0,
+0,0,0,0,0,0,3,3,2,3,3,3,0,0,0,0,
+0,0,0,0,0,3,3,3,3,3,3,0,0,0,0,0,
+0,0,0,0,3,2,3,2,3,3,0,0,0,0,0,0,
+0,0,0,3,2,3,2,2,2,3,0,0,0,0,0,0,
+0,0,0,3,2,3,2,2,3,0,0,0,0,0,0,0,
+0,0,0,0,3,2,2,2,3,0,0,0,0,0,0,0,
+0,0,0,0,0,3,2,2,2,3,0,0,0,0,0,0,
+	};
 
 	Sprite belmspr = Sprite{ 16,32,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -506,6 +540,7 @@ World1::World1() {
 	SiroGen->AddSpritetoMemory(&belmspr, 1);
 	SiroGen->AddSpritetoMemory(&belmspr1, 2);
 	SiroGen->AddSpritetoMemory(&belmspr2, 3);
+	SiroGen->AddSpritetoMemory(&jojospr2, 4);
 
 	entity2->position.x = 16 * 6;
 	entity2->position.y = 200 - 16;
@@ -560,12 +595,12 @@ void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::A)) {
 		entity2->position.x -= 2;
 		SiroGen->SetAttributetoEntity(entity2, 4);
-		SiroGen->PlayAnimation(entity2, &animation, 1);
+		SiroGen->PlayAnimation(entity2, &animation, 3,2);
 	}
 	else if (GetInput()->KeyDown(KeyCode::D)) {
 		entity2->position.x += 2;
 		SiroGen->SetAttributetoEntity(entity2, 0);
-		SiroGen->PlayAnimation(entity2, &animation, 1);
+		SiroGen->PlayAnimation(entity2, &animation, 3,2);
 	}
 
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {

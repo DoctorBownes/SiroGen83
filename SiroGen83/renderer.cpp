@@ -400,6 +400,9 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
 }
 
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
+    if (!entity->frame) {
+        entity->frame = beginframe;
+    }
     SetSpritetoEntity(entity, animation->sprites[entity->frame]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
     if (glfwGetTime() - entity->starttime > animation->framerate) {
         SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
