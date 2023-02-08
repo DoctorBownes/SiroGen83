@@ -3,7 +3,7 @@
 
 Entity* entity = new Entity();
 Entity* entity2 = new Entity();
-Animation animation = Animation{ 0.15f, 1, 2, 0,4};
+Animation animation = Animation{ 0.15f, 1, 2, 0,4, 5,6};
 
 World1::World1() {
 
@@ -33,7 +33,7 @@ World1::World1() {
 		0, 18, 125,		38, 122, 0,		0, 61, 0
 	};
 	SiroGen->ForgroundPalette[3] = {
-		255, 255, 255,	245, 143, 111,	150, 56, 0,
+		0, 0, 0,	254, 252, 221,	253, 169, 100,
 	};
 
 	Tile t0 = {
@@ -536,22 +536,60 @@ World1::World1() {
 0,2,2,2,2,2,2,0,0,0,0,2,2,2,2,2,
 
 	};
+	Sprite bb1 = Sprite{ 16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,
+0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,
+0,0,0,0,1,1,1,1,3,1,3,0,0,0,0,0,
+0,0,0,1,1,1,1,1,3,3,3,3,0,0,0,0,
+0,0,0,1,1,1,3,3,3,1,1,0,0,0,0,0,
+0,0,0,0,3,3,3,3,3,3,3,0,0,0,0,0,
+0,0,0,0,3,2,2,2,3,3,3,0,0,0,0,0,
+0,0,0,0,2,2,3,3,2,2,2,0,0,0,0,0,
+0,0,0,2,2,2,3,3,2,2,2,2,0,0,0,0,
+0,0,0,2,2,2,3,3,2,2,2,2,0,0,0,0,
+0,0,0,0,0,1,1,1,1,1,2,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,
+0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,
+	};
+	Sprite bb2 = Sprite{ 16,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,
+0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,
+0,0,0,0,1,1,1,1,3,1,3,0,0,0,0,0,
+0,0,0,1,1,1,1,1,3,3,3,3,0,0,0,0,
+0,0,0,1,1,1,3,3,3,1,1,0,3,3,0,0,
+0,0,0,0,3,3,3,3,3,3,3,0,3,3,0,0,
+0,0,3,3,3,3,2,2,3,3,3,3,3,3,0,0,
+0,0,3,3,2,2,2,2,2,3,3,3,3,0,0,0,
+0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0,
+0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0,
+0,0,2,1,1,1,1,1,1,1,2,1,2,0,0,0,
+0,0,0,2,1,0,0,0,0,0,1,2,0,0,0,0,
+0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,
+	};
 	SiroGen->AddSpritetoMemory(&jojospr, 0);
 	SiroGen->AddSpritetoMemory(&belmspr, 1);
 	SiroGen->AddSpritetoMemory(&belmspr1, 2);
 	SiroGen->AddSpritetoMemory(&belmspr2, 3);
 	SiroGen->AddSpritetoMemory(&jojospr2, 4);
+	SiroGen->AddSpritetoMemory(&bb1, 5);
+	SiroGen->AddSpritetoMemory(&bb2, 6);
 
 	entity2->position.x = 16 * 6;
 	entity2->position.y = 200 - 16;
 	SiroGen->SetSpritetoEntity(entity2, 0);
-	SiroGen->SetAttributetoEntity(entity2, 0);
+	SiroGen->SetAttributetoEntity(entity2, 1);
 	entities.push_front(entity2);
 
 	entity->position.x = 16 * 5;
 	entity->position.y = 200 - 16;
-	SiroGen->SetAttributetoEntity(entity, 1);
-	SiroGen->SetSpritetoEntity(entity, 1);
+	SiroGen->SetAttributetoEntity(entity, 3);
+	SiroGen->SetSpritetoEntity(entity, 5);
 	entities.push_front(entity);
 	//entity2->position.y = 232.0f;
 
@@ -560,10 +598,6 @@ World1::World1() {
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
-	//gro.spriteTL = drt.spriteTL;
-	//_instance->EditTile(3, 1, 3);
-	//Nametables[0]->tiles[3 + (3 * 16) ] = 0;
-	//Nametables[0]->flip[3 + (3 * 16)] = 3;
 }
 
 void World1::update() {
@@ -571,15 +605,15 @@ void World1::update() {
 		GetCamera()->X -= 2;
 		entity->position.x -= 2;
 		GetCamera()->scrolldir.x = 0;
-		SiroGen->SetAttributetoEntity(entity, 5);
-		SiroGen->PlayAnimation(entity, &animation, 1);
+		SiroGen->SetAttributetoEntity(entity, 7);
+		SiroGen->PlayAnimation(entity, &animation, 5,4);
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right) && SiroGen->GetRenderMode() == 1) {
 		GetCamera()->X += 2;
 		entity->position.x += 2;
 		GetCamera()->scrolldir.x = 1;
-		SiroGen->SetAttributetoEntity(entity, 1);
-		SiroGen->PlayAnimation(entity, &animation, 1);
+		SiroGen->SetAttributetoEntity(entity, 3);
+		SiroGen->PlayAnimation(entity, &animation, 5,4);
 	}
 	else if (GetInput()->KeyDown(KeyCode::Up) && SiroGen->GetRenderMode() == 2) {
 		GetCamera()->Y -= 2;
@@ -594,12 +628,12 @@ void World1::update() {
 
 	if (GetInput()->KeyDown(KeyCode::A)) {
 		entity2->position.x -= 2;
-		SiroGen->SetAttributetoEntity(entity2, 4);
+		SiroGen->SetAttributetoEntity(entity2, 5);
 		SiroGen->PlayAnimation(entity2, &animation, 3,2);
 	}
 	else if (GetInput()->KeyDown(KeyCode::D)) {
 		entity2->position.x += 2;
-		SiroGen->SetAttributetoEntity(entity2, 0);
+		SiroGen->SetAttributetoEntity(entity2, 1);
 		SiroGen->PlayAnimation(entity2, &animation, 3,2);
 	}
 

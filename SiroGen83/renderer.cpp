@@ -552,7 +552,8 @@ void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
 
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
     entity->uv_buffer = (attribute >> 2) + 5;
-    entity->palette_buffer = (attribute + 1) & 3;
+    attribute &= 3;
+    entity->palette_buffer = attribute + 1;
 }
 
 void Renderer::AddtoTileMap(Tile* tile, char position) {
