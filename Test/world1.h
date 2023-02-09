@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WORLD1_H_
+#define WORLD1_H_
 
 #include <SiroGen83/scene.h>
 
@@ -11,3 +12,4 @@ public:
 
 };
 
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ENTITY_H_
+#define ENTITY_H_
 #include <SiroGen83/vector2.h>
 #include <SiroGen83/input.h>
 
@@ -21,11 +22,13 @@ private:
 
 	unsigned short texture_buffer;
 
-	unsigned short palette_buffer;
+	unsigned short palette_buffer = 1;
 
 	unsigned short vertex_buffer;
 
-	unsigned short uv_buffer;
+	unsigned short uv_buffer = 5;
 
 	Input* _instance = _instance->GetInstance();
 };
+
+#endif

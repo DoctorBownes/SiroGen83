@@ -3,6 +3,7 @@
 
 Entity* entity = new Entity();
 Entity* entity2 = new Entity();
+Entity* text = new Entity();
 Animation animation = Animation{ 0.15f, 1, 2, 0,4, 5,6};
 
 World1::World1() {
@@ -572,6 +573,30 @@ World1::World1() {
 0,0,0,2,1,0,0,0,0,0,1,2,0,0,0,0,
 0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,
 	};
+
+	Sprite hightext = Sprite{ 72,8,
+0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,2,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,0,0,0,0,0,2,2,2,2,2,0,
+0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,2,2,2,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,2,2,2,2,0,0,2,2,2,2,2,2,0,0,2,2,2,2,2,0,0,0,2,2,2,2,2,2,0,
+0,2,2,0,0,2,2,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,2,2,0,0,2,2,0,0,0,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,0,0,0,
+0,2,2,2,2,2,2,0,0,0,2,2,2,0,0,0,0,2,2,0,0,0,0,0,0,2,2,2,2,2,2,0,0,0,2,2,0,0,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,2,2,2,0,0,
+0,2,2,2,2,2,2,0,0,0,0,2,2,0,0,0,0,2,2,0,2,2,2,0,0,2,2,2,2,2,2,0,0,0,0,2,2,2,0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,2,2,2,0,0,
+0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,2,0,0,2,2,0,0,2,2,0,0,2,0,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,2,2,2,0,0,0,2,2,0,0,0,0,0,
+0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,2,2,2,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,0,0,2,2,2,2,2,2,0,0,2,2,2,2,2,2,0,0,2,2,0,2,2,2,0,0,2,2,2,2,2,2,0,
+0,2,2,0,0,2,2,0,0,2,2,2,2,2,2,0,0,0,0,2,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,2,2,2,0,
+
+	};
+
+//	unsigned char bxt[] = {
+//0,1,1,1,0,0,0,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,
+//1,0,0,0,1,0,1,1,0,0,1,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,
+//1,0,0,0,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,1,0,1,1,1,1,0,1,1,1,1,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,
+//1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,0,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,
+//1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,
+//1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,1,0,0,0,1,
+//0,1,1,1,0,0,0,1,0,0,1,1,1,1,1,0,1,1,1,0,0,0,0,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,
+//
+//	};
+
 	SiroGen->AddSpritetoMemory(&jojospr, 0);
 	SiroGen->AddSpritetoMemory(&belmspr, 1);
 	SiroGen->AddSpritetoMemory(&belmspr1, 2);
@@ -579,19 +604,28 @@ World1::World1() {
 	SiroGen->AddSpritetoMemory(&jojospr2, 4);
 	SiroGen->AddSpritetoMemory(&bb1, 5);
 	SiroGen->AddSpritetoMemory(&bb2, 6);
+	SiroGen->AddSpritetoMemory(&hightext, 7);
 
 	entity2->position.x = 16 * 6;
-	entity2->position.y = 200 - 16;
-	SiroGen->SetSpritetoEntity(entity2, 0);
+	entity2->position.y = 200;
+	SiroGen->SetSpritetoEntity(entity2, 1);
 	SiroGen->SetAttributetoEntity(entity2, 1);
 	entities.push_front(entity2);
 
 	entity->position.x = 16 * 5;
-	entity->position.y = 200 - 16;
-	SiroGen->SetAttributetoEntity(entity, 3);
-	SiroGen->SetSpritetoEntity(entity, 5);
+	entity->position.y = 200;
+	SiroGen->SetAttributetoEntity(entity, 0);
+	SiroGen->SetSpritetoEntity(entity, 0);
 	entities.push_front(entity);
+
+	text->position.x = 0;
+	text->position.y = 4;
+	SiroGen->SetSpritetoEntity(text, 7);
+	SiroGen->SetAttributetoEntity(text, 3);
+	entities.push_front(text);
+
 	//entity2->position.y = 232.0f;
+
 
 	renderpos = 0;
 
@@ -605,15 +639,15 @@ void World1::update() {
 		GetCamera()->X -= 2;
 		entity->position.x -= 2;
 		GetCamera()->scrolldir.x = 0;
-		SiroGen->SetAttributetoEntity(entity, 7);
-		SiroGen->PlayAnimation(entity, &animation, 5,4);
+		SiroGen->SetAttributetoEntity(entity, 4);
+		SiroGen->PlayAnimation(entity, &animation, 3,2);
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right) && SiroGen->GetRenderMode() == 1) {
 		GetCamera()->X += 2;
 		entity->position.x += 2;
 		GetCamera()->scrolldir.x = 1;
-		SiroGen->SetAttributetoEntity(entity, 3);
-		SiroGen->PlayAnimation(entity, &animation, 5,4);
+		SiroGen->SetAttributetoEntity(entity, 0);
+		SiroGen->PlayAnimation(entity, &animation, 3,2);
 	}
 	else if (GetInput()->KeyDown(KeyCode::Up) && SiroGen->GetRenderMode() == 2) {
 		GetCamera()->Y -= 2;
@@ -629,14 +663,14 @@ void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::A)) {
 		entity2->position.x -= 2;
 		SiroGen->SetAttributetoEntity(entity2, 5);
-		SiroGen->PlayAnimation(entity2, &animation, 3,2);
+		SiroGen->PlayAnimation(entity2, &animation, 1);
 	}
 	else if (GetInput()->KeyDown(KeyCode::D)) {
 		entity2->position.x += 2;
 		SiroGen->SetAttributetoEntity(entity2, 1);
-		SiroGen->PlayAnimation(entity2, &animation, 3,2);
+		SiroGen->PlayAnimation(entity2, &animation, 1);
 	}
-
+	text->position.x = GetCamera()->X;
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
 		//if (_instance->rendermode == 1) {
 		//	_instance->SetRenderMode(this, 2);
@@ -648,7 +682,8 @@ void World1::update() {
 		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
 		//entity->vertex_buffer++;
 		//printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
-		SiroGen->SetRenderMode(this, 2);
+		//SiroGen->SetRenderMode(this, 2);
+		entities.remove(text);
 	}
 	if (GetInput()->KeyPressed(KeyCode::Backspace)) {
 	}

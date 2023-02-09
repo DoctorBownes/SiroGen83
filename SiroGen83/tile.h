@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TILE_H_
+#define TILE_H_
+
 struct Tile {
 	unsigned char pixels[256];
 };
@@ -13,3 +15,5 @@ struct Nametable {
 	unsigned char tiles[16 * 15];
 	unsigned char attributes[16 * 15];
 };
+
+#endif

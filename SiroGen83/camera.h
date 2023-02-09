@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_H_
+#define CAMERA_H_
 #include <glm/glm.hpp>
 
 struct Bector2 {
@@ -29,3 +30,5 @@ private:
 	glm::mat4 projectionMatrix;
 
 };
+
+#endif

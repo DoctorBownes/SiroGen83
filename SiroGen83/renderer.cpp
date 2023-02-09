@@ -504,23 +504,23 @@ void Renderer::RenderScene(Scene* scene) {
 }
 
 void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
-    VertexBuffer[0] = -0.5f * sprite->width;
-    VertexBuffer[1] = 0.5f * sprite->height;
+    VertexBuffer[0] = 0.0f * sprite->width;
+    VertexBuffer[1] = 1.0f * sprite->height;
 
-    VertexBuffer[2] = 0.5f * sprite->width;
-    VertexBuffer[3] = 0.5f * sprite->height;
+    VertexBuffer[2] = 1.0f * sprite->width;
+    VertexBuffer[3] = 1.0f * sprite->height;
 
-    VertexBuffer[4] = 0.5f * sprite->width;
-    VertexBuffer[5] = -0.5f * sprite->height;
+    VertexBuffer[4] = 1.0f * sprite->width;
+    VertexBuffer[5] = 0.0f * sprite->height;
 
-    VertexBuffer[6] = 0.5f * sprite->width;
-    VertexBuffer[7] = -0.5f * sprite->height;
+    VertexBuffer[6] = 1.0f * sprite->width;
+    VertexBuffer[7] = 0.0f * sprite->height;
 
-    VertexBuffer[8] = -0.5f * sprite->width;
-    VertexBuffer[9] = -0.5f * sprite->height;
+    VertexBuffer[8] = 0.0f * sprite->width;
+    VertexBuffer[9] = 0.0f * sprite->height;
 
-    VertexBuffer[10] = -0.5f * sprite->width;
-    VertexBuffer[11] = 0.5f * sprite->height;
+    VertexBuffer[10] = 0.0f * sprite->width;
+    VertexBuffer[11] = 1.0f * sprite->height;
 
 
     position += 4;

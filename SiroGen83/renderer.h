@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RENDERER_H_
+#define RENDERER_H_
 
 #include <glad/glad.h>
 #include <SiroGen83/tile.h>
@@ -117,3 +118,4 @@ private:
 	Vector2 overwrite_pos{0,0};
 };
 
+#endif

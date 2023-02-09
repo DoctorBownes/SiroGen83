@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef CORE_H_
+#define CORE_H_
 //#include <SiroGen83/renderer.h>
 
 class Renderer;
@@ -19,3 +19,4 @@ private:
 	Renderer* _instance = nullptr;
 };
 
+#endif

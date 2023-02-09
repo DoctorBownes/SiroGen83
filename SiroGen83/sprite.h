@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SPRITE_H_
+#define SPRITE_H_
+
 struct Sprite {
 	unsigned char width;
 	unsigned char height;
@@ -9,3 +11,5 @@ struct Animation {
 	float framerate;
 	unsigned int sprites[16];
 };
+
+#endif

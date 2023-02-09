@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SCENE_H_
+#define SCENE_H_
 
 #include <SiroGen83/camera.h>
 #include <SiroGen83/renderer.h>
@@ -23,3 +24,5 @@ protected:
 private:
 	Camera* _camera = new Camera();
 };
+
+#endif
