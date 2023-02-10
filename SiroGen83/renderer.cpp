@@ -545,6 +545,101 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 }
 
+void Renderer::AddScoretoMemory(int var, GLuint position) {
+    int sum = var;
+    int digitamount = 0;
+    pixelcanvas.clear();
+    Score_VertexBuffer.clear();
+    Score_UVBuffer.clear();
+    while (sum > 0) {
+        pixelcanvas.push_back(sum % 10);
+        sum /= 10;
+        digitamount++;
+       // printf("%d\n", pixelcanvas.g);
+    }
+    std::reverse(pixelcanvas.begin(), pixelcanvas.end());
+
+	Sprite text = { 56,7,
+
+        0,1,1,1,0,0,0,1,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,
+        1,0,0,0,1,0,1,1,0,0,1,0,0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,0,
+        1,0,0,0,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,1,0,1,1,1,1,0,1,1,1,1,0,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,0,
+        1,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,1,0,1,0,0,0,1,1,0,0,0,1,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,1,0,0,0,1,0,
+        1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,1,1,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,0,1,1,1,1,0,
+        1,0,0,0,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,1,0,
+        0,1,1,1,0,0,0,1,0,0,1,1,1,1,1,0,1,1,1,0,0,0,0,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,0,1,1,1,0,0,
+
+	};
+    position += 4;
+
+    glDeleteTextures(1, &position);
+
+    position += 8;
+
+    glDeleteBuffers(1, &position);
+    position += 1;
+    glDeleteBuffers(1, &position);
+
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(1, &position);
+    glBindTexture(GL_TEXTURE_2D, position);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, text.width, text.height, 0, GL_RED, GL_UNSIGNED_BYTE, text.pixels);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
+
+
+    float digitwidth = text.width / 11.0f;
+    float _x = 0.0f;
+
+   for (int i = 0; i < digitamount; i++) {
+       Score_VertexBuffer.push_back((_x + 0.0f) * digitwidth);
+       Score_VertexBuffer.push_back(1.0f * text.height);
+       Score_VertexBuffer.push_back((_x + 1.0f) * digitwidth);
+       Score_VertexBuffer.push_back(1.0f * text.height);
+       Score_VertexBuffer.push_back((_x + 1.0f) * digitwidth);
+       Score_VertexBuffer.push_back(0.0f * text.height);
+   
+       Score_VertexBuffer.push_back((_x + 1.0f) * digitwidth);
+       Score_VertexBuffer.push_back(0.0f * text.height);
+       Score_VertexBuffer.push_back((_x + 0.0f) * digitwidth);
+       Score_VertexBuffer.push_back(0.0f * text.height);
+       Score_VertexBuffer.push_back((_x + 0.0f) * digitwidth);
+       Score_VertexBuffer.push_back(1.0f * text.height);
+
+       _x += 1.0f;
+
+       float test = pixelcanvas[i];
+         Score_UVBuffer.push_back(test * 0.09f);
+         Score_UVBuffer.push_back(0.0f);
+         Score_UVBuffer.push_back(test * 0.09f + 0.09f);
+         Score_UVBuffer.push_back(0.0f);
+         Score_UVBuffer.push_back(test * 0.09f + 0.09f);
+         Score_UVBuffer.push_back(1.0f);
+
+         Score_UVBuffer.push_back(test * 0.09f + 0.09f);
+         Score_UVBuffer.push_back(1.0f);
+         Score_UVBuffer.push_back(test * 0.09f);
+         Score_UVBuffer.push_back(1.0f);
+         Score_UVBuffer.push_back(test * 0.09f);
+         Score_UVBuffer.push_back(0.0f);
+
+   }
+
+
+    glGenBuffers(1, &position);
+    glBindBuffer(GL_ARRAY_BUFFER, position);
+    glBufferData(GL_ARRAY_BUFFER, Score_VertexBuffer.size() * 4, Score_VertexBuffer.data(), GL_STATIC_DRAW);
+   // GLuint test = 0;
+    printf("position = %d\n", position);
+    glGenBuffers(1, &position);
+    glBindBuffer(GL_ARRAY_BUFFER, position);
+    glBufferData(GL_ARRAY_BUFFER, Score_UVBuffer.size() * 4, Score_UVBuffer.data(), GL_STATIC_DRAW);
+    
+
+    printf("position = %d\n", position);
+}
+
 void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
     entity->texture_buffer = position + 4;
     entity->vertex_buffer = position + 12;
@@ -673,7 +768,7 @@ void Renderer::RenderEntity(Entity* entity) {
         0,
         (void*)0
     );
-    glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, Score_UVBuffer.size() / 2.0f); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
     glDisableVertexAttribArray(paletteID);

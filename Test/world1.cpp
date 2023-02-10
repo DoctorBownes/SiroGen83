@@ -596,7 +596,7 @@ World1::World1() {
 //0,1,1,1,0,0,0,1,0,0,1,1,1,1,1,0,1,1,1,0,0,0,0,1,0,0,1,1,1,0,0,1,1,1,0,0,1,0,0,0,0,1,1,1,0,0,1,1,1,0,
 //
 //	};
-
+	int test2 = 12;
 	SiroGen->AddSpritetoMemory(&jojospr, 0);
 	SiroGen->AddSpritetoMemory(&belmspr, 1);
 	SiroGen->AddSpritetoMemory(&belmspr1, 2);
@@ -605,16 +605,16 @@ World1::World1() {
 	SiroGen->AddSpritetoMemory(&bb1, 5);
 	SiroGen->AddSpritetoMemory(&bb2, 6);
 	SiroGen->AddSpritetoMemory(&hightext, 7);
+	SiroGen->AddScoretoMemory(score, 8);
 
 	entity2->position.x = 16 * 6;
 	entity2->position.y = 200;
-	SiroGen->SetSpritetoEntity(entity2, 1);
-	SiroGen->SetAttributetoEntity(entity2, 1);
+	//SiroGen->SetSpritetoEntity(entity2, 1);
+	//SiroGen->SetAttributetoEntity(entity2, 1);
 	entities.push_front(entity2);
 
 	entity->position.x = 16 * 5;
 	entity->position.y = 200;
-	SiroGen->SetAttributetoEntity(entity, 0);
 	SiroGen->SetSpritetoEntity(entity, 0);
 	entities.push_front(entity);
 
@@ -632,6 +632,9 @@ World1::World1() {
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
+	entity2->vertex_buffer = 20;
+	entity2->uv_buffer = 21;
+	entity2->texture_buffer = 12;
 }
 
 void World1::update() {
@@ -681,12 +684,15 @@ void World1::update() {
 		//_instance->UpdateMainTile(Nametables[0], 1);
 		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
 		//entity->vertex_buffer++;
-		//printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
 		//SiroGen->SetRenderMode(this, 2);
-		entities.remove(text);
+		//entity->uv_buffer++;
+		//printf("entity->uv_buffer = %d\n", entity->uv_buffer);
+		printf("score = %d\n", score);
 	}
 	if (GetInput()->KeyPressed(KeyCode::Backspace)) {
 	}
+	score++;
+	SiroGen->AddScoretoMemory(score, 8);
 
 
 	//entity->position.x += 0.5f;
