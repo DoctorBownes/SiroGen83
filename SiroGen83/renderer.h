@@ -5,6 +5,7 @@
 #include <SiroGen83/tile.h>
 #include <SiroGen83/vector2.h>
 #include <SiroGen83/sprite.h>
+#include <list>
 #include <vector>
 
 #define PALETTE_ZERO 0
@@ -41,8 +42,6 @@ public:
 	void RenderScene(Scene* scene);
 
 	void AddSpritetoMemory(Sprite* sprite, GLuint position);
-
-	void AddScoretoMemory(int var, GLuint position);
 
 	void SetSpritetoEntity(Entity* entity, GLuint position);
 
@@ -101,10 +100,6 @@ private:
 	std::vector<GLfloat>MT_VertexBuffer;
 
 	std::vector<GLfloat>MT_PaletteBuffer;
-
-	std::vector<GLfloat>Score_VertexBuffer;
-
-	std::vector<GLfloat>Score_UVBuffer;
 
 	Renderer();
 

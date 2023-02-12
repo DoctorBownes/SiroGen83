@@ -9,7 +9,7 @@ public:
 	World1();
 
 	virtual void update() override;
-	int score = 12;
+
 };
 
 #endif
