@@ -157,35 +157,6 @@ Renderer::Renderer() {
     for (int i = 0; i < 2; i++) {
         Maintables[i] = new Nametable();
     }
-    
-    Floattable = new Nametable();
-
-    for (int i = 0; i < 240; i++) {
-        Floattable->tiles[i] = 255;
-        Floattable->attributes[i] = 0;
-    }
-
-    int z = 0;
-    for (int y = 0; y < 15; y++) {
-
-        for (int x = 0; x < 16; x++) {
-            FT_VertexBuffer[(z * 12) + 0] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 1] = ((0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 2] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 3] = ((0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 4] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 5] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 6] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 7] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 8] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 9] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 10] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 11] = ((0.5f - y) * 16.0f);
-
-            EditFTile(z);
-            z++;
-        }
-    }
 
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &tilemap_texture_buffer);
@@ -237,7 +208,7 @@ Renderer::Renderer() {
     N = 0;
 }
 
-void Renderer::EditFTile(unsigned short tile) {
+void Renderer::UpdateFloatTile(unsigned short tile) {
     unsigned short stile = tile * 12;
     unsigned char flip = (Floattable->attributes[tile] >> 2) & 1;
     unsigned char color = Floattable->attributes[tile] & 3;
@@ -480,6 +451,42 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     rendermode = mode;
 }
 
+void Renderer::SetFloattable(Nametable* nametable){
+    Floattable = nametable;
+
+    int z = 0;
+    for (int y = 0; y < 15; y++) {
+
+        for (int x = 0; x < 16; x++) {
+            FT_VertexBuffer[(z * 12) + 0] = ((-0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 1] = ((0.5f - y) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 2] = ((0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 3] = ((0.5f - y) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 4] = ((0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 5] = ((-0.5f - y) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 6] = ((0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 7] = ((-0.5f - y) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 8] = ((-0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 9] = ((-0.5f - y) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 10] = ((-0.5f + x) * 16.0f);
+            FT_VertexBuffer[(z * 12) + 11] = ((0.5f - y) * 16.0f);
+
+            UpdateFloatTile(z);
+            z++;
+        }
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, fvertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, FT_VertexBuffer.size() * 4, FT_VertexBuffer.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
+    glBufferData(GL_ARRAY_BUFFER, FT_PaletteBuffer.size() * 4, FT_PaletteBuffer.data(), GL_STATIC_DRAW);
+
+}
+
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
     if (!entity->frame) {
         entity->frame = beginframe;
@@ -520,34 +527,34 @@ void Renderer::RenderScene(Scene* scene) {
     //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X >> 8);
     //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y >> 8);
 
-    if (rendermode == 1) {
-    
-        N = (overwrite_pos.x >> 8) & 1;
-        // printf("N: %d\n", N);
-        overwrite_pos.x *= 0.0625f;
-        overwrite_pos.x &= 0xf;
-    
-        for (int x = overwrite_pos.x; x < 240; x += 16) {
-            Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
-            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    
-            overwrite_pos.x += 16;
-        }
-    }
-    else {
-    
-        N = (overwrite_pos.y >> 8) & 1;
-    
-        overwrite_pos.y *= 0.0625f;
-        overwrite_pos.y &= 0xf;
-    
-        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-            Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-            Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
-            EditTile(x, x + 240 * N);
-        }
-    }
+    //if (rendermode == 1) {
+    //
+    //    N = (overwrite_pos.x >> 8) & 1;
+    //    // printf("N: %d\n", N);
+    //    overwrite_pos.x *= 0.0625f;
+    //    overwrite_pos.x &= 0xf;
+    //
+    //    for (int x = overwrite_pos.x; x < 240; x += 16) {
+    //        Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
+    //        Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
+    //        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+    //
+    //        overwrite_pos.x += 16;
+    //    }
+    //}
+    //else {
+    //
+    //    N = (overwrite_pos.y >> 8) & 1;
+    //
+    //    overwrite_pos.y *= 0.0625f;
+    //    overwrite_pos.y &= 0xf;
+    //
+    //    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+    //        Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
+    //        Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
+    //        EditTile(x, x + 240 * N);
+    //    }
+    //}
 
     
   //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y + 240);
@@ -654,9 +661,7 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
 }
 void Renderer::RenderFloattable(Scene* scene) {
 
-    glm::mat4 fTranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(scene->GetCamera()->X -120.001f, scene->GetCamera()->Y + 112.001f, 0.0f));
-
-    glm::mat4 fMVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * fTranslationMatrix;
+    glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f)) * glm::translate(glm::mat4(1), glm::vec3(-120.001f, 120.001f, 0.0f));
 
     GLuint fMatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(fMatrixID, 1, GL_FALSE, &fMVP[0][0]);

@@ -214,6 +214,25 @@ World1::World1() {
 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,
 	};
 
+	Tile t10 = {
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	};
+
 	SiroGen->AddtoTileMap(&t0,0);
 	SiroGen->AddtoTileMap(&t1,1);
 	SiroGen->AddtoTileMap(&t2,2);
@@ -223,6 +242,7 @@ World1::World1() {
 	SiroGen->AddtoTileMap(&t6,6);
 	SiroGen->AddtoTileMap(&t7,7);
 	SiroGen->AddtoTileMap(&t8,8);
+	SiroGen->AddtoTileMap(&t10,10);
 
 	Nametables[0] = new Nametable{
 		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
@@ -626,14 +646,31 @@ World1::World1() {
 	//entities.push_front(text);
 
 	//entity2->position.y = 232.0f;
-
+	Floattable = new Nametable{
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+		9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+	};
+	SiroGen->SetFloattable(Floattable);
+	//SiroGen->UpdateFloatTile(0);
 
 	renderpos = 0;
 
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
-	printf("entity->vertex_buffer = %d\n", entity->vertex_buffer);
 }
 
 void World1::update() {
@@ -682,9 +719,9 @@ void World1::update() {
 		//}
 		//_instance->UpdateMainTile(Nametables[0], 1);
 		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
-		entity->vertex_buffer++;
-		printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
-		//SiroGen->SetRenderMode(this, 2);
+		//entity->vertex_buffer++;
+		//printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
+		SiroGen->SetRenderMode(this, 2);
 		//entities.remove(text);
 	}
 	if (GetInput()->KeyPressed(KeyCode::Backspace)) {

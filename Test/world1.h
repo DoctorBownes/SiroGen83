@@ -10,6 +10,8 @@ public:
 
 	virtual void update() override;
 
+	Nametable* Floattable = nullptr;
+
 };
 
 #endif

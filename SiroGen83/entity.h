@@ -15,6 +15,11 @@ public:
 
 	friend class Renderer;
 
+private:
+	float starttime = 0.0;
+
+	unsigned char frame = 0;
+
 	unsigned short texture_buffer;
 
 	unsigned short palette_buffer = 1;
@@ -22,11 +27,6 @@ public:
 	unsigned short vertex_buffer;
 
 	unsigned short uv_buffer = 5;
-
-private:
-	float starttime = 0.0;
-
-	unsigned char frame = 0;
 
 	Input* _instance = _instance->GetInstance();
 };

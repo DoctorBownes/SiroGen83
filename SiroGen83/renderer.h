@@ -51,9 +51,13 @@ public:
 
 	void UpdateMainTile(Nametable* nametable, unsigned short tile);
 
+	void UpdateFloatTile(unsigned short tile);
+
 	void UpdatePalettes();
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
+
+	void SetFloattable(Nametable* nametable);
 
 	GLubyte GetRenderMode() { return rendermode; };
 
@@ -63,20 +67,17 @@ public:
 
 	Palette BackgroundPalette[4];
 	Palette ForgroundPalette[4];
-	Nametable* Floattable = nullptr;
 
 private:
 	GLubyte rendermode = 1;
+
+	Nametable* Floattable = nullptr;
 
 
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];
 
 	void EditTile(unsigned short tile, int test);
-
-	void EditFTile(unsigned short tile);
-
-	std::vector<unsigned char> pixelcanvas;
 
 	GLuint shaderProgram = 0;
 
@@ -91,7 +92,6 @@ private:
 	GLfloat PaletteBuffer[6];
 
 	Nametable* Maintables[2];
-
 
 	void RenderMaintables(Scene* scene);
 
