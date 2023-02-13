@@ -63,6 +63,7 @@ public:
 
 	Palette BackgroundPalette[4];
 	Palette ForgroundPalette[4];
+	Nametable* Floattable = nullptr;
 
 private:
 	GLubyte rendermode = 1;
@@ -72,6 +73,8 @@ private:
 	GLubyte fg_PaletteColors[4 * 4 * 4];
 
 	void EditTile(unsigned short tile, int test);
+
+	void EditFTile(unsigned short tile);
 
 	std::vector<unsigned char> pixelcanvas;
 
@@ -89,17 +92,22 @@ private:
 
 	Nametable* Maintables[2];
 
+
 	void RenderMaintables(Scene* scene);
+
+	void RenderFloattable(Scene* scene);
 
 	void RenderEntity(Entity* entity);
 
 	std::vector<GLubyte>TileMap;
 
 	std::vector<GLfloat>MT_UVBuffer;
-
 	std::vector<GLfloat>MT_VertexBuffer;
-
 	std::vector<GLfloat>MT_PaletteBuffer;
+
+	std::vector<GLfloat>FT_UVBuffer;
+	std::vector<GLfloat>FT_VertexBuffer;
+	std::vector<GLfloat>FT_PaletteBuffer;
 
 	Renderer();
 
@@ -107,11 +115,13 @@ private:
 
 	GLuint tilemap_texture_buffer;
 
-	GLuint vertex_buffer;
-
 	GLuint uv_buffer;
-
+	GLuint vertex_buffer;
 	GLuint palette_buffer;
+
+	GLuint fuv_buffer;
+	GLuint fvertex_buffer;
+	GLuint fpalette_buffer;
 
 	GLubyte N = 0;
 

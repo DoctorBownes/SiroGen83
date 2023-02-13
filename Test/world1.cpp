@@ -8,6 +8,7 @@ Animation animation = Animation{ 0.15f, 1, 2, 0,4, 5,6};
 
 World1::World1() {
 
+
 	SiroGen->BackgroundColor = {
 		0,0,0
 	};
@@ -620,9 +621,9 @@ World1::World1() {
 
 	text->position.x = 0;
 	text->position.y = 4;
-	SiroGen->SetSpritetoEntity(text, 7);
-	SiroGen->SetAttributetoEntity(text, 3);
-	entities.push_front(text);
+	//SiroGen->SetSpritetoEntity(text, 7);
+	//SiroGen->SetAttributetoEntity(text, 3);
+	//entities.push_front(text);
 
 	//entity2->position.y = 232.0f;
 
@@ -632,6 +633,7 @@ World1::World1() {
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
+	printf("entity->vertex_buffer = %d\n", entity->vertex_buffer);
 }
 
 void World1::update() {
@@ -680,10 +682,10 @@ void World1::update() {
 		//}
 		//_instance->UpdateMainTile(Nametables[0], 1);
 		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
-		//entity->vertex_buffer++;
-		//printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
+		entity->vertex_buffer++;
+		printf("entity->uv_buffer = %d\n", entity->vertex_buffer);
 		//SiroGen->SetRenderMode(this, 2);
-		entities.remove(text);
+		//entities.remove(text);
 	}
 	if (GetInput()->KeyPressed(KeyCode::Backspace)) {
 	}
