@@ -111,7 +111,6 @@ private:
 	std::vector<GLfloat>MT_PaletteBuffer;
 
 	std::vector<GLfloat>FT_UVBuffer;
-	std::vector<GLfloat>FT_VertexBuffer;
 	std::vector<GLfloat>FT_PaletteBuffer;
 
 	Renderer();
@@ -125,7 +124,6 @@ private:
 	GLuint palette_buffer;
 
 	GLuint fuv_buffer;
-	GLuint fvertex_buffer;
 	GLuint fpalette_buffer;
 
 	GLubyte N = 0;

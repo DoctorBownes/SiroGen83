@@ -54,7 +54,7 @@ void Core::Run(Scene* scene) {
 
     do {
 
-        if (glfwGetTime() - starttime > 0.0164f) {//60 FPS CAP
+        if (glfwGetTime() - starttime > 0.0162f) {//60 FPS CAP
             glClearColor(_instance->BackgroundColor.r * 0.00392f, _instance->BackgroundColor.g * 0.00392f, _instance->BackgroundColor.b * 0.00392f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

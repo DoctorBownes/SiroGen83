@@ -45,8 +45,7 @@ Renderer::Renderer() {
     MT_PaletteBuffer.resize(2880);
 
     FT_UVBuffer.resize(2880);
-    FT_VertexBuffer.resize(2880);
-    FT_PaletteBuffer.resize(2880);
+    FT_PaletteBuffer.resize(1440);
     TileMap.resize(256 * 16 * 16);
 
     //Initialize forground and background palettes
@@ -189,10 +188,6 @@ Renderer::Renderer() {
     glGenBuffers(1, &fuv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
     glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
-
-    glGenBuffers(1, &fvertex_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, fvertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_VertexBuffer.size() * 4, FT_VertexBuffer.data(), GL_STATIC_DRAW);
 
     glGenBuffers(1, &fpalette_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
@@ -458,29 +453,11 @@ void Renderer::SetFloattable(Nametable* nametable){
     for (int y = 0; y < 15; y++) {
 
         for (int x = 0; x < 16; x++) {
-            FT_VertexBuffer[(z * 12) + 0] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 1] = ((0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 2] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 3] = ((0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 4] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 5] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 6] = ((0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 7] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 8] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 9] = ((-0.5f - y) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 10] = ((-0.5f + x) * 16.0f);
-            FT_VertexBuffer[(z * 12) + 11] = ((0.5f - y) * 16.0f);
 
             UpdateFloatTile(z);
             z++;
         }
     }
-
-    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, fvertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_VertexBuffer.size() * 4, FT_VertexBuffer.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
     glBufferData(GL_ARRAY_BUFFER, FT_PaletteBuffer.size() * 4, FT_PaletteBuffer.data(), GL_STATIC_DRAW);
@@ -536,17 +513,6 @@ void Renderer::RenderScene(Scene* scene) {
     scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
-    //overwrite_posz *= 0.0625f;
-    //overwrite_posz &= 0xf;
-    //overwrite_pos.x += overwrite_pos.y * 16; //Key
-
-    //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X);
-    //printf("overwrite_pos.x: %d\n", overwrite_pos.x);
-    //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
-    //printf("overwrite_posz: %d\n", overwrite_posz);
-    //printf("scene->renderpos : %d\n", scene->renderpos);
-    //printf("scene->GetCamera()->X: %d\n", scene->GetCamera()->X >> 8);
-    //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y >> 8);
 
     //if (rendermode == 1) {
     //
@@ -577,23 +543,7 @@ void Renderer::RenderScene(Scene* scene) {
     //    }
     //}
 
-    
-  //printf("scene->GetCamera()->Y: %d\n", scene->GetCamera()->Y + 240);
-  //printf("overwrite_pos.y: %d\n", overwrite_pos.y);
-   //printf("scene->renderpos.x : %d\n", scene->renderpos);
-
-    /*
-   overwrite_pos *= 16;
-
-    for (int x = 0; x < 16; x++) {
-        printf("overwrite_pos: %d\n", overwrite_pos);
-        Maintables[N]->tiles[overwrite_pos] = scene->Nametables[2]->tiles[overwrite_pos];
-        Maintables[N]->flip[overwrite_pos] = scene->Nametables[2]->flip[overwrite_pos];
-        EditTile(overwrite_pos, overwrite_pos + 240 * N);
-        overwrite_pos++;
-    }*/
     RenderMaintables(scene); //TODO implement int renderpos
-    RenderFloattable(scene);
 
     for (Entity* it : scene->entities) {
         if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
@@ -610,6 +560,8 @@ void Renderer::RenderScene(Scene* scene) {
             RenderEntity(it);
         }
     }
+
+    RenderFloattable(scene);
 }
 
 void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
@@ -632,7 +584,7 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     VertexBuffer[11] = 1.0f * sprite->height;
 
 
-    position += 5;
+    position += 4;
 
     glDeleteTextures(1, &position);
 
@@ -656,7 +608,7 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
 
 void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
     entity->texture_buffer = position + 4;
-    entity->vertex_buffer = position + 15;
+    entity->vertex_buffer = position + 14;
 }
 
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
@@ -697,7 +649,7 @@ void Renderer::RenderFloattable(Scene* scene) {
 
     GLuint fvertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(fvertexPositionID);
-    glBindBuffer(GL_ARRAY_BUFFER, fvertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
     glVertexAttribPointer(
         fvertexPositionID,   // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
@@ -730,7 +682,7 @@ void Renderer::RenderFloattable(Scene* scene) {
         0,
         (void*)0
     );
-    glDrawArrays(GL_TRIANGLES, 0, FT_UVBuffer.size() / 2); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 1440); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(fvertexPositionID);
     glDisableVertexAttribArray(fuvPositionID);
     glDisableVertexAttribArray(fpaletteID);
@@ -744,14 +696,6 @@ void Renderer::RenderMaintables(Scene* scene) {
 
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(vertexPositionID);
@@ -768,7 +712,6 @@ void Renderer::RenderMaintables(Scene* scene) {
     GLuint uvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(uvPositionID);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, MT_UVBuffer.size() * 4, MT_UVBuffer.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(
         uvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
@@ -788,7 +731,7 @@ void Renderer::RenderMaintables(Scene* scene) {
         0,
         (void*)0
     );
-    glDrawArrays(GL_TRIANGLES, 0, MT_UVBuffer.size() / 2); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 2880); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
     glDisableVertexAttribArray(paletteID);
