@@ -487,17 +487,25 @@ void Renderer::SetFloattable(Nametable* nametable){
 
 }
 
-void Renderer::SetTileDigits(int score, unsigned char posR2L) {
-    while (score > 0)
-    {
+void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
+    digits = 0;
+    while (score > 0) {
         int digit = score % 10;
         score /= 10;
         Floattable->tiles[posR2L] = digit;
 
         UpdateFloatTile(posR2L);
         posR2L--;
-        //print digit
+        digits++;
     }
+    if (lastdigits > digits) {
+
+        Floattable->tiles[posR2L] = blankdigit;
+
+        UpdateFloatTile(posR2L);
+    }
+
+    lastdigits = digits;
 }
 
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {

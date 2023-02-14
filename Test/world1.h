@@ -12,7 +12,7 @@ public:
 
 	Nametable* Floattable = nullptr;
 
-	int score = 0;
+	int score = 10001;
 
 };
 

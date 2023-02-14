@@ -59,7 +59,7 @@ public:
 
 	void SetFloattable(Nametable* nametable);
 
-	void SetTileDigits(int score, unsigned char posR2L);
+	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
 
 	GLubyte GetRenderMode() { return rendermode; };
 
@@ -71,6 +71,9 @@ public:
 	Palette ForgroundPalette[4];
 
 private:
+	unsigned char digits = 0;
+	unsigned char lastdigits = 0;
+
 	GLubyte rendermode = 1;
 
 	Nametable* Floattable = nullptr;
