@@ -59,6 +59,8 @@ public:
 
 	void SetFloattable(Nametable* nametable);
 
+	void SetTileDigits(int score, unsigned char posR2L);
+
 	GLubyte GetRenderMode() { return rendermode; };
 
 	void PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe = 0);

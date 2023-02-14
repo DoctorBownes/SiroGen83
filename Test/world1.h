@@ -12,6 +12,8 @@ public:
 
 	Nametable* Floattable = nullptr;
 
+	int score = 0;
+
 };
 
 #endif

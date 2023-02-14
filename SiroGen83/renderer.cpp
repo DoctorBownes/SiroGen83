@@ -487,6 +487,19 @@ void Renderer::SetFloattable(Nametable* nametable){
 
 }
 
+void Renderer::SetTileDigits(int score, unsigned char posR2L) {
+    while (score > 0)
+    {
+        int digit = score % 10;
+        score /= 10;
+        Floattable->tiles[posR2L] = digit;
+
+        UpdateFloatTile(posR2L);
+        posR2L--;
+        //print digit
+    }
+}
+
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
     if (!entity->frame) {
         entity->frame = beginframe;
@@ -661,7 +674,7 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
 }
 void Renderer::RenderFloattable(Scene* scene) {
 
-    glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f)) * glm::translate(glm::mat4(1), glm::vec3(-120.001f, 120.001f, 0.0f));
+    glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f, 0.0083333f,1.0f)) * glm::translate(glm::mat4(1), glm::vec3(-120.001f, 112.001f, 0.0f));
 
     GLuint fMatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(fMatrixID, 1, GL_FALSE, &fMVP[0][0]);
