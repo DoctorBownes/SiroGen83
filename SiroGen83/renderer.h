@@ -59,6 +59,8 @@ public:
 
 	void SetScoreScreen(TileScreen* tilescreen);
 
+	void DeactivateScoreScreen() { ScoreScreen = nullptr; };
+
 	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
 
 	GLubyte GetRenderMode() { return rendermode; };

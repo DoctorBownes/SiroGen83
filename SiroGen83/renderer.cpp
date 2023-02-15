@@ -46,6 +46,7 @@ Renderer::Renderer() {
 
     FT_UVBuffer.resize(2880);
     FT_PaletteBuffer.resize(1440);
+
     TileMap.resize(256 * 16 * 16);
 
     //Initialize forground and background palettes
@@ -186,18 +187,11 @@ Renderer::Renderer() {
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     glGenBuffers(1, &fuv_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
-
     glGenBuffers(1, &fpalette_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_PaletteBuffer.size() * 4, FT_PaletteBuffer.data(), GL_STATIC_DRAW);
 
     glGenBuffers(1, &uv_buffer);
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &palette_buffer);
-
-
 
 
     N = 0;
@@ -461,7 +455,6 @@ void Renderer::SetScoreScreen(TileScreen* tilescreen){
 
     glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
     glBufferData(GL_ARRAY_BUFFER, FT_PaletteBuffer.size() * 4, FT_PaletteBuffer.data(), GL_STATIC_DRAW);
-
 }
 
 void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
@@ -514,34 +507,34 @@ void Renderer::RenderScene(Scene* scene) {
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
 
-    if (rendermode == 1) {
-    
-        N = (overwrite_pos.x >> 8) & 1;
-        // printf("N: %d\n", N);
-        overwrite_pos.x *= 0.0625f;
-        overwrite_pos.x &= 0xf;
-    
-        for (int x = overwrite_pos.x; x < 240; x += 16) {
-            MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
-            MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
-            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    
-            overwrite_pos.x += 16;
-        }
-    }
-    else {
-    
-        N = (overwrite_pos.y >> 8) & 1;
-    
-        overwrite_pos.y *= 0.0625f;
-        overwrite_pos.y &= 0xf;
-    
-        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-            EditTile(x, x + 240 * N);
-        }
-    }
+    //if (rendermode == 1) {
+    //
+    //    N = (overwrite_pos.x >> 8) & 1;
+    //    // printf("N: %d\n", N);
+    //    overwrite_pos.x *= 0.0625f;
+    //    overwrite_pos.x &= 0xf;
+    //
+    //    for (int x = overwrite_pos.x; x < 240; x += 16) {
+    //        MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
+    //        MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
+    //        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+    //
+    //        overwrite_pos.x += 16;
+    //    }
+    //}
+    //else {
+    //
+    //    N = (overwrite_pos.y >> 8) & 1;
+    //
+    //    overwrite_pos.y *= 0.0625f;
+    //    overwrite_pos.y &= 0xf;
+    //
+    //    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+    //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+    //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+    //        EditTile(x, x + 240 * N);
+    //    }
+    //}
 
     RenderMainScreens(scene); //TODO implement int renderpos
 
@@ -561,7 +554,17 @@ void Renderer::RenderScene(Scene* scene) {
         }
     }
 
-    RenderScoreScreen(scene);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
+    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
+
+    if (ScoreScreen) {
+        RenderScoreScreen(scene);
+    }
 }
 
 void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
@@ -638,14 +641,6 @@ void Renderer::RenderScoreScreen(Scene* scene) {
 
     GLuint fMatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(fMatrixID, 1, GL_FALSE, &fMVP[0][0]);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     GLuint fvertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
     glEnableVertexAttribArray(fvertexPositionID);
