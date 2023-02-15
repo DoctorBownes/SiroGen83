@@ -154,7 +154,7 @@ Renderer::Renderer() {
     }
 
     for (int i = 0; i < 2; i++) {
-        Maintables[i] = new Nametable();
+        MainScreen[i] = new TileScreen();
     }
 
     glActiveTexture(GL_TEXTURE0);
@@ -203,20 +203,20 @@ Renderer::Renderer() {
     N = 0;
 }
 
-void Renderer::UpdateFloatTile(unsigned short tile) {
+void Renderer::UpdateScoreTile(unsigned short tile) {
     unsigned short stile = tile * 12;
-    unsigned char flip = (Floattable->attributes[tile] >> 2) & 1;
-    unsigned char color = Floattable->attributes[tile] & 3;
+    unsigned char flip = (ScoreScreen->attributes[tile] >> 2) & 1;
+    unsigned char color = ScoreScreen->attributes[tile] & 3;
     float MapSize = 1.0f / (TileMap.size() / 256.0f);
 
-    FT_UVBuffer[stile + 0] =  (flip * MapSize + Floattable->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 2] = (!flip * MapSize + Floattable->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 4] = (!flip * MapSize + Floattable->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 6] = (!flip * MapSize + Floattable->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 8] =  (flip * MapSize + Floattable->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 10] = (flip * MapSize + Floattable->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 0] =  (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 2] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 4] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 6] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 8] =  (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 10] = (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
 
-    flip = Floattable->attributes[tile];
+    flip = ScoreScreen->attributes[tile];
     (flip >>= 3) &= 1;
 
     FT_UVBuffer[stile + 1] = flip;
@@ -238,18 +238,18 @@ void Renderer::UpdateFloatTile(unsigned short tile) {
 
 void Renderer::EditTile(unsigned short tile, int test) {
     unsigned short stile = test * 12;
-    unsigned char flip = (Maintables[N]->attributes[tile] >> 2) & 1;
-    unsigned char color = Maintables[N]->attributes[tile] & 3;
+    unsigned char flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
+    unsigned char color = MainScreen[N]->attributes[tile] & 3;
     float MapSize = 1.0f / (TileMap.size() / 256.0f);
 
-    MT_UVBuffer[stile + 0] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[stile + 2] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[stile + 4] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[stile + 6] = (!flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[stile + 8] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[stile +10] =  (flip * MapSize + Maintables[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 0] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile + 8] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[stile +10] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
 
-    flip = Maintables[N]->attributes[tile];
+    flip = MainScreen[N]->attributes[tile];
     (flip >>= 3) &= 1;
 
     MT_UVBuffer[stile + 1] =  flip;
@@ -269,9 +269,9 @@ void Renderer::EditTile(unsigned short tile, int test) {
     MT_PaletteBuffer[stile + 5] = color;
 }
 
-void Renderer::UpdateMainTile(Nametable* nametable, unsigned short tile) {
-    Maintables[N]->tiles[tile] = nametable->tiles[tile];
-    Maintables[N]->attributes[tile] = nametable->attributes[tile];
+void Renderer::UpdateMainTile(TileScreen* tilescreen, unsigned short tile) {
+    MainScreen[N]->tiles[tile] = tilescreen->tiles[tile];
+    MainScreen[N]->attributes[tile] = tilescreen->attributes[tile];
     EditTile(tile, tile);
 }
 
@@ -367,8 +367,8 @@ void Renderer::UpdatePalettes() {
 void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     for (int j = 0; j < 2; j++) {
         for (int i = 0; i < 240; i++) {
-            Maintables[j]->tiles[i] = scene->Nametables[scene->renderpos + (j)]->tiles[i];
-            Maintables[j]->attributes[i] = scene->Nametables[scene->renderpos + (j)]->attributes[i];
+            MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
+            MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
         }
     }
 
@@ -446,15 +446,15 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     rendermode = mode;
 }
 
-void Renderer::SetFloattable(Nametable* nametable){
-    Floattable = nametable;
+void Renderer::SetScoreScreen(TileScreen* tilescreen){
+    ScoreScreen = tilescreen;
 
     int z = 0;
     for (int y = 0; y < 15; y++) {
 
         for (int x = 0; x < 16; x++) {
 
-            UpdateFloatTile(z);
+            UpdateScoreTile(z);
             z++;
         }
     }
@@ -469,17 +469,17 @@ void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blan
     while (score > 0) {
         int digit = score % 10;
         score /= 10;
-        Floattable->tiles[posR2L] = digit;
+        ScoreScreen->tiles[posR2L] = digit;
 
-        UpdateFloatTile(posR2L);
+        UpdateScoreTile(posR2L);
         posR2L--;
         digits++;
     }
     if (lastdigits > digits) {
 
-        Floattable->tiles[posR2L] = blankdigit;
+        ScoreScreen->tiles[posR2L] = blankdigit;
 
-        UpdateFloatTile(posR2L);
+        UpdateScoreTile(posR2L);
     }
 
     lastdigits = digits;
@@ -514,36 +514,36 @@ void Renderer::RenderScene(Scene* scene) {
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
 
-    //if (rendermode == 1) {
-    //
-    //    N = (overwrite_pos.x >> 8) & 1;
-    //    // printf("N: %d\n", N);
-    //    overwrite_pos.x *= 0.0625f;
-    //    overwrite_pos.x &= 0xf;
-    //
-    //    for (int x = overwrite_pos.x; x < 240; x += 16) {
-    //        Maintables[N]->tiles[overwrite_pos.x] = scene->Nametables[scene->renderpos]->tiles[x];
-    //        Maintables[N]->attributes[overwrite_pos.x] = scene->Nametables[scene->renderpos]->attributes[x];
-    //        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    //
-    //        overwrite_pos.x += 16;
-    //    }
-    //}
-    //else {
-    //
-    //    N = (overwrite_pos.y >> 8) & 1;
-    //
-    //    overwrite_pos.y *= 0.0625f;
-    //    overwrite_pos.y &= 0xf;
-    //
-    //    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-    //        Maintables[N]->tiles[x] = scene->Nametables[scene->renderpos]->tiles[x];
-    //        Maintables[N]->attributes[x] = scene->Nametables[scene->renderpos]->attributes[x];
-    //        EditTile(x, x + 240 * N);
-    //    }
-    //}
+    if (rendermode == 1) {
+    
+        N = (overwrite_pos.x >> 8) & 1;
+        // printf("N: %d\n", N);
+        overwrite_pos.x *= 0.0625f;
+        overwrite_pos.x &= 0xf;
+    
+        for (int x = overwrite_pos.x; x < 240; x += 16) {
+            MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
+            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+    
+            overwrite_pos.x += 16;
+        }
+    }
+    else {
+    
+        N = (overwrite_pos.y >> 8) & 1;
+    
+        overwrite_pos.y *= 0.0625f;
+        overwrite_pos.y &= 0xf;
+    
+        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+            EditTile(x, x + 240 * N);
+        }
+    }
 
-    RenderMaintables(scene); //TODO implement int renderpos
+    RenderMainScreens(scene); //TODO implement int renderpos
 
     for (Entity* it : scene->entities) {
         if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
@@ -561,7 +561,7 @@ void Renderer::RenderScene(Scene* scene) {
         }
     }
 
-    RenderFloattable(scene);
+    RenderScoreScreen(scene);
 }
 
 void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
@@ -632,7 +632,7 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 16, 16, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
 }
-void Renderer::RenderFloattable(Scene* scene) {
+void Renderer::RenderScoreScreen(Scene* scene) {
 
     glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f, 0.0083333f,1.0f)) * glm::translate(glm::mat4(1), glm::vec3(-120.001f, 112.001f, 0.0f));
 
@@ -689,7 +689,7 @@ void Renderer::RenderFloattable(Scene* scene) {
 }
 
 
-void Renderer::RenderMaintables(Scene* scene) {
+void Renderer::RenderMainScreens(Scene* scene) {
     glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(-120.001f, 112.001f, 0.0f));
 
     glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;

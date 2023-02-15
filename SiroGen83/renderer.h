@@ -49,15 +49,15 @@ public:
 
 	void AddtoTileMap(Tile* tile, char position);
 
-	void UpdateMainTile(Nametable* nametable, unsigned short tile);
+	void UpdateMainTile(TileScreen* tilescreen, unsigned short tile);
 
-	void UpdateFloatTile(unsigned short tile);
+	void UpdateScoreTile(unsigned short tile);
 
 	void UpdatePalettes();
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	void SetFloattable(Nametable* nametable);
+	void SetScoreScreen(TileScreen* tilescreen);
 
 	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
 
@@ -76,8 +76,7 @@ private:
 
 	GLubyte rendermode = 1;
 
-	Nametable* Floattable = nullptr;
-
+	TileScreen* ScoreScreen = nullptr;
 
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];
@@ -96,11 +95,11 @@ private:
 
 	GLfloat PaletteBuffer[6];
 
-	Nametable* Maintables[2];
+	TileScreen* MainScreen[2];
 
-	void RenderMaintables(Scene* scene);
+	void RenderMainScreens(Scene* scene);
 
-	void RenderFloattable(Scene* scene);
+	void RenderScoreScreen(Scene* scene);
 
 	void RenderEntity(Entity* entity);
 

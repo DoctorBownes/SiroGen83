@@ -16,7 +16,7 @@ public:
 
 	//unsigned char rendermode = 1;
 
-	Nametable* Nametables[256];
+	TileScreen* TileScreens[256];
 
 protected:
 	Renderer* SiroGen = SiroGen->GetInstance();

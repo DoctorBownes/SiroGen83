@@ -457,7 +457,7 @@ World1::World1() {
 	SiroGen->AddtoTileMap(&t8, 18);
 	SiroGen->AddtoTileMap(&t20,20);
 
-	Nametables[0] = new Nametable{
+	TileScreens[0] = new TileScreen{
 		11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,
 		11,15,11,12,15,12,11,12,11,15,11,12,15,12,11,12,
 		12,11,13,13,12,11,12,11,12,11,13,13,12,11,12,11,
@@ -491,7 +491,7 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	Nametables[1] = new Nametable{
+	TileScreens[1] = new TileScreen{
 		11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,
 		11,15,11,12,15,12,11,12,11,15,11,12,15,12,11,12,
 		12,11,13,13,12,11,12,11,12,11,13,13,12,11,12,11,
@@ -525,7 +525,7 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	Nametables[2] = new Nametable{
+	TileScreens[2] = new TileScreen{
 		6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
 		1,5,1,2,5,2,1,2,1,5,1,2,5,2,1,2,
 		2,1,3,3,2,1,2,1,2,1,3,3,2,1,2,1,
@@ -559,7 +559,7 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	Nametables[3] = new Nametable{
+	TileScreens[3] = new TileScreen{
 		6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
 		1,5,1,2,5,2,1,2,1,5,1,2,5,2,1,2,
 		2,1,3,3,2,1,2,1,2,1,3,3,2,1,2,1,
@@ -593,8 +593,8 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	//Nametables[0]->tiles[3] = 0;
-	//Nametables[0]->flip[3] = 3;
+	//TileScreens[0]->tiles[3] = 0;
+	//TileScreens[0]->flip[3] = 3;
 
 	//_instance->GenerateSprite(entity, canvas, 5, 5);
 	//entities.push_front(entity);
@@ -847,7 +847,7 @@ World1::World1() {
 	//entities.push_front(text);
 
 	//entity2->position.y = 232.0f;
-	Floattable = new Nametable{
+	ScoreScreen = new TileScreen{
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 		20,20,20,20,20,20,20,20,20,20,20,0,0,0,0,20,
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
@@ -880,7 +880,7 @@ World1::World1() {
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 	};
-	SiroGen->SetFloattable(Floattable);
+	SiroGen->SetScoreScreen(ScoreScreen);
 	//SiroGen->UpdateFloatTile(0);
 
 	renderpos = 0;
@@ -935,14 +935,14 @@ void World1::update() {
 		//else {
 		//	_instance->SetRenderMode(this, 1);
 		//}
-		//_instance->UpdateMainTile(Nametables[0], 1);
+		//_instance->UpdateMainTile(TileScreens[0], 1);
 		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
 		//entity->texture_buffer++;
 		//printf("entity->uv_buffer = %d\n", entity->texture_buffer);
 		//entities.remove(text);
 	}
 	if (GetInput()->KeyPressed(KeyCode::Backspace)) {
-		SiroGen->SetFloattable(Nametables[0]);
+		SiroGen->SetScoreScreen(TileScreens[0]);
 	}
 
 	score-= 1;

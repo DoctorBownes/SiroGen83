@@ -11,7 +11,7 @@ struct Color {
 	unsigned char b;
 };
 
-struct Nametable {
+struct TileScreen {
 	unsigned char tiles[16 * 15];
 	unsigned char attributes[16 * 15];
 };

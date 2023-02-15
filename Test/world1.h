@@ -10,7 +10,7 @@ public:
 
 	virtual void update() override;
 
-	Nametable* Floattable = nullptr;
+	TileScreen* ScoreScreen = nullptr;
 
 	int score = 10001;
 
