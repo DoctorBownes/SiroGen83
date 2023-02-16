@@ -73,8 +73,6 @@ public:
 	Palette ForgroundPalette[4];
 
 private:
-	unsigned char digits = 0;
-	unsigned char lastdigits = 0;
 
 	GLubyte rendermode = 1;
 

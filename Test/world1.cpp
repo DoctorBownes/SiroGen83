@@ -5,7 +5,7 @@
 Entity* entity = new Entity();
 Entity* entity2 = new Entity();
 Entity* text = new Entity();
-Animation animation = Animation{ 0.15f, 1, 2, 0,4, 5,6};
+Animation animation = Animation{ 0.15f, 1, 2, 4,0, 5,6};
 
 	Sprite hightext = Sprite{ 72,8,
 0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,2,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,0,0,0,0,0,2,2,2,2,2,0,
@@ -848,8 +848,8 @@ World1::World1() {
 
 	//entity2->position.y = 232.0f;
 	ScoreScreen = new TileScreen{
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,0,20,
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
-		20,20,20,20,20,20,20,20,20,20,20,0,0,0,0,20,
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 		19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,
 		19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,
@@ -891,7 +891,6 @@ World1::World1() {
 }
 
 void World1::update() {
-	int newscore = score;
 	if (GetInput()->KeyDown(KeyCode::Left) && SiroGen->GetRenderMode() == 1) {
 		GetCamera()->X -= 2;
 		entity->position.x -= 2;
@@ -942,13 +941,15 @@ void World1::update() {
 		//entities.remove(text);
 		SiroGen->DeactivateScoreScreen();
 	}
-	if (GetInput()->KeyPressed(KeyCode::Backspace)) {
-		SiroGen->SetScoreScreen(TileScreens[0]);
+	if (GetInput()->KeyDown(KeyCode::KeyPadAdd)) {
+		upscore++;
+	}
+	if (GetInput()->KeyDown(KeyCode::KeyPadSubtract)) {
+		upscore--;
 	}
 
-	score-= 1;
-
-	SiroGen->SetTileDigits(score, 30);
+	SiroGen->SetTileDigits(downscore, 30);
+	SiroGen->SetTileDigits(upscore, 14,20);
 
 
 	//entity->position.x += 0.5f;

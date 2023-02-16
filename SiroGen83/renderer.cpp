@@ -458,7 +458,6 @@ void Renderer::SetScoreScreen(TileScreen* tilescreen){
 }
 
 void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
-    digits = 0;
     while (score > 0) {
         int digit = score % 10;
         score /= 10;
@@ -466,23 +465,15 @@ void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blan
 
         UpdateScoreTile(posR2L);
         posR2L--;
-        digits++;
     }
-    if (lastdigits > digits) {
-
-        ScoreScreen->tiles[posR2L] = blankdigit;
-
-        UpdateScoreTile(posR2L);
-    }
-
-    lastdigits = digits;
+    ScoreScreen->tiles[posR2L+1] = blankdigit;
+    UpdateScoreTile(posR2L);
 }
 
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
     if (!entity->frame) {
         entity->frame = beginframe;
     }
-    SetSpritetoEntity(entity, animation->sprites[entity->frame]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
     if (glfwGetTime() - entity->starttime > animation->framerate) {
         SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
 
