@@ -87,3 +87,18 @@ target_link_libraries(Test # g++ -lSiroGen83
 	target_link_libraries(Test
 		${ALL_GRAPHICS_LIBS}
 	)
+
+
+# BurgerBoss
+add_executable(BurgerBoss # g++ BurgerBoss/main.cpp -o BurgerBoss
+	BurgerBoss/main.cpp
+	BurgerBoss/world1.cpp
+	BurgerBoss/world1.h
+	BurgerBoss/spritefactory.h
+)
+target_link_libraries(BurgerBoss # g++ -lSiroGen83
+	${ALL_GRAPHICS_LIBS}
+)
+	target_link_libraries(BurgerBoss
+		${ALL_GRAPHICS_LIBS}
+	)

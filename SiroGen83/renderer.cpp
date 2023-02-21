@@ -533,7 +533,7 @@ void Renderer::RenderScene(Scene* scene) {
         if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
             it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
         }
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 120.001f, -(it->position.y & 511) + 112.001f, 0.0f));
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 128.001f, -(it->position.y & 511) + 107.001f, 0.0f));
 
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 

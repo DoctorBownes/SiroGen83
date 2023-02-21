@@ -469,8 +469,8 @@ World1::World1() {
 		12,11,14,14,12,11,18,18,17,17,14,14,12,11,12,11,
 		11,12,14,14,11,12,18,18,17,17,14,14,17,17,11,12,
 		12,11,14,14,12,11,18,18,16,16,14,14,16,16,12,11,
-		11,12,14,14,11,12,11,12,16,16,14,14,11,12,11,12,
-		11,12,13,13,11,12,11,12,11,12,13,13,11,12,11,12,
+		11,12,14,14,10,12,11,12,16,16,14,14,11,12,11,12,
+		11,12,13,13,10,12,11,12,11,12,13,13,11,12,11,12,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,
 
@@ -828,14 +828,14 @@ World1::World1() {
 	SiroGen->AddSpritetoMemory(&bb2, 6);
 	SiroGen->AddSpritetoMemory(&hightext, 7);
 
-	entity2->position.x = 16 * 6;
-	entity2->position.y = 200;
+	entity2->position.x =  6 * 16;
+	entity2->position.y = 13 * 15;
 	SiroGen->SetSpritetoEntity(entity2, 1);
 	SiroGen->SetAttributetoEntity(entity2, 1);
 	entities.push_front(entity2);
 
-	entity->position.x = 16 * 5;
-	entity->position.y = 200;
+	entity->position.x =  5 * 16;
+	entity->position.y = 13 * 15;
 	SiroGen->SetAttributetoEntity(entity, 0);
 	SiroGen->SetSpritetoEntity(entity, 0);
 	entities.push_front(entity);
@@ -890,22 +890,55 @@ World1::World1() {
 	GetCamera()->Y = 0;
 }
 
+unsigned char gridmap[16 * 15]{
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+};
+
+bool TileCol(Entity* entity, unsigned char grid[16 * 15]) {
+	unsigned char posz = entity->position.x * 0.0625f + (entity->position.y * 0.0667f) * 15;
+	printf("posz: %d\n", posz);
+	if (grid[posz] == 1) {
+		return true;
+	}
+	return false;
+}
+
 void World1::update() {
-	if (GetInput()->KeyDown(KeyCode::Left) && SiroGen->GetRenderMode() == 1) {
+	if (GetInput()->KeyDown(KeyCode::Left) && SiroGen->GetRenderMode() == 1 && !TileCol(entity, gridmap)) {
 		GetCamera()->X -= 2;
 		entity->position.x -= 2;
 		GetCamera()->scrolldir.x = 0;
 		SiroGen->SetAttributetoEntity(entity, 4);
 		SiroGen->PlayAnimation(entity, &animation, 3,2);
 	}
-	else if (GetInput()->KeyDown(KeyCode::Right) && SiroGen->GetRenderMode() == 1) {
+	else if (GetInput()->KeyDown(KeyCode::Left) && SiroGen->GetRenderMode() == 1 && TileCol(entity, gridmap)) {
+		entity->position.x += 2;
+	}
+	if (GetInput()->KeyDown(KeyCode::Right) && SiroGen->GetRenderMode() == 1 && !TileCol(entity, gridmap)) {
 		GetCamera()->X += 2;
 		entity->position.x += 2;
 		GetCamera()->scrolldir.x = 1;
 		SiroGen->SetAttributetoEntity(entity, 0);
 		SiroGen->PlayAnimation(entity, &animation, 3,2);
 	}
-	else if (GetInput()->KeyDown(KeyCode::Up) && SiroGen->GetRenderMode() == 2) {
+	else if (GetInput()->KeyDown(KeyCode::Right) && SiroGen->GetRenderMode() == 1 && TileCol(entity, gridmap)) {
+		entity->position.x -= 4;
+	}
+	if (GetInput()->KeyDown(KeyCode::Up) && SiroGen->GetRenderMode() == 2) {
 		GetCamera()->Y -= 2;
 		entity->position.y -= 2;
 		GetCamera()->scrolldir.y = 0;
@@ -928,17 +961,6 @@ void World1::update() {
 	}
 	text->position.x = GetCamera()->X;
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-		//if (_instance->rendermode == 1) {
-		//	_instance->SetRenderMode(this, 2);
-		//}
-		//else {
-		//	_instance->SetRenderMode(this, 1);
-		//}
-		//_instance->UpdateMainTile(TileScreens[0], 1);
-		//SiroGen->BackgroundPalette[0] = Palette{200,120,0, 43,54,3, 165,20,65};
-		//entity->texture_buffer++;
-		//printf("entity->uv_buffer = %d\n", entity->texture_buffer);
-		//entities.remove(text);
 		SiroGen->DeactivateScoreScreen();
 	}
 	if (GetInput()->KeyDown(KeyCode::KeyPadAdd)) {
@@ -951,6 +973,7 @@ void World1::update() {
 	SiroGen->SetTileDigits(downscore, 30);
 	SiroGen->SetTileDigits(upscore, 14,20);
 
+	
 
 	//entity->position.x += 0.5f;
 	//GetCamera()->X = entity->position.x;
