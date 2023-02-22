@@ -51,15 +51,15 @@ public:
 
 	void UpdateMainTile(TileScreen* tilescreen, unsigned short tile);
 
-	void UpdateScoreTile(unsigned short tile);
+	void UpdateGUITile(unsigned short tile);
 
 	void UpdatePalettes();
 
 	void SetRenderMode(Scene* scene, unsigned char mode);
 
-	void SetScoreScreen(TileScreen* tilescreen);
+	void SetGUIScreen(TileScreen* tilescreen);
 
-	void DeactivateScoreScreen() { ScoreScreen = nullptr; };
+	void DeactivateGUIScreen() { GUIScreen = nullptr; };
 
 	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
 
@@ -76,7 +76,7 @@ private:
 
 	GLubyte rendermode = 1;
 
-	TileScreen* ScoreScreen = nullptr;
+	TileScreen* GUIScreen = nullptr;
 
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];

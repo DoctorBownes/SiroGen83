@@ -197,20 +197,20 @@ Renderer::Renderer() {
     N = 0;
 }
 
-void Renderer::UpdateScoreTile(unsigned short tile) {
+void Renderer::UpdateGUITile(unsigned short tile) {
     unsigned short stile = tile * 12;
-    unsigned char flip = (ScoreScreen->attributes[tile] >> 2) & 1;
-    unsigned char color = ScoreScreen->attributes[tile] & 3;
+    unsigned char flip = (GUIScreen->attributes[tile] >> 2) & 1;
+    unsigned char color = GUIScreen->attributes[tile] & 3;
     float MapSize = 1.0f / (TileMap.size() / 256.0f);
 
-    FT_UVBuffer[stile + 0] =  (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 2] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 4] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 6] = (!flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 8] =  (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
-    FT_UVBuffer[stile + 10] = (flip * MapSize + ScoreScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 0] =  (flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 4] = (!flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 6] = (!flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 8] =  (flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
+    FT_UVBuffer[stile + 10] = (flip * MapSize + GUIScreen->tiles[tile] * (MapSize));
 
-    flip = ScoreScreen->attributes[tile];
+    flip = GUIScreen->attributes[tile];
     (flip >>= 3) &= 1;
 
     FT_UVBuffer[stile + 1] = flip;
@@ -440,15 +440,15 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     rendermode = mode;
 }
 
-void Renderer::SetScoreScreen(TileScreen* tilescreen){
-    ScoreScreen = tilescreen;
+void Renderer::SetGUIScreen(TileScreen* guiscreen){
+    GUIScreen = guiscreen;
 
     int z = 0;
     for (int y = 0; y < 15; y++) {
 
         for (int x = 0; x < 16; x++) {
 
-            UpdateScoreTile(z);
+            UpdateGUITile(z);
             z++;
         }
     }
@@ -461,13 +461,13 @@ void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blan
     while (score > 0) {
         int digit = score % 10;
         score /= 10;
-        ScoreScreen->tiles[posR2L] = digit;
+        GUIScreen->tiles[posR2L] = digit;
 
-        UpdateScoreTile(posR2L);
+        UpdateGUITile(posR2L);
         posR2L--;
     }
-    ScoreScreen->tiles[posR2L+1] = blankdigit;
-    UpdateScoreTile(posR2L);
+    GUIScreen->tiles[posR2L+1] = blankdigit;
+    UpdateGUITile(posR2L);
 }
 
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
@@ -533,7 +533,7 @@ void Renderer::RenderScene(Scene* scene) {
         if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
             it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
         }
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 128.001f, -(it->position.y & 511) + 107.001f, 0.0f));
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 128.001f, -(it->position.y & 511) + 104.001f, 0.0f));
 
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
@@ -553,7 +553,7 @@ void Renderer::RenderScene(Scene* scene) {
     glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
-    if (ScoreScreen) {
+    if (GUIScreen) {
         RenderScoreScreen(scene);
     }
 }

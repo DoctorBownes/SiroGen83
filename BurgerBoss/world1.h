@@ -10,6 +10,10 @@ public:
 
 	virtual void update() override;
 
+	Entity* player = nullptr;
+
+	Animation playerwalk;
+
 };
 
 #endif
