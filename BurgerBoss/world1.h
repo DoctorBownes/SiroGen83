@@ -12,7 +12,11 @@ public:
 
 	Entity* player = nullptr;
 
+	Entity* player2 = nullptr;
+
 	Animation playerwalk;
+
+	bool TileCol(Entity* entity);
 
 };
 
