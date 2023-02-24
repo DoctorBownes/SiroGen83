@@ -18,6 +18,12 @@ public:
 
 	bool TileCol(Entity* entity);
 
+	unsigned char gravity = 0;
+	Vector2 velocity = {0,0};
+	Vector2 oldpos = {0,0};
+	bool onground = false;
+	bool onoff = false;
+
 };
 
 #endif

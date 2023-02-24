@@ -99,7 +99,7 @@ private:
 
 	void RenderMainScreens(Scene* scene);
 
-	void RenderScoreScreen(Scene* scene);
+	void RenderGUIScreen(Scene* scene);
 
 	void RenderEntity(Entity* entity);
 

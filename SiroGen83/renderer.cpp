@@ -498,36 +498,36 @@ void Renderer::RenderScene(Scene* scene) {
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
 
-    //if (rendermode == 1) {
-    //
-    //    N = (overwrite_pos.x >> 8) & 1;
-    //    // printf("N: %d\n", N);
-    //    overwrite_pos.x *= 0.0625f;
-    //    overwrite_pos.x &= 0xf;
-    //
-    //    for (int x = overwrite_pos.x; x < 240; x += 16) {
-    //        MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
-    //        MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
-    //        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    //
-    //        overwrite_pos.x += 16;
-    //    }
-    //}
-    //else {
-    //
-    //    N = (overwrite_pos.y >> 8) & 1;
-    //
-    //    overwrite_pos.y *= 0.0625f;
-    //    overwrite_pos.y &= 0xf;
-    //
-    //    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-    //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-    //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-    //        EditTile(x, x + 240 * N);
-    //    }
-    //}
+    if (rendermode == 1) {
+    
+        N = (overwrite_pos.x >> 8) & 1;
+        // printf("N: %d\n", N);
+        overwrite_pos.x *= 0.0625f;
+        overwrite_pos.x &= 0xf;
+    
+        for (int x = overwrite_pos.x; x < 240; x += 16) {
+            MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
+            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+    
+            overwrite_pos.x += 16;
+        }
+    }
+    else {
+    
+        N = (overwrite_pos.y >> 8) & 1;
+    
+        overwrite_pos.y *= 0.0625f;
+        overwrite_pos.y &= 0xf;
+    
+        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+            EditTile(x, x + 240 * N);
+        }
+    }
 
-    RenderMainScreens(scene); //TODO implement int renderpos
+    RenderMainScreens(scene);
 
     for (Entity* it : scene->entities) {
         if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
@@ -554,7 +554,7 @@ void Renderer::RenderScene(Scene* scene) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     if (GUIScreen) {
-        RenderScoreScreen(scene);
+        RenderGUIScreen(scene);
     }
 }
 
@@ -626,7 +626,7 @@ void Renderer::AddtoTileMap(Tile* tile, char position) {
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 16, 16, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
 }
-void Renderer::RenderScoreScreen(Scene* scene) {
+void Renderer::RenderGUIScreen(Scene* scene) {
 
     glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f, 0.0083333f,1.0f)) * glm::translate(glm::mat4(1), glm::vec3(-120.001f, 112.001f, 0.0f));
 
