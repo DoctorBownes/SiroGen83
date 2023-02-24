@@ -453,6 +453,9 @@ void Renderer::SetGUIScreen(TileScreen* guiscreen){
         }
     }
 
+    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
+
     glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
     glBufferData(GL_ARRAY_BUFFER, FT_PaletteBuffer.size() * 4, FT_PaletteBuffer.data(), GL_STATIC_DRAW);
 }
@@ -648,7 +651,6 @@ void Renderer::RenderGUIScreen(Scene* scene) {
     GLuint fuvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(fuvPositionID);
     glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, FT_UVBuffer.size() * 4, FT_UVBuffer.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(
         fuvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
@@ -698,6 +700,7 @@ void Renderer::RenderMainScreens(Scene* scene) {
     GLuint uvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(uvPositionID);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 8, MT_UVBuffer.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(
         uvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
