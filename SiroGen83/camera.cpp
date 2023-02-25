@@ -13,7 +13,7 @@ Camera::Camera() {
 }
 
 void Camera::update(unsigned char mode) {
-    if (((Y + scrolldir.y * 256) & 0xff) > 239) {
+    if (((Y/* + scrolldir.y * 256*/) & 0xff) > 239) {
         Y += -16 + scrolldir.y * 32;
     }
 

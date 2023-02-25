@@ -392,7 +392,7 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
                 }
             }
         }
-        if (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0xff) > 239) {
+        if (((scene->GetCamera()->Y/* + scene->GetCamera()->scrolldir.y * 256*/) & 0xff) > 239) {
             scene->GetCamera()->Y += -16 + scene->GetCamera()->scrolldir.y * 32;
         }
         scene->GetCamera()->scrolldir.y = (scene->GetCamera()->Y >> 8) & 1;
@@ -497,7 +497,7 @@ void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 3);
+    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
     overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
     overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
 
@@ -533,7 +533,7 @@ void Renderer::RenderScene(Scene* scene) {
     RenderMainScreens(scene);
 
     for (Entity* it : scene->entities) {
-        if (((it->position.y + scene->GetCamera()->scrolldir.y * 512) & 0x1ff) > 479) {
+        if (((it->position.y/* + scene->GetCamera()->scrolldir.y * 512*/) & 0x1ff) > 479) {
             it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
         }
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511) - 128.001f, -(it->position.y & 511) + 104.001f, 0.0f));
