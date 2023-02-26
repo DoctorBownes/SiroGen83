@@ -16,7 +16,7 @@ bool World1::TileCol(Entity* entity) {
 
 World1::World1() {
 	SiroGen->BackgroundColor = {
-		97,153,255,
+		27,0,119,
 	};
 	SiroGen->BackgroundPalette[0] = {
 		10, 10, 10,	105, 0, 0,		213, 12, 24
@@ -234,7 +234,7 @@ World1::World1() {
 	//SiroGen->SetSpritetoEntity(player2, 0);
 	//entities.push_front(player2);
 
-	playerwalk = Animation{0.15f, 1,0};
+	playerwalk = Animation{0.075f, 1,0,2,0};
 
 	gravity = 1;
 	velocity = {2,0};
@@ -247,13 +247,13 @@ void World1::update() {
 	if (GetInput()->KeyDown(KeyCode::Left)) {
 		player->position.x -= velocity.x;
 		SiroGen->SetAttributetoEntity(player, 4);
-		SiroGen->PlayAnimation(player, &playerwalk, 1);
+		SiroGen->PlayAnimation(player, &playerwalk, 3);
 		GetCamera()->scrolldir.x = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		player->position.x += velocity.x;
 		SiroGen->SetAttributetoEntity(player, 0);
-		SiroGen->PlayAnimation(player, &playerwalk, 1);
+		SiroGen->PlayAnimation(player, &playerwalk, 3);
 		GetCamera()->scrolldir.x = 1;
 	}
 	else {
@@ -267,12 +267,12 @@ void World1::update() {
 	if (GetInput()->KeyPressed(KeyCode::A)) {
 		player->position.x -= 1;
 		SiroGen->SetAttributetoEntity(player, 4);
-		SiroGen->PlayAnimation(player, &playerwalk, 1);
+		SiroGen->PlayAnimation(player, &playerwalk, 3);
 	}
 	else if (GetInput()->KeyPressed(KeyCode::D)) {
 		player->position.x += 1;
 		SiroGen->SetAttributetoEntity(player, 0);
-		SiroGen->PlayAnimation(player, &playerwalk, 1);
+		SiroGen->PlayAnimation(player, &playerwalk, 3);
 	}
 	GetCamera()->X = player->position.x - 112;
 
