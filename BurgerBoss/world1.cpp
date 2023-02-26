@@ -3,10 +3,10 @@
 bool World1::TileCol(Entity* entity) {
 	for (char i = 0; i < 2; i++) {
 		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((entity->position.x + 6 + i * 3 & 255)) * 0.0625f;//todo fix
-			unsigned char posy = ((entity->position.y) + 3 + j * 12) * 0.0625f;
+			unsigned char posx = ((entity->position.x + 6 + i * 3 & 255)) * 0.0625f;
+			unsigned char posy = ((entity->position.y) - 5 + j * 12) * 0.0625f;//TODO MAKE BETTER
 			posy *= 16;
-			if (TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 13) {
+			if (TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 12 || TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 11) {
 				return true;
 			}
 		}
