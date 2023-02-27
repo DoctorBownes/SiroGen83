@@ -242,8 +242,12 @@ World1::World1() {
 }
 
 void World1::update() {
+	if (gravity >> 4) {
+		gravity = 0;
+	}
+	gravity += 4;
 	player->position.y += velocity.y;
-	velocity.y += gravity;
+	velocity.y += gravity >> 4;
 	if (GetInput()->KeyDown(KeyCode::Left)) {
 		player->position.x -= velocity.x;
 		SiroGen->SetAttributetoEntity(player, 4);
@@ -259,9 +263,11 @@ void World1::update() {
 	else {
 		SiroGen->SetSpritetoEntity(player, 0);
 	}
-	if (GetInput()->KeyDown(KeyCode::Space) && onground) {
+	if (GetInput()->KeyPressed(KeyCode::Space) && onground) {
 		//player->position.y -= 10;
-		velocity.y = -13;
+		player->position.y -= 1;
+		gravity = 0;
+		velocity.y = -5;
 	}
 
 	if (GetInput()->KeyPressed(KeyCode::A)) {
@@ -283,14 +289,12 @@ void World1::update() {
 	//}
 	if (TileCol(player)) {
 		velocity.y = 0;
-		player->position.y = oldpos.y;
-		oldpos.y -= 5;
+		player->position.y = oldpos.y + 1;//TODO FIX
 		onground = true;
 	}
 	else {
 		onground = false;
 		oldpos.y = player->position.y;
 	}
-	//printf("player->position.x: %d\n", player->position.x / 16);
-	//printf("player->position.y: %d\n", player->position.y / 16);
+	//printf("gravity: %d\n", gravity);
 }
