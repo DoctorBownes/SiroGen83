@@ -242,12 +242,12 @@ World1::World1() {
 }
 
 void World1::update() {
-	if (gravity >> 4) {
+	if (gravity / 4) {
 		gravity = 0;
 	}
-	gravity += 4;
+	gravity += 1;
 	player->position.y += velocity.y;
-	velocity.y += gravity >> 4;
+	velocity.y += gravity / 4;
 	if (GetInput()->KeyDown(KeyCode::Left)) {
 		player->position.x -= velocity.x;
 		SiroGen->SetAttributetoEntity(player, 4);
