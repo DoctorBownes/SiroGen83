@@ -1,10 +1,13 @@
 #include "world1.h"
 
 bool World1::TileCol(Entity* entity) {
+	//TODO: MAKE BETTER
+	//Tile collisions are now only set for "Roof tiles". Should be dynamic.
+	//Basically, add more tile collision types (i.e. stair-tiles)
 	for (char i = 0; i < 2; i++) {
 		for (char j = 0; j < 2; j++) {
 			unsigned char posx = ((entity->position.x + 6 + i * 3 & 255)) * 0.0625f;
-			unsigned char posy = ((entity->position.y) - 5 + j * 12) * 0.0625f;//TODO MAKE BETTER
+			unsigned char posy = ((entity->position.y) - 5 + j * 12) * 0.0625f;
 			posy *= 16;
 			if (TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 12 || TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 11) {
 				return true;
@@ -92,13 +95,13 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,15,
+		10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,11,
+		10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,15,
 		10,10,11,12,12,12,12,12,12,12,12,12,11,10,10,15,
 		10,10,15,13,13,13,13,13,13,13,13,13,15,10,10,15,
 		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
@@ -288,13 +291,13 @@ void World1::update() {
 	//	//printf("Hit!\n");
 	//}
 	if (TileCol(player)) {
+		//if (!onground) {
+		//}
+		player->position.y -= (player->position.y - (((player->position.y) / 16) * 16) - 9);
 		velocity.y = 0;
-		player->position.y = oldpos.y + 1;//TODO FIX
 		onground = true;
 	}
 	else {
 		onground = false;
-		oldpos.y = player->position.y;
 	}
-	//printf("gravity: %d\n", gravity);
 }
