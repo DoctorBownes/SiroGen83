@@ -6,23 +6,34 @@
 #include <SiroGen83/entity.h>
 #include <forward_list>
 
+
 class Scene : public Entity {
 public:
+
 	std::forward_list<Entity*> entities;
 
 	Camera* GetCamera() { return _camera; };
 
 	unsigned char renderpos = 0;
 
-	//unsigned char rendermode = 1;
-
 	TileScreen* TileScreens[256];
 
 protected:
 	Renderer* SiroGen = SiroGen->GetInstance();
 
+
 private:
 	Camera* _camera = new Camera();
 };
+
+#define AddtoScene(entity){ \
+entity->SetScene(this); \
+entities.push_front(entity); \
+}
+
+#define RemovefromScene(entity){ \
+entity->SetScene(nullptr); \
+entities.remove(entity); \
+}
 
 #endif

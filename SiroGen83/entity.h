@@ -3,7 +3,9 @@
 #include <SiroGen83/vector2.h>
 #include <SiroGen83/input.h>
 
-class Entity { //friend class Renderer
+class Scene;
+
+class Entity {
 public:
 	Entity();
 
@@ -12,6 +14,9 @@ public:
 	virtual void update();
 
 	Input* GetInput() { return _instance; };
+
+	void SetScene(Scene* scene) { _currentscene = scene; };
+	Scene* GetScene() { return _currentscene; };
 
 	friend class Renderer;
 
@@ -27,6 +32,8 @@ private:
 	unsigned short vertex_buffer;
 
 	unsigned short uv_buffer = 5;
+
+	Scene* _currentscene = nullptr;
 
 	Input* _instance = _instance->GetInstance();
 };

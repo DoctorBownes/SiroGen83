@@ -17,6 +17,14 @@ bool World1::TileCol(Entity* entity) {
 	return false;
 }
 
+//void World1::ApplyGravity(Character* chr) {
+	//if (gravity / 4) {
+	//	gravity = 0;
+	//}
+	//chr->position.y += chr->velocity.y;
+	//chr->velocity.y += gravity / 4;
+//}
+
 World1::World1() {
 	SiroGen->BackgroundColor = {
 		27,0,119,
@@ -95,13 +103,13 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,11,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,11,10,10,10,10,10,10,10,11,
-		10,10,10,10,10,10,10,10,11,10,10,10,10,10,10,15,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,15,
 		10,10,11,12,12,12,12,12,12,12,12,12,11,10,10,15,
 		10,10,15,13,13,13,13,13,13,13,13,13,15,10,10,15,
 		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
@@ -226,39 +234,36 @@ World1::World1() {
 		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	player = new Entity();
+	player = new Character();
 	player->position = { 10 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
-	entities.push_front(player);
+	AddtoScene(player);
 
-	//player2 = new Entity();
-	//player2->position = { 5 * 16, 9 * 16 };
-	//SiroGen->SetAttributetoEntity(player2, 1);
-	//SiroGen->SetSpritetoEntity(player2, 0);
-	//entities.push_front(player2);
+	pickle = new Character();
+	pickle->position = { 5 * 16, 9 * 16 };
+	SiroGen->SetAttributetoEntity(pickle, 1);
+	SiroGen->SetSpritetoEntity(pickle, 4);
+	AddtoScene(pickle);
+	RemovefromScene(pickle);
 
 	playerwalk = Animation{0.075f, 1,0,2,0};
-
+	enemywalk = Animation{0.2f, 5,4};
 	gravity = 1;
-	velocity = {2,0};
+	player->velocity = {2,0};
+	player->gravity_damper = 4;
+	pickle->gravity_damper = 4;
 
 }
 
 void World1::update() {
-	if (gravity / 4) {
-		gravity = 0;
-	}
-	gravity += 1;
-	player->position.y += velocity.y;
-	velocity.y += gravity / 4;
 	if (GetInput()->KeyDown(KeyCode::Left)) {
-		player->position.x -= velocity.x;
+		player->position.x -= player->velocity.x;
 		SiroGen->SetAttributetoEntity(player, 4);
 		SiroGen->PlayAnimation(player, &playerwalk, 3);
 		GetCamera()->scrolldir.x = 0;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		player->position.x += velocity.x;
+		player->position.x += player->velocity.x;
 		SiroGen->SetAttributetoEntity(player, 0);
 		SiroGen->PlayAnimation(player, &playerwalk, 3);
 		GetCamera()->scrolldir.x = 1;
@@ -266,11 +271,16 @@ void World1::update() {
 	else {
 		SiroGen->SetSpritetoEntity(player, 0);
 	}
-	if (GetInput()->KeyPressed(KeyCode::Space) && onground) {
+	if (GetInput()->KeyPressed(KeyCode::Up) && onground) {
 		//player->position.y -= 10;
 		player->position.y -= 1;
 		gravity = 0;
-		velocity.y = -5;
+		player->velocity.y = -5;
+	}
+
+	if (GetInput()->KeyPressed(KeyCode::R)) {
+		player->position.x = 128;
+		player->position.y = 128;
 	}
 
 	if (GetInput()->KeyPressed(KeyCode::A)) {
@@ -285,6 +295,7 @@ void World1::update() {
 	}
 	GetCamera()->X = player->position.x - 112;
 
+	SiroGen->PlayAnimation(pickle, &enemywalk, 1);
 	//signed char difx = player2->position.x - player->position.x;
 	//signed char dify = player2->position.y - player->position.y;
 	//if (difx < 16 && difx > -16 && dify < 16 && dify > -16) {
@@ -294,10 +305,11 @@ void World1::update() {
 		//if (!onground) {
 		//}
 		player->position.y -= (player->position.y - (((player->position.y) / 16) * 16) - 9);
-		velocity.y = 0;
+		player->velocity.y = 0;
 		onground = true;
 	}
 	else {
+		SiroGen->SetSpritetoEntity(player, 3);
 		onground = false;
 	}
 }
