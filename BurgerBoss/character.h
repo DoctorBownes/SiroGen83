@@ -20,9 +20,11 @@ public:
 
 	unsigned char gravity_damper = 0;
 	sc_Vector2 velocity = { 0,0 };
+	unsigned char gravity = 0;
+	bool onground = false;
 
 protected:
-	unsigned char gravity = 0;
+	bool TileCol(Entity* entity);
 
 };
 

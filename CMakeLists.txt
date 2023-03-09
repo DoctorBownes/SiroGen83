@@ -97,6 +97,8 @@ add_executable(BurgerBoss # g++ BurgerBoss/main.cpp -o BurgerBoss
 	BurgerBoss/spritefactory.h
 	BurgerBoss/character.cpp
 	BurgerBoss/character.h
+	BurgerBoss/player.cpp
+	BurgerBoss/player.h
 )
 target_link_libraries(BurgerBoss # g++ -lSiroGen83
 	${ALL_GRAPHICS_LIBS}

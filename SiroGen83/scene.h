@@ -18,9 +18,7 @@ public:
 
 	TileScreen* TileScreens[256];
 
-protected:
 	Renderer* SiroGen = SiroGen->GetInstance();
-
 
 private:
 	Camera* _camera = new Camera();

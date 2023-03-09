@@ -1,22 +1,5 @@
 #include "world1.h"
 
-bool World1::TileCol(Entity* entity) {
-	//TODO: MAKE BETTER
-	//Tile collisions are now only set for "Roof tiles". Should be dynamic.
-	//Basically, add more tile collision types (i.e. stair-tiles)
-	for (char i = 0; i < 2; i++) {
-		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((entity->position.x + 6 + i * 3 & 255)) * 0.0625f;
-			unsigned char posy = ((entity->position.y) - 5 + j * 12) * 0.0625f;
-			posy *= 16;
-			if (TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 12 || TileScreens[(entity->position.x + 6 + i * 3) >> 8]->tiles[posx + posy] == 11) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 //void World1::ApplyGravity(Character* chr) {
 	//if (gravity / 4) {
 	//	gravity = 0;
@@ -234,7 +217,7 @@ World1::World1() {
 		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	player = new Character();
+	player = new Player();
 	player->position = { 10 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
 	AddtoScene(player);
@@ -244,9 +227,7 @@ World1::World1() {
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
 	AddtoScene(pickle);
-	RemovefromScene(pickle);
 
-	playerwalk = Animation{0.075f, 1,0,2,0};
 	enemywalk = Animation{0.2f, 5,4};
 	gravity = 1;
 	player->velocity = {2,0};
@@ -256,60 +237,26 @@ World1::World1() {
 }
 
 void World1::update() {
-	if (GetInput()->KeyDown(KeyCode::Left)) {
-		player->position.x -= player->velocity.x;
-		SiroGen->SetAttributetoEntity(player, 4);
-		SiroGen->PlayAnimation(player, &playerwalk, 3);
-		GetCamera()->scrolldir.x = 0;
-	}
-	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		player->position.x += player->velocity.x;
-		SiroGen->SetAttributetoEntity(player, 0);
-		SiroGen->PlayAnimation(player, &playerwalk, 3);
-		GetCamera()->scrolldir.x = 1;
-	}
-	else {
-		SiroGen->SetSpritetoEntity(player, 0);
-	}
-	if (GetInput()->KeyPressed(KeyCode::Up) && onground) {
-		//player->position.y -= 10;
-		player->position.y -= 1;
-		gravity = 0;
-		player->velocity.y = -5;
-	}
-
-	if (GetInput()->KeyPressed(KeyCode::R)) {
-		player->position.x = 128;
-		player->position.y = 128;
-	}
-
-	if (GetInput()->KeyPressed(KeyCode::A)) {
-		player->position.x -= 1;
-		SiroGen->SetAttributetoEntity(player, 4);
-		SiroGen->PlayAnimation(player, &playerwalk, 3);
-	}
-	else if (GetInput()->KeyPressed(KeyCode::D)) {
-		player->position.x += 1;
-		SiroGen->SetAttributetoEntity(player, 0);
-		SiroGen->PlayAnimation(player, &playerwalk, 3);
-	}
-	GetCamera()->X = player->position.x - 112;
 
 	SiroGen->PlayAnimation(pickle, &enemywalk, 1);
+
+	if (GetInput()->KeyDown(KeyCode::A)) {
+		pickle->position.x -= 1;
+		SiroGen->SetAttributetoEntity(pickle, 5);
+	}
+	else if (GetInput()->KeyDown(KeyCode::D)) {
+		pickle->position.x += 1;
+		SiroGen->SetAttributetoEntity(pickle, 1);
+	}
+	if (GetInput()->KeyPressed(KeyCode::W) && pickle->onground) {
+		//player->position.y -= 10;
+		pickle->position.y -= 1;
+		pickle->gravity = 0;
+		pickle->velocity.y = -5;
+	}
 	//signed char difx = player2->position.x - player->position.x;
 	//signed char dify = player2->position.y - player->position.y;
 	//if (difx < 16 && difx > -16 && dify < 16 && dify > -16) {
 	//	//printf("Hit!\n");
 	//}
-	if (TileCol(player)) {
-		//if (!onground) {
-		//}
-		player->position.y -= (player->position.y - (((player->position.y) / 16) * 16) - 9);
-		player->velocity.y = 0;
-		onground = true;
-	}
-	else {
-		SiroGen->SetSpritetoEntity(player, 3);
-		onground = false;
-	}
 }

@@ -2,7 +2,7 @@
 #define WORLD1_H_
 
 #include <SiroGen83/scene.h>
-#include <BurgerBoss/character.h>
+#include <BurgerBoss/player.h>
 
 class World1 : public Scene {
 
@@ -11,19 +11,15 @@ public:
 
 	virtual void update() override;
 
-	Character* player = nullptr;
+	Player* player = nullptr;
 
 	Character* pickle = nullptr;
 
-	Animation playerwalk;
 	Animation enemywalk;
-
-	bool TileCol(Entity* entity);
 
 	//void ApplyGravity(Character* chr);
 
 	unsigned char gravity = 0;
-	bool onground = false;
 	bool onoff = false;
 
 };
