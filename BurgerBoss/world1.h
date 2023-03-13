@@ -17,6 +17,8 @@ public:
 
 	Animation enemywalk;
 
+	bool TileCol(Character* chr);
+
 	//void ApplyGravity(Character* chr);
 
 	unsigned char gravity = 0;

@@ -10,7 +10,7 @@
 
 World1::World1() {
 	SiroGen->BackgroundColor = {
-		27,0,119,
+		127,0,219,
 	};
 	SiroGen->BackgroundPalette[0] = {
 		10, 10, 10,	105, 0, 0,		213, 12, 24
@@ -90,7 +90,7 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,12,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,15,
 		10,10,11,12,12,12,12,12,12,12,12,12,11,10,10,15,
@@ -218,11 +218,15 @@ World1::World1() {
 	};
 
 	player = new Player();
+	player->width = 4;
+	player->height = 16;
 	player->position = { 10 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
 	AddtoScene(player);
 
 	pickle = new Character();
+	pickle->width = 16;
+	pickle->height = 24;
 	pickle->position = { 5 * 16, 9 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
@@ -230,7 +234,7 @@ World1::World1() {
 
 	enemywalk = Animation{0.2f, 5,4};
 	gravity = 1;
-	player->velocity = {2,0};
+	player->velocity = {1,0};
 	player->gravity_damper = 4;
 	pickle->gravity_damper = 4;
 
@@ -250,7 +254,7 @@ void World1::update() {
 	}
 	if (GetInput()->KeyPressed(KeyCode::W) && pickle->onground) {
 		//player->position.y -= 10;
-		pickle->position.y -= 1;
+		pickle->position.y -= 4;
 		pickle->gravity = 0;
 		pickle->velocity.y = -5;
 	}
@@ -259,4 +263,24 @@ void World1::update() {
 	//if (difx < 16 && difx > -16 && dify < 16 && dify > -16) {
 	//	//printf("Hit!\n");
 	//}
+}
+
+bool World1::TileCol(Character* chr)
+{
+	for (char i = 0; i < 2; i++) {
+		for (char j = 0; j < 2; j++) {
+			unsigned char posx = ((chr->position.x  + i * (chr->width - 1) & 255)) * 0.0625f;
+			unsigned char posy = ((chr->position.y - 8 + j * (chr->height - 1) & 255)) * 0.0625f;
+			posy *= 16;
+			switch (TileScreens[(chr->position.x + i * (chr->width - 1)) >> 8]->tiles[posx + posy]) {
+			case	12:
+				return true;
+				break;
+			case	11:
+				return true;
+				break;
+			}
+		}
+	}
+	return false;
 }
