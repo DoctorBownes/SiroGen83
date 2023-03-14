@@ -28,10 +28,10 @@ void Character::update() {
 bool Character::TileCol(Entity* entity) {
 	for (char i = 0; i < 2; i++) {
 		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((entity->position.x + i * (width - 1) & 255)) * 0.0625f;
-			unsigned char posy = ((entity->position.y - 8 + j * (height -1))) * 0.0625f;
+			unsigned char posx = ((position.x + hitbox.x + i * (hitbox.width - 1) & 255)) * 0.0625f;
+			unsigned char posy = ((position.y - hitbox.y + j * (hitbox.height - 1) & 255)) * 0.0625f;
 			posy *= 16;
-			switch (GetScene()->TileScreens[(entity->position.x + i * (width - 1)) >> 8]->tiles[posx + posy]) {
+			switch (GetScene()->TileScreens[(position.x + hitbox.x + i * (hitbox.width - 1)) >> 8]->tiles[posx + posy]) {
 			case	12:
 				return true;
 				break;

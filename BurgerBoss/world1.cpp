@@ -218,15 +218,19 @@ World1::World1() {
 	};
 
 	player = new Player();
-	player->width = 4;
-	player->height = 16;
+	player->hitbox.x = 6;
+	player->hitbox.y = 0;
+	player->hitbox.width = 4;
+	player->hitbox.height = 16;
 	player->position = { 10 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
 	AddtoScene(player);
 
 	pickle = new Character();
-	pickle->width = 16;
-	pickle->height = 24;
+	pickle->hitbox.x = 0;
+	pickle->hitbox.y = 8;//fix this
+	pickle->hitbox.width = 16;
+	pickle->hitbox.height = 24;
 	pickle->position = { 5 * 16, 9 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
@@ -243,7 +247,9 @@ World1::World1() {
 void World1::update() {
 
 	SiroGen->PlayAnimation(pickle, &enemywalk, 1);
-
+	//if (TileCol(player)) {
+	//	printf("Hit!\n");
+	//}
 	if (GetInput()->KeyDown(KeyCode::A)) {
 		pickle->position.x -= 1;
 		SiroGen->SetAttributetoEntity(pickle, 5);
@@ -269,10 +275,10 @@ bool World1::TileCol(Character* chr)
 {
 	for (char i = 0; i < 2; i++) {
 		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((chr->position.x  + i * (chr->width - 1) & 255)) * 0.0625f;
-			unsigned char posy = ((chr->position.y - 8 + j * (chr->height - 1) & 255)) * 0.0625f;
+			unsigned char posx = ((chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1) & 255)) * 0.0625f;
+			unsigned char posy = ((chr->position.y - chr->hitbox.y + j * (chr->hitbox.height - 1) & 255)) * 0.0625f;
 			posy *= 16;
-			switch (TileScreens[(chr->position.x + i * (chr->width - 1)) >> 8]->tiles[posx + posy]) {
+			switch (TileScreens[(chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy]) {
 			case	12:
 				return true;
 				break;

@@ -8,6 +8,13 @@ struct sc_Vector2 {
 	signed char y;
 };
 
+struct Collider {
+	unsigned char x = 0;
+	unsigned char y = 0;
+	unsigned char width = 0;
+	unsigned char height = 0;
+};
+
 class Character : public Entity {
 
 public:
@@ -15,8 +22,7 @@ public:
 
 	virtual void update() override;
 
-	unsigned char width = 0;
-	unsigned char height = 0;
+	Collider hitbox;
 
 	unsigned char gravity_damper = 0;
 	sc_Vector2 velocity = { 0,0 };
