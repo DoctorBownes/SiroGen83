@@ -9,8 +9,8 @@ struct sc_Vector2 {
 };
 
 struct Collider {
-	unsigned char x = 0;
-	unsigned char y = 0;
+	signed char x = 0;
+	signed char y = 0;
 	unsigned char width = 0;
 	unsigned char height = 0;
 };

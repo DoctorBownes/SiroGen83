@@ -88,9 +88,9 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,12,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,15,
 		10,10,11,12,12,12,12,12,12,12,12,12,11,10,10,15,
@@ -222,16 +222,16 @@ World1::World1() {
 	player->hitbox.y = 0;
 	player->hitbox.width = 4;
 	player->hitbox.height = 16;
-	player->position = { 10 * 16, 7 * 16 };
+	player->position = { 7 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
 	AddtoScene(player);
 
 	pickle = new Character();
 	pickle->hitbox.x = 0;
-	pickle->hitbox.y = 8;//fix this
+	pickle->hitbox.y = 0;
 	pickle->hitbox.width = 16;
 	pickle->hitbox.height = 24;
-	pickle->position = { 5 * 16, 9 * 16 };
+	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
 	AddtoScene(pickle);
@@ -247,7 +247,7 @@ World1::World1() {
 void World1::update() {
 
 	SiroGen->PlayAnimation(pickle, &enemywalk, 1);
-	//if (TileCol(player)) {
+	//if (TileCol(pickle)) {
 	//	printf("Hit!\n");
 	//}
 	if (GetInput()->KeyDown(KeyCode::A)) {
@@ -258,6 +258,30 @@ void World1::update() {
 		pickle->position.x += 1;
 		SiroGen->SetAttributetoEntity(pickle, 1);
 	}
+	//else if (GetInput()->KeyDown(KeyCode::W)) {
+	//	pickle->position.y -= 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 1);
+	//}
+	//else if (GetInput()->KeyDown(KeyCode::S)) {
+	//	pickle->position.y += 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 1);
+	//}
+	//if (GetInput()->KeyPressed(KeyCode::F)) {
+	//	pickle->position.x -= 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 5);
+	//}
+	//else if (GetInput()->KeyPressed(KeyCode::H)) {
+	//	pickle->position.x += 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 1);
+	//}
+	//else if (GetInput()->KeyPressed(KeyCode::T)) {
+	//	pickle->position.y -= 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 1);
+	//}
+	//else if (GetInput()->KeyPressed(KeyCode::G)) {
+	//	pickle->position.y += 1;
+	//	SiroGen->SetAttributetoEntity(pickle, 1);
+	//}
 	if (GetInput()->KeyPressed(KeyCode::W) && pickle->onground) {
 		//player->position.y -= 10;
 		pickle->position.y -= 4;
@@ -275,8 +299,8 @@ bool World1::TileCol(Character* chr)
 {
 	for (char i = 0; i < 2; i++) {
 		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1) & 255)) * 0.0625f;
-			unsigned char posy = ((chr->position.y - chr->hitbox.y + j * (chr->hitbox.height - 1) & 255)) * 0.0625f;
+			unsigned char posx = ((chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1)) & 255) * 0.0625f;
+			unsigned char posy = ((chr->position.y - chr->hitbox.y - j * (chr->hitbox.height - 1)) & 255) * 0.0625f;
 			posy *= 16;
 			switch (TileScreens[(chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy]) {
 			case	12:
