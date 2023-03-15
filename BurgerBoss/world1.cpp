@@ -10,7 +10,7 @@
 
 World1::World1() {
 	SiroGen->BackgroundColor = {
-		127,0,219,
+		27,0,119,
 	};
 	SiroGen->BackgroundPalette[0] = {
 		10, 10, 10,	105, 0, 0,		213, 12, 24
@@ -88,7 +88,7 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,12,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
@@ -218,9 +218,9 @@ World1::World1() {
 	};
 
 	player = new Player();
-	player->hitbox.x = 6;
+	player->hitbox.x = 0;
 	player->hitbox.y = 0;
-	player->hitbox.width = 4;
+	player->hitbox.width = 16;
 	player->hitbox.height = 16;
 	player->position = { 7 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
@@ -234,11 +234,11 @@ World1::World1() {
 	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
-	AddtoScene(pickle);
+	//AddtoScene(pickle);
 
 	enemywalk = Animation{0.2f, 5,4};
 	gravity = 1;
-	player->velocity = {1,0};
+	player->velocity = {2,0};
 	player->gravity_damper = 4;
 	pickle->gravity_damper = 4;
 
