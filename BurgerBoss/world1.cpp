@@ -295,22 +295,32 @@ void World1::update() {
 	//}
 }
 
-bool World1::TileCol(Character* chr)
+unsigned char World1::TileCol(Character* chr, unsigned char tiletype)
 {
-	for (char i = 0; i < 2; i++) {
-		for (char j = 0; j < 2; j++) {
-			unsigned char posx = ((chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1)) & 255) * 0.0625f;
-			unsigned char posy = ((chr->position.y - chr->hitbox.y - j * (chr->hitbox.height - 1)) & 255) * 0.0625f;
-			posy *= 16;
-			switch (TileScreens[(chr->position.x + chr->hitbox.x + i * (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy]) {
-			case	12:
-				return true;
-				break;
-			case	11:
-				return true;
-				break;
-			}
-		}
+	unsigned char status = 0;
+	unsigned char posx = ((chr->position.x + chr->hitbox.x) & 255) * 0.0625f;
+	unsigned char posy = ((chr->position.y - chr->hitbox.y) & 255) * 0.0625f;
+	posy *= 16;
+	if (TileScreens[(chr->position.x + chr->hitbox.x) >> 8]->tiles[posx + posy] == tiletype) {
+		status |= 0b0001;
 	}
-	return false;
+	posx = ((chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) & 255) * 0.0625f;
+	posy = ((chr->position.y - chr->hitbox.y) & 255) * 0.0625f;
+	posy *= 16;
+	if (TileScreens[(chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy] == tiletype) {
+		status |= 0b0010;
+	}
+	posx = ((chr->position.x + chr->hitbox.x) & 255) * 0.0625f;
+	posy = ((chr->position.y - chr->hitbox.y - (chr->hitbox.height - 1)) & 255) * 0.0625f;
+	posy *= 16;
+	if (TileScreens[(chr->position.x + chr->hitbox.x) >> 8]->tiles[posx + posy] == tiletype) {
+		status |= 0b0100;
+	}
+	posx = ((chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) & 255) * 0.0625f;
+	posy = ((chr->position.y - chr->hitbox.y - (chr->hitbox.height - 1)) & 255) * 0.0625f;
+	posy *= 16;
+	if (TileScreens[(chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy] == tiletype) {
+		status |= 0b1000;
+	}
+	return status;
 }
