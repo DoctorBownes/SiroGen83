@@ -24,14 +24,13 @@ public:
 
 	Collider hitbox;
 
-	unsigned char colstat = 0;
 	unsigned char gravity_damper = 0;
 	sc_Vector2 velocity = { 0,0 };
 	unsigned char gravity = 0;
 	bool onground = false;
 
 protected:
-	unsigned char TileCol(Entity* entity, unsigned char tiletype);
+	//unsigned char TileCol(Character* chr, unsigned char tiletype);
 
 };
 

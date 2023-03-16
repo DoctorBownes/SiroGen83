@@ -11,19 +11,23 @@ public:
 
 	Vector2 position{0,0};
 
+	virtual void BeginPlay();
+
 	virtual void update();
 
 	Input* GetInput() { return _instance; };
 
 	void SetScene(Scene* scene) { _currentscene = scene; };
-	Scene* GetScene() { return _currentscene; };
+
+	template <typename T>
+	T* GetScene() { return (T*)_currentscene; };
+
+	unsigned char frame = 0;
 
 	friend class Renderer;
 
 private:
 	float starttime = 0.0;
-
-	unsigned char frame = 0;
 
 	unsigned short texture_buffer;
 

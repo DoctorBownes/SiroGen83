@@ -218,9 +218,9 @@ World1::World1() {
 	};
 
 	player = new Player();
-	player->hitbox.x = 0;
+	player->hitbox.x = 6;
 	player->hitbox.y = 0;
-	player->hitbox.width = 16;
+	player->hitbox.width = 4;
 	player->hitbox.height = 16;
 	player->position = { 7 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
@@ -234,9 +234,9 @@ World1::World1() {
 	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
-	//AddtoScene(pickle);
+	AddtoScene(pickle);
 
-	enemywalk = Animation{0.2f, 5,4};
+	enemywalk = Animation{0.2f, 7,6};
 	gravity = 1;
 	player->velocity = {2,0};
 	player->gravity_damper = 4;
@@ -305,21 +305,16 @@ unsigned char World1::TileCol(Character* chr, unsigned char tiletype)
 		status |= 0b0001;
 	}
 	posx = ((chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) & 255) * 0.0625f;
-	posy = ((chr->position.y - chr->hitbox.y) & 255) * 0.0625f;
-	posy *= 16;
 	if (TileScreens[(chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy] == tiletype) {
 		status |= 0b0010;
 	}
-	posx = ((chr->position.x + chr->hitbox.x) & 255) * 0.0625f;
-	posy = ((chr->position.y - chr->hitbox.y - (chr->hitbox.height - 1)) & 255) * 0.0625f;
-	posy *= 16;
-	if (TileScreens[(chr->position.x + chr->hitbox.x) >> 8]->tiles[posx + posy] == tiletype) {
-		status |= 0b0100;
-	}
-	posx = ((chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) & 255) * 0.0625f;
 	posy = ((chr->position.y - chr->hitbox.y - (chr->hitbox.height - 1)) & 255) * 0.0625f;
 	posy *= 16;
 	if (TileScreens[(chr->position.x + chr->hitbox.x + (chr->hitbox.width - 1)) >> 8]->tiles[posx + posy] == tiletype) {
+		status |= 0b0100;
+	}
+	posx = ((chr->position.x + chr->hitbox.x) & 255) * 0.0625f;
+	if (TileScreens[(chr->position.x + chr->hitbox.x) >> 8]->tiles[posx + posy] == tiletype) {
 		status |= 0b1000;
 	}
 	return status;

@@ -39,6 +39,18 @@ const char* fragment_shader =
 Renderer* Renderer::_instance = 0;
 
 Renderer::Renderer() {
+    VertexBuffer[0] = 0.0f;
+    VertexBuffer[1] = 0.0f;
+    VertexBuffer[2] = 0.0f;
+    VertexBuffer[3] = 0.0f;
+    VertexBuffer[4] = 0.0f;
+    VertexBuffer[5] = 0.0f;
+    VertexBuffer[6] = 0.0f;
+    VertexBuffer[7] = 0.0f;
+    VertexBuffer[8] = 0.0f;
+    VertexBuffer[9] = 0.0f;
+    VertexBuffer[10] = 0.0f;
+    VertexBuffer[11] = 0.0f;
     //Setup Maintables
     MT_UVBuffer.resize(2880 * 2);
     MT_VertexBuffer.resize(2880 * 2);

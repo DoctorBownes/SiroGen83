@@ -48,6 +48,12 @@ void Core::Run(Scene* scene) {
 
     scene->GetCamera()->X |= scene->renderpos << 8;
 
+    scene->BeginPlay();
+
+    for (Entity* it : scene->entities) {
+        it->BeginPlay();
+    }
+
     _instance->UpdatePalettes();
 
     _instance->SetRenderMode(scene, _instance->GetRenderMode());
