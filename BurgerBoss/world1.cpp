@@ -18,6 +18,9 @@ World1::World1() {
 	SiroGen->BackgroundPalette[1] = {
 		91, 91, 91,	158, 158, 158,		255, 213, 0
 	};
+	SiroGen->BackgroundPalette[2] = {
+		91, 91, 91,	158, 158, 158,		200, 200, 200
+	};
 	SiroGen->ForgroundPalette[0] = {
 		119, 74, 31,	253, 169, 100,		254, 252, 221
 	};
@@ -26,6 +29,9 @@ World1::World1() {
 	};
 	SiroGen->ForgroundPalette[2] = {
 		255, 255, 255,	222, 16, 20,		241, 235, 35
+	};
+	SiroGen->ForgroundPalette[3] = {
+		163, 163, 163,	218, 255, 165,		253, 169, 100
 	};
 
 	TileScreen* GUIScreen = new TileScreen{
@@ -124,14 +130,14 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		12,12,12,12,12,11,10,10,10,10,10,10,10,10,10,10,
-		13,13,13,13,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,13,13,13,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,10,
+		12,12,12,12,12,11,10,13,13,13,13,13,13,13,13,10,
+		13,13,13,13,13,15,10,13,13,13,13,13,13,13,13,10,
+		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
+		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
+		13,13,13,13,13,15,10,13,13,13,13,13,13,13,13,10,
+		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
+		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
 
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -140,14 +146,14 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,1,5,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,
-		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
-		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,
-		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
-		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,
+		1,1,1,1,1,5,0,2,2,2,2,2,2,2,2,0,
+		0,0,0,0,0,4,0,2,2,2,2,2,2,2,2,0,
+		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
+		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
+		0,0,0,0,0,4,0,2,2,2,2,2,2,2,2,0,
+		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
+		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
 	};
 	TileScreens[2] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -218,9 +224,9 @@ World1::World1() {
 	};
 
 	player = new Player();
-	player->hitbox.x = 6;
+	player->hitbox.x = 0;
 	player->hitbox.y = 0;
-	player->hitbox.width = 4;
+	player->hitbox.width = 16;
 	player->hitbox.height = 16;
 	player->position = { 7 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
@@ -241,6 +247,7 @@ World1::World1() {
 	player->velocity = {2,0};
 	player->gravity_damper = 4;
 	pickle->gravity_damper = 4;
+	pickle->velocity = { 2,0 };
 
 }
 
@@ -252,12 +259,25 @@ void World1::update() {
 	//}
 	if (GetInput()->KeyDown(KeyCode::A)) {
 		pickle->position.x -= 1;
-		SiroGen->SetAttributetoEntity(pickle, 5);
 	}
 	else if (GetInput()->KeyDown(KeyCode::D)) {
-		pickle->position.x += 1;
+	}
+	pickle->position.x += pickle->velocity.x;
+	if ((TileCol(pickle, 11) | TileCol(pickle, 12)) == 1) {
+		pickle->velocity.x = -2;
+		SiroGen->SetAttributetoEntity(pickle, 5);
+		//pickle->position.y -= 4;
+		//pickle->gravity = 0;
+		//pickle->velocity.y = -5;
+	}
+	else if ((TileCol(pickle, 11) | TileCol(pickle, 12)) == 2) {
+		pickle->velocity.x = 2;
 		SiroGen->SetAttributetoEntity(pickle, 1);
 	}
+	if (GetCamera()->X >= pickle->position.x) {
+		RemovefromScene(pickle);
+	}
+	//printf("colstat: %d\n", TileCol(pickle, 11));
 	//else if (GetInput()->KeyDown(KeyCode::W)) {
 	//	pickle->position.y -= 1;
 	//	SiroGen->SetAttributetoEntity(pickle, 1);
@@ -284,9 +304,6 @@ void World1::update() {
 	//}
 	if (GetInput()->KeyPressed(KeyCode::W) && pickle->onground) {
 		//player->position.y -= 10;
-		pickle->position.y -= 4;
-		pickle->gravity = 0;
-		pickle->velocity.y = -5;
 	}
 	//signed char difx = player2->position.x - player->position.x;
 	//signed char dify = player2->position.y - player->position.y;

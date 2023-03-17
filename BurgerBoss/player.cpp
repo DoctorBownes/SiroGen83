@@ -10,8 +10,9 @@ void Player::BeginPlay() {
 	spatula = new Entity();
 	GetScene<Scene>()->entities.push_front(spatula);
 	spatula->SetScene(GetScene<Scene>());
+	spatula->GetScene<Scene>()->SiroGen->SetAttributetoEntity(spatula, 3);
 	spatula->GetScene<Scene>()->SiroGen->SetSpritetoEntity(spatula, 4);
-	spatula->position.x = position.x + 13;
+	spatula->position.x = position.x + 11;
 	spatula->position.y = position.y - 5;
 }
 
@@ -22,16 +23,16 @@ void Player::update() {
 		GetScene<Scene>()->SiroGen->SetAttributetoEntity(this, 4);
 		GetScene<Scene>()->SiroGen->PlayAnimation(this, &playerwalk, 3);
 		GetScene<Scene>()->GetCamera()->scrolldir.x = 0;
-		spatula->position.x = position.x -9;
-		spatula->GetScene<Scene>()->SiroGen->SetAttributetoEntity(spatula, 4);
+		spatula->position.x = position.x -7;
+		spatula->GetScene<Scene>()->SiroGen->SetAttributetoEntity(spatula, 7);
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		this->position.x += this->velocity.x;
 		GetScene<Scene>()->SiroGen->SetAttributetoEntity(this, 0);
 		GetScene<Scene>()->SiroGen->PlayAnimation(this, &playerwalk, 3);
 		GetScene<Scene>()->GetCamera()->scrolldir.x = 1;
-		spatula->position.x = position.x + 13;
-		spatula->GetScene<Scene>()->SiroGen->SetAttributetoEntity(spatula, 0);
+		spatula->position.x = position.x + 11;
+		spatula->GetScene<Scene>()->SiroGen->SetAttributetoEntity(spatula,3);
 	}
 	else {
 		GetScene<Scene>()->SiroGen->SetSpritetoEntity(this, 0);

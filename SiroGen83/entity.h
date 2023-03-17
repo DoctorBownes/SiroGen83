@@ -27,7 +27,7 @@ public:
 	friend class Renderer;
 
 private:
-	float starttime = 0.0;
+	float starttime = 0.0f;
 
 	unsigned short texture_buffer;
 
