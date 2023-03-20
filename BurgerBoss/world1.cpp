@@ -1,4 +1,5 @@
 #include "world1.h"
+#include <cmath>
 
 //void World1::ApplyGravity(Character* chr) {
 	//if (gravity / 4) {
@@ -224,9 +225,9 @@ World1::World1() {
 	};
 
 	player = new Player();
-	player->hitbox.x = 0;
+	player->hitbox.x = 6;
 	player->hitbox.y = 0;
-	player->hitbox.width = 16;
+	player->hitbox.width = 4;
 	player->hitbox.height = 16;
 	player->position = { 7 * 16, 7 * 16 };
 	SiroGen->SetSpritetoEntity(player, 0);
@@ -240,76 +241,43 @@ World1::World1() {
 	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 4);
-	AddtoScene(pickle);
+
+	pickletoo = new Character();
+	pickletoo->hitbox.x = 0;
+	pickletoo->hitbox.y = 0;
+	pickletoo->hitbox.width = 16;
+	pickletoo->hitbox.height = 24;
+	pickletoo->position = { 48 * 16, 8 * 16 };
+	SiroGen->SetAttributetoEntity(pickletoo, 1);
+	SiroGen->SetSpritetoEntity(pickletoo, 4);
 
 	enemywalk = Animation{0.2f, 7,6};
 	gravity = 1;
 	player->velocity = {2,0};
 	player->gravity_damper = 4;
 	pickle->gravity_damper = 4;
-	pickle->velocity = { 2,0 };
+	pickletoo->gravity_damper = 4;
+	pickle->velocity = { 1,0 };
+	pickletoo->velocity = { 1,0 };
 
+	AddEnemytoScene(pickle);
+	AddEnemytoScene(pickletoo);
 }
 
 void World1::update() {
-
-	SiroGen->PlayAnimation(pickle, &enemywalk, 1);
-	//if (TileCol(pickle)) {
-	//	printf("Hit!\n");
-	//}
-	if (GetInput()->KeyDown(KeyCode::A)) {
-		pickle->position.x -= 1;
+	for (it = enemies.begin(); it != enemies.end(); it++) {
+		(*it)->position.x += (*it)->velocity.x;
+		unsigned char test = (TileCol((*it), 11) | TileCol((*it), 12));
+		if (test != 3) {
+			(*it)->velocity.x *= -1;
+			SiroGen->SetAttributetoEntity((*it), 1 + 4 * (test - 1));
+		}
+		SiroGen->PlayAnimation((*it), &enemywalk, 1);
+		if (GetCamera()->X - 16 >= (*it)->position.x) {
+			RemoveEnemyFromScene((*it));
+			break;
+		}
 	}
-	else if (GetInput()->KeyDown(KeyCode::D)) {
-	}
-	pickle->position.x += pickle->velocity.x;
-	if ((TileCol(pickle, 11) | TileCol(pickle, 12)) == 1) {
-		pickle->velocity.x = -2;
-		SiroGen->SetAttributetoEntity(pickle, 5);
-		//pickle->position.y -= 4;
-		//pickle->gravity = 0;
-		//pickle->velocity.y = -5;
-	}
-	else if ((TileCol(pickle, 11) | TileCol(pickle, 12)) == 2) {
-		pickle->velocity.x = 2;
-		SiroGen->SetAttributetoEntity(pickle, 1);
-	}
-	if (GetCamera()->X >= pickle->position.x) {
-		RemovefromScene(pickle);
-	}
-	//printf("colstat: %d\n", TileCol(pickle, 11));
-	//else if (GetInput()->KeyDown(KeyCode::W)) {
-	//	pickle->position.y -= 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 1);
-	//}
-	//else if (GetInput()->KeyDown(KeyCode::S)) {
-	//	pickle->position.y += 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 1);
-	//}
-	//if (GetInput()->KeyPressed(KeyCode::F)) {
-	//	pickle->position.x -= 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 5);
-	//}
-	//else if (GetInput()->KeyPressed(KeyCode::H)) {
-	//	pickle->position.x += 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 1);
-	//}
-	//else if (GetInput()->KeyPressed(KeyCode::T)) {
-	//	pickle->position.y -= 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 1);
-	//}
-	//else if (GetInput()->KeyPressed(KeyCode::G)) {
-	//	pickle->position.y += 1;
-	//	SiroGen->SetAttributetoEntity(pickle, 1);
-	//}
-	if (GetInput()->KeyPressed(KeyCode::W) && pickle->onground) {
-		//player->position.y -= 10;
-	}
-	//signed char difx = player2->position.x - player->position.x;
-	//signed char dify = player2->position.y - player->position.y;
-	//if (difx < 16 && difx > -16 && dify < 16 && dify > -16) {
-	//	//printf("Hit!\n");
-	//}
 }
 
 unsigned char World1::TileCol(Character* chr, unsigned char tiletype)

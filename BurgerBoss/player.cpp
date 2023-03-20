@@ -42,7 +42,6 @@ void Player::update() {
 	}
 	if (GetInput()->KeyPressed(KeyCode::Up) && onground) {
 		//player->position.y -= 10;
-		this->position.y -= 4;
 		this->gravity = 0;
 		this->velocity.y = -5;
 	}

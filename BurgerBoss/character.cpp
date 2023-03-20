@@ -14,9 +14,13 @@ void Character::update() {
 	this->velocity.y += gravity / gravity_damper;
 
 	if (GetScene<World1>()->TileCol(this, 12) | GetScene<World1>()->TileCol(this, 11) & 3) {
-		this->position.y -= (this->position.y - (((this->position.y) / 16) * 16) - 8);
-		this->velocity.y = 0;
-		onground = true;
+		while (this->position.y - (((this->position.y) / 16) * 16) & 8) {
+			//printf("coldif: %d\n", 16 - (this->position.y - (((this->position.y) / 16) * 16)) & 4);
+			this->position.y--;
+			this->velocity.y = 0;
+			onground = true;
+		}
+		//this->position.y -= (this->position.y - (((this->position.y) / 16) * 16) - 8);
 	}
 	else {
 		onground = false;
