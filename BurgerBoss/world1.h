@@ -1,7 +1,7 @@
 #ifndef WORLD1_H_
 #define WORLD1_H_
 
-#include <list>
+#include <vector>
 #include <SiroGen83/scene.h>
 #include <BurgerBoss/player.h>
 
@@ -19,8 +19,7 @@ public:
 
 	Animation enemywalk;
 
-	std::list<Character*>::iterator it;
-	std::list<Character*> enemies;
+	std::vector<Character*> enemies[5];
 
 	unsigned char TileCol(Character* chr, unsigned char tiletype);
 
@@ -30,15 +29,5 @@ public:
 	bool onoff = true;
 
 };
-
-#define AddEnemytoScene(entity){ \
-AddtoScene(entity); \
-enemies.push_back(entity); \
-}
-
-#define RemoveEnemyFromScene(entity){ \
-RemovefromScene(entity); \
-enemies.remove(entity); \
-}
 
 #endif

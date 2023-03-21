@@ -240,7 +240,7 @@ World1::World1() {
 	pickle->hitbox.height = 24;
 	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
-	SiroGen->SetSpritetoEntity(pickle, 4);
+	SiroGen->SetSpritetoEntity(pickle, 7);
 
 	pickletoo = new Character();
 	pickletoo->hitbox.x = 0;
@@ -249,7 +249,7 @@ World1::World1() {
 	pickletoo->hitbox.height = 24;
 	pickletoo->position = { 48 * 16, 8 * 16 };
 	SiroGen->SetAttributetoEntity(pickletoo, 1);
-	SiroGen->SetSpritetoEntity(pickletoo, 4);
+	SiroGen->SetSpritetoEntity(pickletoo, 7);
 
 	enemywalk = Animation{0.2f, 7,6};
 	gravity = 1;
@@ -259,25 +259,36 @@ World1::World1() {
 	pickletoo->gravity_damper = 4;
 	pickle->velocity = { 1,0 };
 	pickletoo->velocity = { 1,0 };
-
-	AddEnemytoScene(pickle);
-	AddEnemytoScene(pickletoo);
+	enemies[pickle->position.x >> 8].push_back(pickle);
+	enemies[pickletoo->position.x >> 8].push_back(pickletoo);
 }
 
 void World1::update() {
-	for (it = enemies.begin(); it != enemies.end(); it++) {
-		(*it)->position.x += (*it)->velocity.x;
-		unsigned char test = (TileCol((*it), 11) | TileCol((*it), 12));
-		if (test != 3) {
-			(*it)->velocity.x *= -1;
-			SiroGen->SetAttributetoEntity((*it), 1 + 4 * (test - 1));
+	unsigned char pagepos = player->position.x >> 8;
+	for (unsigned char i = 0; i < 2; i++) {
+		for (unsigned char j = 0; j < enemies[pagepos + i].size(); j++) {
+
+			if ((enemies[pagepos + i][j]->position.x - player->position.x) <= 60 && (enemies[pagepos + i][j]->position.x - player->position.x) > -50) {
+				if (!enemies[pagepos + i][j]->GetScene<World1>()) {
+					AddtoScene(enemies[pagepos + i][j]);
+				}
+			}
+			else {
+				RemovefromScene(enemies[pagepos + i][j]);
+			}
 		}
-		SiroGen->PlayAnimation((*it), &enemywalk, 1);
-		if (GetCamera()->X - 16 >= (*it)->position.x) {
-			RemoveEnemyFromScene((*it));
-			break;
-		}
+		//if (GetCamera()->X - 16 >= (*it)->position.x) {
+		//	RemoveEnemyFromScene((*it));
+		//	break;
+		//}
 	}
+	//enemies[pagepos][i]->position.x += enemies[pagepos][i]->velocity.x;
+	//unsigned char test = (TileCol(enemies[pagepos][i], 11) | TileCol(enemies[pagepos][i], 12));
+	//if (test != 3) {
+	//	enemies[pagepos][i]->velocity.x *= -1;
+	//	SiroGen->SetAttributetoEntity(enemies[pagepos][i], 1 + 4 * (test - 1));
+	//}
+	//SiroGen->PlayAnimation(enemies[pagepos][i], &enemywalk, 1);
 }
 
 unsigned char World1::TileCol(Character* chr, unsigned char tiletype)
