@@ -241,13 +241,14 @@ World1::World1() {
 	pickle->position = { 8 * 16, 10 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 7);
+	//AddtoScene(pickle);
 
 	pickletoo = new Character();
 	pickletoo->hitbox.x = 0;
 	pickletoo->hitbox.y = 0;
 	pickletoo->hitbox.width = 16;
 	pickletoo->hitbox.height = 24;
-	pickletoo->position = { 48 * 16, 8 * 16 };
+	pickletoo->position = { 800, 8 * 16 };
 	SiroGen->SetAttributetoEntity(pickletoo, 1);
 	SiroGen->SetSpritetoEntity(pickletoo, 7);
 
@@ -259,29 +260,34 @@ World1::World1() {
 	pickletoo->gravity_damper = 4;
 	pickle->velocity = { 1,0 };
 	pickletoo->velocity = { 1,0 };
-	enemies[pickle->position.x >> 8].push_back(pickle);
-	enemies[pickletoo->position.x >> 8].push_back(pickletoo);
+
+	es = new EntitySpawner(pickletoo);
+	//enemies[pickle->position.x >> 8].push_back(pickle);
+	//enemies[pickletoo->position.x >> 8].push_back(pickletoo);
 }
 
 void World1::update() {
-	unsigned char pagepos = player->position.x >> 8;
-	for (unsigned char i = 0; i < 2; i++) {
-		for (unsigned char j = 0; j < enemies[pagepos + i].size(); j++) {
-
-			if ((enemies[pagepos + i][j]->position.x - player->position.x) <= 60 && (enemies[pagepos + i][j]->position.x - player->position.x) > -50) {
-				if (!enemies[pagepos + i][j]->GetScene<World1>()) {
-					AddtoScene(enemies[pagepos + i][j]);
-				}
-			}
-			else {
-				RemovefromScene(enemies[pagepos + i][j]);
-			}
+	if (es) {
+		if ((player->position.x + 128 >> 8) == es->page && (player->position.x + 128 & 255) >= es->posx) {
+			AddtoScene(es->heldentity);
+			delete es;
+			es = nullptr;
 		}
-		//if (GetCamera()->X - 16 >= (*it)->position.x) {
-		//	RemoveEnemyFromScene((*it));
-		//	break;
-		//}
 	}
+	//unsigned char pagepos = player->position.x >> 8;
+	//for (unsigned char i = 0; i < 2; i++) {
+	//	for (unsigned char j = 0; j < enemies[pagepos + i].size(); j++) {
+	//
+	//		if ((enemies[pagepos + i][j]->position.x - player->position.x) <= 60 && (enemies[pagepos + i][j]->position.x - player->position.x) > -50) {
+	//			if (!enemies[pagepos + i][j]->GetScene<World1>()) {
+	//				AddtoScene(enemies[pagepos + i][j]);
+	//			}
+	//		}
+	//		else {
+	//			RemovefromScene(enemies[pagepos + i][j]);
+	//		}
+	//	}
+	//}
 	//enemies[pagepos][i]->position.x += enemies[pagepos][i]->velocity.x;
 	//unsigned char test = (TileCol(enemies[pagepos][i], 11) | TileCol(enemies[pagepos][i], 12));
 	//if (test != 3) {

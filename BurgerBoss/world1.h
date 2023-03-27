@@ -1,8 +1,8 @@
 #ifndef WORLD1_H_
 #define WORLD1_H_
 
-#include <vector>
 #include <SiroGen83/scene.h>
+#include <BurgerBoss/entityspawner.h>
 #include <BurgerBoss/player.h>
 
 class World1 : public Scene {
@@ -17,9 +17,11 @@ public:
 	Character* pickle = nullptr;
 	Character* pickletoo = nullptr;
 
+	EntitySpawner* es = nullptr;
+
 	Animation enemywalk;
 
-	std::vector<Character*> enemies[5];
+	//std::vector<Character*> enemies[5];
 
 	unsigned char TileCol(Character* chr, unsigned char tiletype);
 
