@@ -2,7 +2,7 @@
 #define WORLD1_H_
 
 #include <SiroGen83/scene.h>
-#include <BurgerBoss/entityspawner.h>
+#include <BurgerBoss/checkpoint.h>
 #include <BurgerBoss/player.h>
 
 class World1 : public Scene {
@@ -17,7 +17,9 @@ public:
 	Character* pickle = nullptr;
 	Character* pickletoo = nullptr;
 
-	EntitySpawner* es = nullptr;
+	std::forward_list<Entity*> checkpoints[256];
+
+	CheckPoint* es = nullptr;
 
 	Animation enemywalk;
 

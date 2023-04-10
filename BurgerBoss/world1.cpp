@@ -91,10 +91,10 @@ World1::World1() {
 
 	TileScreens[0] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -125,10 +125,10 @@ World1::World1() {
 
 	TileScreens[1] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,10,
@@ -248,7 +248,7 @@ World1::World1() {
 	pickletoo->hitbox.y = 0;
 	pickletoo->hitbox.width = 16;
 	pickletoo->hitbox.height = 24;
-	pickletoo->position = { 800, 8 * 16 };
+	pickletoo->position = { 400, 8 * 16 };
 	SiroGen->SetAttributetoEntity(pickletoo, 1);
 	SiroGen->SetSpritetoEntity(pickletoo, 7);
 
@@ -261,18 +261,31 @@ World1::World1() {
 	pickle->velocity = { 1,0 };
 	pickletoo->velocity = { 1,0 };
 
-	es = new EntitySpawner(pickletoo);
+	checkpoints[pickle->position.x >> 8].push_front(pickle);
+	checkpoints[pickletoo->position.x >> 8].push_front(pickletoo);
+
 	//enemies[pickle->position.x >> 8].push_back(pickle);
 	//enemies[pickletoo->position.x >> 8].push_back(pickletoo);
 }
 
 void World1::update() {
-	if (es) {
-		if ((player->position.x + 128 >> 8) == es->page && (player->position.x + 128 & 255) >= es->posx) {
-			AddtoScene(es->heldentity);
-			delete es;
-			es = nullptr;
+	unsigned char playpage = player->position.x >> 8;
+	for (unsigned char i = 0; i < 2; i++) {
+		for (Entity* enemy : checkpoints[playpage + i]) {
+			if (!enemy->flag) {
+				if (player->position.x - enemy->position.x >= -128) {
+					printf("Spawned!\n");
+					AddtoScene(enemy);
+					enemy->flag = 1;
+				}
+			}
 		}
+	}
+	entities.remove_if([&](Entity* entity) {
+		return GetCamera()->X - 128 >= entity->position.x;
+	});
+	for (Entity* enemi : checkpoints[unsigned char(playpage - 1)]) {
+		enemi->flag = 0;
 	}
 	//unsigned char pagepos = player->position.x >> 8;
 	//for (unsigned char i = 0; i < 2; i++) {
