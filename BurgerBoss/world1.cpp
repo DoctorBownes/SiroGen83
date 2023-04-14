@@ -57,20 +57,20 @@ World1::World1() {
 
 	TileScreens[255] = new TileScreen {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		12,12,12,12,12,11,10,10,10,10,10,10,10,10,10,10,
-		13,13,13,13,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,13,13,13,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
-		13,14,13,14,13,15,10,10,10,10,10,10,10,10,10,10,
+		12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,
+		10,10,15,13,13,13,13,13,13,13,13,13,15,10,10,15,
+		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
+		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
+		10,10,15,13,13,13,13,13,13,13,13,13,15,10,10,15,
 
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -98,9 +98,9 @@ World1::World1() {
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,15,
-		10,10,11,12,12,12,12,12,12,12,12,12,11,10,10,15,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,
 		10,10,15,13,13,13,13,13,13,13,13,13,15,10,10,15,
 		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
 		10,10,15,13,14,13,13,14,13,13,14,13,15,10,10,15,
@@ -126,25 +126,25 @@ World1::World1() {
 	TileScreens[1] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,14,10,14,10,10,10,10,10,10,10,10,14,
+		10,10,10,10,14,10,14,10,10,10,10,10,10,10,10,14,
+		10,10,10,14,10,10,10,14,10,10,10,10,10,10,10,14,
+		10,10,10,14,10,10,10,14,10,10,10,10,10,10,10,10,
+		10,10,10,10,14,14,14,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-		10,10,10,10,10,10,10,12,12,12,12,12,12,12,12,10,
-		12,12,12,12,12,11,10,13,13,13,13,13,13,13,13,10,
-		13,13,13,13,13,15,10,13,13,13,13,13,13,13,13,10,
-		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,
 		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
 		13,13,13,13,13,15,10,13,13,13,13,13,13,13,13,10,
 		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
 		13,14,13,14,13,15,10,13,13,13,13,13,13,13,13,10,
 
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,
@@ -238,7 +238,7 @@ World1::World1() {
 	pickle->hitbox.y = 0;
 	pickle->hitbox.width = 16;
 	pickle->hitbox.height = 24;
-	pickle->position = { 8 * 16, 10 * 16 };
+	pickle->position = { 0, 5 * 16 };
 	SiroGen->SetAttributetoEntity(pickle, 1);
 	SiroGen->SetSpritetoEntity(pickle, 7);
 	//AddtoScene(pickle);
@@ -261,45 +261,58 @@ World1::World1() {
 	pickle->velocity = { 1,0 };
 	pickletoo->velocity = { 1,0 };
 
-	checkpoints[pickle->position.x >> 8].push_front(pickle);
-	checkpoints[pickletoo->position.x >> 8].push_front(pickletoo);
-
+	//checkpoints[pickle->position.x >> 8].push_front(pickle);
+	//checkpoints[pickletoo->position.x >> 8].push_front(pickletoo);
+	Entitiy_CheckPoint* chkp1 = new Entitiy_CheckPoint();
+	chkp1->posx = 400;
+	chkp1->heldentity = pickle;
+	enemy_chkp[chkp1->posx >> 8].push_front(chkp1);
+	CheckPoint* chkp2 = new CheckPoint{300,0};
+	CheckPoint* chkp3 = new CheckPoint{100,0};
+	array_chkp[chkp2->posx >> 8].push_front(chkp2);
+	array_chkp[chkp3->posx >> 8].push_front(chkp3);
+	barney[0] = "Mario\n";
+	barney[1] = "Luigi\n";
+	onoff = 0;
 	//enemies[pickle->position.x >> 8].push_back(pickle);
 	//enemies[pickletoo->position.x >> 8].push_back(pickletoo);
 }
 
 void World1::update() {
-	unsigned char playpage = player->position.x >> 8;
-	for (unsigned char i = 0; i < 2; i++) {
-		for (Entity* enemy : checkpoints[playpage + i]) {
-			if (!enemy->flag) {
-				if (player->position.x - enemy->position.x >= -128) {
-					printf("Spawned!\n");
-					AddtoScene(enemy);
-					enemy->flag = 1;
-				}
-			}
-		}
-	}
-	entities.remove_if([&](Entity* entity) {
-		return GetCamera()->X - 128 >= entity->position.x;
-	});
-	for (Entity* enemi : checkpoints[unsigned char(playpage - 1)]) {
-		enemi->flag = 0;
-	}
-	//unsigned char pagepos = player->position.x >> 8;
+	//unsigned char playpage = player->position.x >> 8;
 	//for (unsigned char i = 0; i < 2; i++) {
-	//	for (unsigned char j = 0; j < enemies[pagepos + i].size(); j++) {
-	//
-	//		if ((enemies[pagepos + i][j]->position.x - player->position.x) <= 60 && (enemies[pagepos + i][j]->position.x - player->position.x) > -50) {
-	//			if (!enemies[pagepos + i][j]->GetScene<World1>()) {
-	//				AddtoScene(enemies[pagepos + i][j]);
+	//	for (Entitiy_CheckPoint* echkp : enemy_chkp[playpage + i]) {
+	//		if (!echkp->flag) {
+	//			if (player->position.x - echkp->posx >= -128) {
+	//				echkp->heldentity->position.x = echkp->posx;
+	//				AddtoScene(echkp->heldentity);
+	//				echkp->flag = 1;
 	//			}
 	//		}
-	//		else {
-	//			RemovefromScene(enemies[pagepos + i][j]);
+	//	}
+	//}
+	//for (Entitiy_CheckPoint* echkp : enemy_chkp[(unsigned char)(playpage -1)]) {
+	//	echkp->flag = 0;
+	//}
+	//printf("%s", barney[onoff]);
+	
+	//unsigned char playpage = player->position.x >> 8;
+	//for (unsigned char i = 0; i < 2; i++) {
+	//	for (Entity* enemy : checkpoints[playpage + i]) {
+	//		if (!enemy->flag) {
+	//			if (player->position.x - enemy->position.x >= -128) {
+	//				printf("Spawned!\n");
+	//				AddtoScene(enemy);
+	//				enemy->flag = 1;
+	//			}
 	//		}
 	//	}
+	//}
+	//entities.remove_if([&](Entity* entity) {
+	//	return GetCamera()->X - 128 >= entity->position.x;
+	//});
+	//for (Entity* enemi : checkpoints[unsigned char(playpage - 1)]) {
+	//	enemi->flag = 0;
 	//}
 	//enemies[pagepos][i]->position.x += enemies[pagepos][i]->velocity.x;
 	//unsigned char test = (TileCol(enemies[pagepos][i], 11) | TileCol(enemies[pagepos][i], 12));

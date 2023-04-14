@@ -95,9 +95,9 @@ private:
 
 	GLfloat PaletteBuffer[6];
 
-	TileScreen* MainScreen[2];
+	TileScreen* MainScreen[4];
 
-	void RenderMainScreens(Scene* scene);
+	void RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos);
 
 	void RenderGUIScreen(Scene* scene);
 
@@ -105,12 +105,12 @@ private:
 
 	std::vector<GLubyte>TileMap;
 
-	std::vector<GLfloat>MT_UVBuffer;
-	std::vector<GLfloat>MT_VertexBuffer;
-	std::vector<GLfloat>MT_PaletteBuffer;
+	GLfloat MT_UVBuffer[4][2880];
+	GLfloat MT_VertexBuffer[4][2880];
+	GLfloat MT_PaletteBuffer[4][1440];
 
-	std::vector<GLfloat>FT_UVBuffer;
-	std::vector<GLfloat>FT_PaletteBuffer;
+	std::vector<GLfloat>GUI_UVBuffer;
+	std::vector<GLfloat>GUI_PaletteBuffer;
 
 	Renderer();
 

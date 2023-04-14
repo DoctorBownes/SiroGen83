@@ -11,7 +11,7 @@ class Camera {
 public:
 	Camera();
 
-	void update(unsigned char mode = 0);
+	void update();
 
 	glm::mat4 GetCamMat() { return cameraMatrix; };
 

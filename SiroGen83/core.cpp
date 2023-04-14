@@ -71,9 +71,6 @@ void Core::Run(Scene* scene) {
                 it->update();
             }
 
-            scene->GetCamera()->update(_instance->GetRenderMode());
-            _instance->RenderScene(scene);
-
             scene->GetCamera()->update();
             _instance->RenderScene(scene);
 

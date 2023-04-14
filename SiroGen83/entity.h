@@ -23,7 +23,6 @@ public:
 	T* GetScene() { return (T*)_currentscene; };
 
 	unsigned char frame = 0;
-	unsigned char flag = 0;
 
 	friend class Renderer;
 

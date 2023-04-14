@@ -17,9 +17,10 @@ public:
 	Character* pickle = nullptr;
 	Character* pickletoo = nullptr;
 
-	std::forward_list<Entity*> checkpoints[256];
+	std::forward_list<Entitiy_CheckPoint*> enemy_chkp[256];
+	std::forward_list<CheckPoint*> array_chkp[256];
 
-	CheckPoint* es = nullptr;
+	const char* barney[12];
 
 	Animation enemywalk;
 
@@ -30,7 +31,7 @@ public:
 	//void ApplyGravity(Character* chr);
 
 	unsigned char gravity = 0;
-	bool onoff = true;
+	char onoff = true;
 
 };
 
