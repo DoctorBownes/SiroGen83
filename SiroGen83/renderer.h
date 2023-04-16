@@ -128,6 +128,12 @@ private:
 	GLubyte N = 0;
 
 	Vector2 overwrite_pos{0,0};
+
+	unsigned short lo_CamX = 0;
+	unsigned short lo_CamY = 0;
+
+	unsigned short lo_EntX = 0;
+	unsigned short lo_EntY = 0;
 };
 
 #endif

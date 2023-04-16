@@ -506,9 +506,11 @@ void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char
 //}
 
 void Renderer::RenderScene(Scene* scene) {
+    lo_CamX = scene->GetCamera()->X & 511; //Get low byte of camera
+    lo_CamY = scene->GetCamera()->Y & 511; //Get low byte of camera
     scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
-    overwrite_pos.x = (scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) & 0x1ff;
-    overwrite_pos.y = (scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) & 0x1ff;
+    overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+    overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
 
     if (rendermode == 1) {
     
@@ -527,7 +529,7 @@ void Renderer::RenderScene(Scene* scene) {
     }
     else {
     
-        N = (overwrite_pos.y >> 8) & 1;
+        N = (overwrite_pos.y >> 8) * 2 & 3;
     
         overwrite_pos.y *= 0.0625f;
         overwrite_pos.y &= 0xf;
@@ -538,18 +540,23 @@ void Renderer::RenderScene(Scene* scene) {
             EditTile(x, x + 240 * N);
         }
     }
-
-    RenderMainScreens(scene, 0, Vector2{ unsigned short((scene->GetCamera()->X / 256) * 512 & 768),0});
+    RenderMainScreens(scene, 0, Vector2{ unsigned short((lo_CamX / 256) * 512),unsigned short((lo_CamY / 256) * 480) });
     RenderMainScreens(scene, 1, Vector2{ 256,0 });
     RenderMainScreens(scene, 2, Vector2{ 0,240 });
     RenderMainScreens(scene, 3, Vector2{ 256,240 });
 
     for (Entity* it : scene->entities) {
-        if (((it->position.y/* + scene->GetCamera()->scrolldir.y * 512*/) & 0x1ff) > 479) {
+        if (((it->position.y) & 0x1ff) > 479) {
             it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
         }
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3((it->position.x & 511 + (unsigned short((scene->GetCamera()->X / 256) * 512 & 768))) - 128.001f, -(it->position.y & 511) + 119.001f, 0.0f));//Maybe change 119 to 120 for collision
+        lo_EntX = it->position.x & 511;
+        lo_EntY = it->position.y & 511;
 
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1),glm::vec3((lo_EntX - (((lo_EntX - lo_CamX)) / 256) * 512) - 128.001f,
+                
+                
+                -(lo_EntY - (((lo_EntY - lo_CamY)) / 256) * 480) + 119.001f, 0.0f));//Maybe change 119 to 120 for collision
+        
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
         GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
