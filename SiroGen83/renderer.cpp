@@ -376,65 +376,29 @@ void Renderer::SetRenderMode(Scene* scene, unsigned char mode) {
     }
 
     int i = 0;
-    if (mode == 1) {//when running in mode 2
-        for (N = 0; N < 4; N++) {
-            int z = 0;
-            for (int y = 0; y < 15; y++) {
+    for (N = 0; N < 4; N++) {
+        int z = 0;
+        for (int y = 0; y < 15; y++) {
 
-                for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
-                    MT_VertexBuffer[0][(i * 12) + 0] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 5] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 7] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 8] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 9] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 10] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 11] = ((0.5f - y) * 16.0f);
+            for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
+                MT_VertexBuffer[0][(i * 12) + 0] = ((-0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 5] = ((-0.5f - y) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 7] = ((-0.5f - y) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 8] = ((-0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 9] = ((-0.5f - y) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 10] = ((-0.5f + x) * 16.0f);
+                MT_VertexBuffer[0][(i * 12) + 11] = ((0.5f - y) * 16.0f);
 
-                    EditTile(z, i);
-                    z++;
-                    i++;
-                }
+                EditTile(z, i);
+                z++;
+                i++;
             }
         }
-        if (((scene->GetCamera()->Y/* + scene->GetCamera()->scrolldir.y * 256*/) & 0xff) > 239) {
-            scene->GetCamera()->Y += -16 + scene->GetCamera()->scrolldir.y * 32;
-        }
-        scene->GetCamera()->scrolldir.y = (scene->GetCamera()->Y >> 8) & 1;
-        scene->GetCamera()->Y = 0 + 512 * (scene->GetCamera()->Y >> 9);
-    }
-    else {//set rendermode to 2
-        for (N = 0; N < 4; N++) {
-            int z = 0;
-            for (int y = 0 + 15 * N; y < 15 + 15 * N; y++) {
-
-                for (int x = 0; x < 16; x++) {
-                    MT_VertexBuffer[0][(i * 12) + 0] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 5] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 7] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 8] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 9] = ((-0.5f - y) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 10] = ((-0.5f + x) * 16.0f);
-                    MT_VertexBuffer[0][(i * 12) + 11] = ((0.5f - y) * 16.0f);
-
-                    EditTile(z, i);
-                    z++;
-                    i++;
-                }
-            }
-        }
-        //scene->GetCamera()->Y = scene->GetCamera()->X;
-        scene->GetCamera()->scrolldir.x = (scene->GetCamera()->X >> 8) & 1;
-        scene->GetCamera()->X = 0 + 512 * (scene->GetCamera()->X >> 9);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
@@ -512,37 +476,35 @@ void Renderer::RenderScene(Scene* scene) {
     overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
     overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
 
-    if (rendermode == 1) {
+    N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) * 2 & 3);
+    overwrite_pos.x *= 0.0625f;
+    overwrite_pos.x &= 0xf;
     
-        N = (overwrite_pos.x >> 8) & 1;
-        // printf("N: %d\n", N);
-        overwrite_pos.x *= 0.0625f;
-        overwrite_pos.x &= 0xf;
+    for (int x = overwrite_pos.x; x < 240; x += 16) {
+        MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
+        MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
+        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
     
-        for (int x = overwrite_pos.x; x < 240; x += 16) {
-            MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
-            MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
-            EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    
-            overwrite_pos.x += 16;
-        }
+        overwrite_pos.x += 16;
     }
-    else {
     
-        N = (overwrite_pos.y >> 8) * 2 & 3;
+    overwrite_pos.y *= 0.0625f;
+    overwrite_pos.y &= 0xf;
+
+    printf("scene->renderpos: %d\n", scene->renderpos);
     
-        overwrite_pos.y *= 0.0625f;
-        overwrite_pos.y &= 0xf;
-    
-        for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-            EditTile(x, x + 240 * N);
-        }
+    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+        EditTile(x, x + 240 * N);
     }
-    RenderMainScreens(scene, 0, Vector2{ unsigned short((lo_CamX / 256) * 512),unsigned short((lo_CamY / 256) * 480) });
-    RenderMainScreens(scene, 1, Vector2{ 256,0 });
-    RenderMainScreens(scene, 2, Vector2{ 0,240 });
+
+    unsigned short MainScreenPos_X = (lo_CamX / 256) * 512;
+    unsigned short MainScreenPos_Y = (lo_CamY / 256) * 480;
+
+    RenderMainScreens(scene, 0, Vector2{ MainScreenPos_X, MainScreenPos_Y });
+    RenderMainScreens(scene, 1, Vector2{ 256,MainScreenPos_Y });
+    RenderMainScreens(scene, 2, Vector2{ MainScreenPos_X,240 });
     RenderMainScreens(scene, 3, Vector2{ 256,240 });
 
     for (Entity* it : scene->entities) {
@@ -552,11 +514,12 @@ void Renderer::RenderScene(Scene* scene) {
         lo_EntX = it->position.x & 511;
         lo_EntY = it->position.y & 511;
 
-        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1),glm::vec3((lo_EntX - (((lo_EntX - lo_CamX)) / 256) * 512) - 128.001f,
-                
-                
-                -(lo_EntY - (((lo_EntY - lo_CamY)) / 256) * 480) + 119.001f, 0.0f));//Maybe change 119 to 120 for collision
-        
+        glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1),glm::vec3(
+
+            (lo_EntX - (((lo_EntX - lo_CamX)) / 256) * 512) - 128.001f,
+           -(lo_EntY - (((lo_EntY - lo_CamY)) / 256) * 480) + 119.001f, 
+            0.0f));//Maybe change 119 to 120 for collision
+
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
 
         GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
