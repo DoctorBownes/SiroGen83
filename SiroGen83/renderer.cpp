@@ -479,6 +479,9 @@ void Renderer::RenderScene(Scene* scene) {
     N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) * 2 & 3);
     overwrite_pos.x *= 0.0625f;
     overwrite_pos.x &= 0xf;
+
+    overwrite_pos.y *= 0.0625f;
+    overwrite_pos.y &= 0xf;
     
     for (int x = overwrite_pos.x; x < 240; x += 16) {
         MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
@@ -487,17 +490,48 @@ void Renderer::RenderScene(Scene* scene) {
     
         overwrite_pos.x += 16;
     }
-    
-    overwrite_pos.y *= 0.0625f;
-    overwrite_pos.y &= 0xf;
 
-    printf("scene->renderpos: %d\n", scene->renderpos);
+   // overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+   // overwrite_pos.x *= 0.0625f;
+   // overwrite_pos.x &= 0xf;
+   // N += 2;
+   // N &= 3;
+   //
+   // printf("N: %d\n", N);
+   //
+   // for (int x = overwrite_pos.x; x < 240; x += 16) {
+   //     MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos + 16]->tiles[x];
+   //     MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos + 16]->attributes[x];
+   //     EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+   //
+   //     overwrite_pos.x += 16;
+   // }
+   //
+   // overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+   // overwrite_pos.x *= 0.0625f;
+   // overwrite_pos.x &= 0xf;
+   // N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) * 2 & 3);
     
     for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
         MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
         EditTile(x, x + 240 * N);
     }
+
+
+   unsigned char test = N & 1;
+
+   N &= 1;
+   N += 3 - (2 * N) - (((lo_CamY + scene->GetCamera()->scrolldir.y * 256 >> 8) & 2));
+   N &= 3;
+
+   //TODO: IMPROVE!!!
+   
+   for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+       MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (1 - (2 * (test | (lo_CamX / 256))))]->tiles[x];
+       MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (1 - (2 * (test | (lo_CamX / 256))))]->attributes[x];
+       EditTile(x, x + 240 * N);
+   }
 
     unsigned short MainScreenPos_X = (lo_CamX / 256) * 512;
     unsigned short MainScreenPos_Y = (lo_CamY / 256) * 480;
