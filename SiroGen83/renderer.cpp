@@ -470,66 +470,75 @@ void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-    lo_CamX = scene->GetCamera()->X & 511; //Get low byte of camera
-    lo_CamY = scene->GetCamera()->Y & 511; //Get low byte of camera
-    scene->renderpos=((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
-    overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-    overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+ //  lo_CamX = scene->GetCamera()->X & 511; //Get low byte of camera
+ //  lo_CamY = scene->GetCamera()->Y & 511; //Get low byte of camera
+ //  scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16) /32) * 32;
+ //  overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+ //  overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+ //
+ //  N = ((overwrite_pos.x >> 8) & 1);
+ //  overwrite_pos.x *= 0.0625f;
+ //  overwrite_pos.x &= 0xf;
+ //
+ //  overwrite_pos.y *= 0.0625f;
+ //  overwrite_pos.y &= 0xf;
+ //  
+ // for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
+ //     MainScreen[N]->tiles[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos]->tiles[x];
+ //     MainScreen[N]->attributes[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos]->attributes[x];
+ //     EditTile((overwrite_pos.x + overwrite_pos.y * 16), (overwrite_pos.x + overwrite_pos.y * 16) + 240 * N);
+ // 
+ //     overwrite_pos.x += 16;
+ // }
+ //
+ //  overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+ //  overwrite_pos.x *= 0.0625f;
+ //  overwrite_pos.x &= 0xf;
+ //  unsigned char split = (N & 2 | (lo_CamY / 256));
+ //  
+ //  N += 2 - ((2 * (N & 2)));
+ //  
+ //  printf("N: %d\n", N);
+ //  
+ //  for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
+ //      MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos + (16 - (32 * test))]->tiles[x];
+ //      MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos + (16 - (32 * test))]->attributes[x];
+ //      EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+ //  
+ //      overwrite_pos.x += 16;
+ //  }
 
-    N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) * 2 & 3);
-    overwrite_pos.x *= 0.0625f;
-    overwrite_pos.x &= 0xf;
+   lo_CamX = scene->GetCamera()->X & 511; //Get low byte of camera
+   lo_CamY = scene->GetCamera()->Y & 511; //Get low byte of camera
+   scene->renderpos = (((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
+   overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+  
+   N = ((overwrite_pos.y >> 8) * 2 & 3);
+   overwrite_pos.x *= 0.0625f;
+   overwrite_pos.x &= 0xf;
+  
+   overwrite_pos.y *= 0.0625f;
+   overwrite_pos.y &= 0xf;
+   unsigned char split = (N & 1 | (lo_CamX / 256));
 
-    overwrite_pos.y *= 0.0625f;
-    overwrite_pos.y &= 0xf;
-    
-    for (int x = overwrite_pos.x; x < 240; x += 16) {
-        MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
-        MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
-        EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-    
-        overwrite_pos.x += 16;
-    }
-
-   // overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-   // overwrite_pos.x *= 0.0625f;
-   // overwrite_pos.x &= 0xf;
-   // N += 2;
-   // N &= 3;
-   //
-   // printf("N: %d\n", N);
-   //
-   // for (int x = overwrite_pos.x; x < 240; x += 16) {
-   //     MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos + 16]->tiles[x];
-   //     MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos + 16]->attributes[x];
-   //     EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
-   //
-   //     overwrite_pos.x += 16;
-   // }
-   //
-   // overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-   // overwrite_pos.x *= 0.0625f;
-   // overwrite_pos.x &= 0xf;
-   // N = ((overwrite_pos.x >> 8) & 1) + ((overwrite_pos.y >> 8) * 2 & 3);
-    
-    for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-        EditTile(x, x + 240 * N);
-    }
-
-
-   unsigned char test = N & 1;
-
-   N &= 1;
-   N += 3 - (2 * N) - (((lo_CamY + scene->GetCamera()->scrolldir.y * 256 >> 8) & 2));
-   N &= 3;
-
+   printf("overwrite_pos.x: %d\n", overwrite_pos.x);
+  
+   for (int x = overwrite_pos.y * 16 + overwrite_pos.x * !split; x <= ((15 + overwrite_pos.x * split) & 15) + overwrite_pos.y * 16; x++) {
+       MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+       MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+       EditTile(x, x + 240 * N);
+   }
+  
+  
+   
+   N += 1 - ((2 * (N & 1)));
+   
    //TODO: IMPROVE!!!
    
-   for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
-       MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (1 - (2 * (test | (lo_CamX / 256))))]->tiles[x];
-       MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (1 - (2 * (test | (lo_CamX / 256))))]->attributes[x];
+   for (int x = overwrite_pos.y * 16 + overwrite_pos.x * split; x <= (overwrite_pos.x * !split + 15 * split) + overwrite_pos.y * 16; x++) {
+       MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (1 - (2 * split))]->tiles[x];
+       MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (1 - (2 * (split)))]->attributes[x];
        EditTile(x, x + 240 * N);
    }
 
