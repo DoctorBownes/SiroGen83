@@ -483,70 +483,57 @@ void Renderer::RenderScene(Scene* scene) {
    overwrite_pos.y &= 0xf;
 
    unsigned char split = (N & 2 | (lo_CamY / 256));
-
-   scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + split) * 256) >> 8) * 16) / 32) * 32;
+   scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
 
 
    if (!split) {
        for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-           MainScreen[N]->tiles[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile((overwrite_pos.x + overwrite_pos.y * 16), (overwrite_pos.x + overwrite_pos.y * 16) + 240 * N);
+           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+           EditTile(x, x + 240 * N);
 
-           overwrite_pos.x += 16;
        }
-
-       overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-       overwrite_pos.x *= 0.0625f;
-       overwrite_pos.x &= 0xf;
 
        N += 2 - ((2 * (N & 2)));
 
 
        for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-           MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
-           MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
-           EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
+           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+           EditTile(x, x + 240 * N);
 
-           overwrite_pos.x += 16;
        }
    }
    else {
        for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-           MainScreen[N]->tiles[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[overwrite_pos.x] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile(overwrite_pos.x, overwrite_pos.x + 240 * N);
+           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+           EditTile(x, x + 240 * N);
 
-           overwrite_pos.x += 16;
+          // overwrite_pos.x += 16;
        }
-
-       overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-       overwrite_pos.x *= 0.0625f;
-       overwrite_pos.x &= 0xf;
 
        N += 2 - ((2 * (N & 2)));
 
        for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-           MainScreen[N]->tiles[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
-           MainScreen[N]->attributes[(overwrite_pos.x + overwrite_pos.y * 16)] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
-           EditTile((overwrite_pos.x + overwrite_pos.y * 16), (overwrite_pos.x + overwrite_pos.y * 16) + 240 * N);
+           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
+           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+           EditTile(x, x + 240 * N);
 
-           overwrite_pos.x += 16;
+           //overwrite_pos.x += 16;
        }
 
    }
 
-   overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
    overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
 
    N = ((overwrite_pos.y >> 8) * 2 & 3);
-   overwrite_pos.x *= 0.0625f;
-   overwrite_pos.x &= 0xf;
 
    overwrite_pos.y *= 0.0625f;
    overwrite_pos.y &= 0xf;
+
    split = (N & 1 | (lo_CamX / 256));
-   scene->renderpos = (((scene->GetCamera()->X + (split) * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
+   scene->renderpos = (((scene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
    //printf("overwrite_pos.x: %d\n", overwrite_pos.x);
 
    for (int x = overwrite_pos.y * 16 + overwrite_pos.x * !split; x <= ((15 + overwrite_pos.x * split) & 15) + overwrite_pos.y * 16; x++) {
@@ -555,11 +542,7 @@ void Renderer::RenderScene(Scene* scene) {
        EditTile(x, x + 240 * N);
    }
 
-
-
    N += 1 - ((2 * (N & 1)));
-
-   //TODO: IMPROVE!!!
 
    for (int x = overwrite_pos.y * 16 + overwrite_pos.x * split; x <= (overwrite_pos.x * !split + 15 * split) + overwrite_pos.y * 16; x++) {
        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
