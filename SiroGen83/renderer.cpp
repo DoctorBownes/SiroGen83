@@ -465,9 +465,9 @@ void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char
 //}
 
 void Renderer::RenderScene(Scene* scene) {
-   lo_CamX = scene->GetCamera()->X & 511; //Get low byte of camera
-   lo_CamY = scene->GetCamera()->Y & 511; //Get low byte of cameraoverwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
-   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+   lo_CamX = scene->GetCamera()->X & 511;
+   lo_CamY = scene->GetCamera()->Y & 511;
+   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 272); // 272 MAGIC NUMBER ALERT!
    overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
  
    N = ((overwrite_pos.x >> 8) & 1);
@@ -526,14 +526,15 @@ void Renderer::RenderScene(Scene* scene) {
    scene->renderpos = (((scene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
       
    if (split) {
-       for (int x = overwrite_pos.y * 16; x <= overwrite_pos.x + overwrite_pos.y * 16; x++) {
+       for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
            EditTile(x, x + 240 * N);
        }
 
        N += 1 - ((2 * (N & 1)));
-
+       //TODO:  overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16
+       // See if can be simplified
        for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
@@ -549,7 +550,7 @@ void Renderer::RenderScene(Scene* scene) {
 
        N += 1 - ((2 * (N & 1)));
 
-       for (int x = overwrite_pos.y * 16; x <= overwrite_pos.x + overwrite_pos.y * 16; x++) {
+       for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
            EditTile(x, x + 240 * N);
@@ -574,7 +575,7 @@ void Renderer::RenderScene(Scene* scene) {
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1),glm::vec3(
 
             (lo_EntX - (((lo_EntX - lo_CamX)) / 256) * 512) - 128.001f,
-           -(lo_EntY - (((lo_EntY - lo_CamY)) / 256) * 480) + 119.001f, 
+           -(lo_EntY - (((lo_EntY - (lo_CamY + 208))) / 256) * 480) + 119.001f, //TODO: Search for better approach (lo_CamY + 208)
             0.0f));//Maybe change 119 to 120 for collision
 
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
