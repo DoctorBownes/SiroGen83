@@ -55,15 +55,13 @@ public:
 
 	void UpdatePalettes();
 
-	void SetRenderMode(Scene* scene, unsigned char mode);
+	void SetRenderMode(Scene* scene);
 
 	void SetGUIScreen(TileScreen* tilescreen);
 
 	void DeactivateGUIScreen() { GUIScreen = nullptr; };
 
 	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
-
-	GLubyte GetRenderMode() { return rendermode; };
 
 	void PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe = 0);
 
@@ -73,8 +71,6 @@ public:
 	Palette ForgroundPalette[4];
 
 private:
-
-	GLubyte rendermode = 1;
 
 	TileScreen* GUIScreen = nullptr;
 
@@ -109,8 +105,8 @@ private:
 	GLfloat MT_VertexBuffer[4][2880];
 	GLfloat MT_PaletteBuffer[4][1440];
 
-	std::vector<GLfloat>GUI_UVBuffer;
-	std::vector<GLfloat>GUI_PaletteBuffer;
+	GLfloat GUI_UVBuffer[2880];
+	GLfloat GUI_PaletteBuffer[1440];
 
 	Renderer();
 

@@ -1339,7 +1339,7 @@ World1::World1() {
 
 	//entity2->position.y = 232.0f;
 	ScoreScreen = new TileScreen{
-		20,20,20,20,20,20,20,20,20,20,20,20,20,20,0,20,
+		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 		20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 		19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,
@@ -1372,14 +1372,13 @@ World1::World1() {
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 	};
 	//SiroGen->SetGUIScreen(ScoreScreen);
-	//SiroGen->UpdateFloatTile(0);
+	//SiroGen->UpdateGUITile(14);
 
 	renderpos = 0;
 
 	//GetCamera()->SetZoom(1.0f); //4.5f = Pixel Perfect Zoom
 	GetCamera()->X = 0;
 	GetCamera()->Y = 0;
-	SiroGen->SetRenderMode(this, 1);
 }
 
 unsigned char gridmap[16 * 15]{
@@ -1446,17 +1445,18 @@ void World1::update() {
 	}
 	text->position.x = GetCamera()->X;
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-		//SiroGen->DeactivateScoreScreen();
+		TileScreens[0]->tiles[17] = 3;
+		SiroGen->UpdateMainTile(TileScreens[0], 17);
 	}
-	if (GetInput()->KeyDown(KeyCode::KeyPadAdd)) {
+	if (GetInput()->KeyDown(KeyCode::Y)) {
 		upscore++;
 	}
-	if (GetInput()->KeyDown(KeyCode::KeyPadSubtract)) {
+	if (GetInput()->KeyDown(KeyCode::H)) {
 		upscore--;
 	}
 
 	//SiroGen->SetTileDigits(downscore, 30);
-	//SiroGen->SetTileDigits(upscore, 14,20);
+//	SiroGen->SetTileDigits(upscore, 13 + 16);
 
 	
 
