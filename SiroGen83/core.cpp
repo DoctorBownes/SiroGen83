@@ -56,7 +56,7 @@ void Core::Run(Scene* scene) {
 
     _instance->UpdatePalettes();
 
-    _instance->SetRenderMode(scene, _instance->GetRenderMode());
+    _instance->SetRenderMode(scene);
 
     do {
 
