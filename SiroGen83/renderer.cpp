@@ -365,7 +365,7 @@ void Renderer::UpdatePalettes() {
 }
 
 void Renderer::SetRenderMode(Scene* scene) {
-    for (int j = 0; j < 2; j++) {
+    for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 240; i++) {
             MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
             MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
@@ -534,14 +534,14 @@ void Renderer::RenderScene(Scene* scene) {
 
        N += 1 - ((2 * (N & 1)));
 
-       for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
            EditTile(x, x + 240 * N);
        }
    }
    else {
-       for (int x = overwrite_pos.y * 16; x < 16 + overwrite_pos.y * 16; x++) {
+       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
            MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
            MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
            EditTile(x, x + 240 * N);
