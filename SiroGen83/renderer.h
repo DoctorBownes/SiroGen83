@@ -101,12 +101,12 @@ private:
 
 	std::vector<GLubyte>TileMap;
 
-	GLfloat MT_UVBuffer[4][2880];
-	GLfloat MT_VertexBuffer[4][2880];
-	GLfloat MT_PaletteBuffer[4][1440];
+	GLfloat MT_UVBuffer[4][2880 * 4];
+	GLfloat MT_VertexBuffer[4][2880 * 4];
+	GLfloat MT_PaletteBuffer[4][1440 * 4];
 
-	GLfloat GUI_UVBuffer[2880];
-	GLfloat GUI_PaletteBuffer[1440];
+	GLfloat GUI_UVBuffer[2880 * 4];
+	GLfloat GUI_PaletteBuffer[1440 * 4];
 
 	Renderer();
 

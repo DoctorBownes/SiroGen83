@@ -53,7 +53,7 @@ Renderer::Renderer() {
     VertexBuffer[11] = 0.0f;
     //Setup Maintables
 
-    TileMap.resize(256 * 16 * 16);
+    TileMap.resize(256 * 8 * 8);
 
     //Initialize forground and background palettes
     unsigned char PaletteColors[] = {
@@ -169,7 +169,7 @@ Renderer::Renderer() {
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 16, 16, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, TileMap.size() / 8, 8, 0, GL_RED, GL_UNSIGNED_BYTE, (void*)0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
     glActiveTexture(GL_TEXTURE1);
@@ -237,27 +237,118 @@ void Renderer::UpdateGUITile(unsigned short tile) {
 }
 
 void Renderer::EditTile(unsigned short tile, int test) {
-    unsigned short stile = test * 12;
-    unsigned char flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
-    unsigned char color = MainScreen[N]->attributes[tile] & 3;
-    float MapSize = 1.0f / (TileMap.size() / 256.0f);
+    unsigned short bigpos = (test * 2 - (test & 15)) * 2;
+    unsigned short stile = (bigpos) * 12;
+    unsigned short flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
+    unsigned short color = MainScreen[N]->attributes[tile] & 3;
+    float MapSize = 1.0f / (TileMap.size() / 64.0f);
 
-    MT_UVBuffer[0][stile + 0] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[0][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[0][stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[0][stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[0][stile + 8] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
-    MT_UVBuffer[0][stile +10] =  (flip * MapSize + MainScreen[N]->tiles[tile] * (MapSize));
+    MT_UVBuffer[0][stile + 0] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 8] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
 
     flip = MainScreen[N]->attributes[tile];
     (flip >>= 3) &= 1;
 
-    MT_UVBuffer[0][stile + 1] =  flip;
-    MT_UVBuffer[0][stile + 3] =  flip;
+    MT_UVBuffer[0][stile + 1] = flip;
+    MT_UVBuffer[0][stile + 3] = flip;
     MT_UVBuffer[0][stile + 5] = !flip;
     MT_UVBuffer[0][stile + 7] = !flip;
     MT_UVBuffer[0][stile + 9] = !flip;
-    MT_UVBuffer[0][stile +11] =  flip;
+    MT_UVBuffer[0][stile + 11] = flip;
+
+    stile /= 2;
+
+    MT_PaletteBuffer[0][stile + 0] = color;
+    MT_PaletteBuffer[0][stile + 1] = color;
+    MT_PaletteBuffer[0][stile + 2] = color;
+    MT_PaletteBuffer[0][stile + 3] = color;
+    MT_PaletteBuffer[0][stile + 4] = color;
+    MT_PaletteBuffer[0][stile + 5] = color;
+
+    bigpos += 1;
+    stile = (bigpos) * 12;
+    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
+
+    MT_UVBuffer[0][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+
+    flip = MainScreen[N]->attributes[tile];
+    (flip >>= 3) &= 1;
+
+    MT_UVBuffer[0][stile + 1] = flip;
+    MT_UVBuffer[0][stile + 3] = flip;
+    MT_UVBuffer[0][stile + 5] = !flip;
+    MT_UVBuffer[0][stile + 7] = !flip;
+    MT_UVBuffer[0][stile + 9] = !flip;
+    MT_UVBuffer[0][stile + 11] = flip;
+
+    stile /= 2;
+
+    MT_PaletteBuffer[0][stile + 0] = color;
+    MT_PaletteBuffer[0][stile + 1] = color;
+    MT_PaletteBuffer[0][stile + 2] = color;
+    MT_PaletteBuffer[0][stile + 3] = color;
+    MT_PaletteBuffer[0][stile + 4] = color;
+    MT_PaletteBuffer[0][stile + 5] = color;
+
+    bigpos += 31;
+    stile = (bigpos) * 12;
+    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
+
+    MT_UVBuffer[0][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+
+    flip = MainScreen[N]->attributes[tile];
+    (flip >>= 3) &= 1;
+
+    MT_UVBuffer[0][stile + 1] = flip;
+    MT_UVBuffer[0][stile + 3] = flip;
+    MT_UVBuffer[0][stile + 5] = !flip;
+    MT_UVBuffer[0][stile + 7] = !flip;
+    MT_UVBuffer[0][stile + 9] = !flip;
+    MT_UVBuffer[0][stile + 11] = flip;
+
+    stile /= 2;
+
+    MT_PaletteBuffer[0][stile + 0] = color;
+    MT_PaletteBuffer[0][stile + 1] = color;
+    MT_PaletteBuffer[0][stile + 2] = color;
+    MT_PaletteBuffer[0][stile + 3] = color;
+    MT_PaletteBuffer[0][stile + 4] = color;
+    MT_PaletteBuffer[0][stile + 5] = color;
+
+    bigpos += 1;
+    stile = (bigpos) * 12;
+    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
+
+    MT_UVBuffer[0][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 4] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 6] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
+    MT_UVBuffer[0][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
+
+    flip = MainScreen[N]->attributes[tile];
+    (flip >>= 3) &= 1;
+
+    MT_UVBuffer[0][stile + 1] = flip;
+    MT_UVBuffer[0][stile + 3] = flip;
+    MT_UVBuffer[0][stile + 5] = !flip;
+    MT_UVBuffer[0][stile + 7] = !flip;
+    MT_UVBuffer[0][stile + 9] = !flip;
+    MT_UVBuffer[0][stile + 11] = flip;
 
     stile /= 2;
 
@@ -366,8 +457,14 @@ void Renderer::UpdatePalettes() {
 
 void Renderer::SetRenderMode(Scene* scene) {
     for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 240; i++) {
+        for (int i = 0; i < 960; i++) {
             MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
+           // MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
+        }
+    }
+
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 240; i++) {
             MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
         }
     }
@@ -375,37 +472,51 @@ void Renderer::SetRenderMode(Scene* scene) {
     int i = 0;
     for (N = 0; N < 4; N++) {
         int z = 0;
-        for (int y = 0; y < 15; y++) {
+        for (int y = 0; y < 30; y++) {
 
-            for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
-                MT_VertexBuffer[0][(i * 12) + 0] = ((-0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 5] = ((-0.5f - y) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 7] = ((-0.5f - y) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 8] = ((-0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 9] = ((-0.5f - y) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 10] = ((-0.5f + x) * 16.0f);
-                MT_VertexBuffer[0][(i * 12) + 11] = ((0.5f - y) * 16.0f);
+            for (int x = 0 + 32 * N; x < 32 + 32 * N; x++) {
+                MT_VertexBuffer[0][(i * 12) + 0] =((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 5] =((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 7] =((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 8] =((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 9] =((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) +10] =((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) +11] = ((0.5f - y) * 8.0f);
 
-                EditTile(z, i);
+                //EditTile(z, i);
                 z++;
                 i++;
             }
         }
     }
 
+   i = 0;
+   for (N = 0; N < 4; N++) {
+       int z = 0;
+       for (int y = 0; y < 15; y++) {
+   
+           for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
+   
+               EditTile(z, i);
+               z++;
+               i++;
+           }
+       }
+   }
+
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4, MT_UVBuffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_UVBuffer[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4, MT_PaletteBuffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer[0], GL_STATIC_DRAW);
 }
 
 void Renderer::SetGUIScreen(TileScreen* guiscreen){
@@ -477,85 +588,93 @@ void Renderer::RenderScene(Scene* scene) {
    overwrite_pos.y *= 0.0625f;
    overwrite_pos.y &= 0xf;
 
-   unsigned char split = (N & 2 | (lo_CamY / 256));
-   scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
-
-
-   if (split) {
-       for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-
-       N += 2 - ((2 * (N & 2)));
-
-       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-   }
-   else {
-       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile(x, x + 240 * N);
-
-       }
-
-       N += 2 - ((2 * (N & 2)));
-
-
-       for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
-           EditTile(x, x + 240 * N);
-
-       }
-   }
-
-   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
-
-   N = ((overwrite_pos.y >> 8) * 2 & 3);
-
-   overwrite_pos.y *= 0.0625f;
-   overwrite_pos.y &= 0xf;
-
-   split = (N & 1 | (lo_CamX / 256));
-   scene->renderpos = (((scene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
-      
-   if (split) {
-       for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-
-       N += 1 - ((2 * (N & 1)));
-       //TODO:  overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16
-       // See if can be simplified
-       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-   }
-   else {
-       for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-
-       N += 1 - ((2 * (N & 1)));
-
-       for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
-           MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
-           MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
-           EditTile(x, x + 240 * N);
-       }
-   }
+ //unsigned char split = (N & 2 | (lo_CamY / 256));
+ //scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
+ //printf("%d\n", split);
+ //
+ //if (split) {
+ //    for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //
+ //    N += 2 - ((2 * (N & 2)));
+ //
+ //    for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //}
+ //else {
+ //    for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
+ //        unsigned short bigpos = (x * 2 - (x & 15)) * 2;
+ //        MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+ //        MainScreen[N]->tiles[bigpos + 1] = scene->TileScreens[scene->renderpos]->tiles[bigpos + 1];
+ //        MainScreen[N]->tiles[bigpos + 32] = scene->TileScreens[scene->renderpos]->tiles[bigpos + 32];
+ //        MainScreen[N]->tiles[bigpos + 33] = scene->TileScreens[scene->renderpos]->tiles[bigpos + 33];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //
+ //    }
+ //
+ //    N += 2 - ((2 * (N & 2)));
+ //
+ //
+ //    for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
+ //        unsigned short bigpos = (x * 2 - (x & 15)) * 2;
+ //        MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+ //        MainScreen[N]->tiles[bigpos + 1] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos + 1];
+ //        MainScreen[N]->tiles[bigpos + 32] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos + 32];
+ //        MainScreen[N]->tiles[bigpos + 33] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos + 33];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //
+ //    }
+ //}
+ //
+ //overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+ //
+ //N = ((overwrite_pos.y >> 8) * 2 & 3);
+ //
+ //overwrite_pos.y *= 0.0625f;
+ //overwrite_pos.y &= 0xf;
+ //
+ //split = (N & 1 | (lo_CamX / 256));
+ //scene->renderpos = (((scene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
+ //   
+ //if (split) {
+ //    for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //
+ //    N += 1 - ((2 * (N & 1)));
+ //    //TODO:  overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16
+ //    // See if can be simplified
+ //    for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //}
+ //else {
+ //    for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //
+ //    N += 1 - ((2 * (N & 1)));
+ //
+ //    for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
+ //        MainScreen[N]->tiles[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[x];
+ //        MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
+ //        EditTile(x, x + 240 * N);
+ //    }
+ //}
 
     unsigned short MainScreenPos_X = (lo_CamX / 256) * 512;
     unsigned short MainScreenPos_Y = (lo_CamY / 256) * 480;
@@ -656,17 +775,17 @@ void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
 
 void Renderer::AddtoTileMap(Tile* tile, char position) {
     //TileMap.resize(512/*TileMap.size() + 16 * 16*/);
-    int overwrite_pos = (position * 16); //change overwrite_pos // + (y * width)
-    for (int y = 0; y < 16; y++) {
-        overwrite_pos = (position * 16) + y; //change overwrite_pos // + (y * width)
-        for (int x = 0 + y; x < 256; x += 16) {
+    int overwrite_pos = (position * 8); //change overwrite_pos // + (y * width)
+    for (int y = 0; y < 8; y++) {
+        overwrite_pos = (position * 8) + y; //change overwrite_pos // + (y * width)
+        for (int x = 0 + y; x < 64; x += 8) {
             TileMap[overwrite_pos] = tile->pixels[x];
-            overwrite_pos += (TileMap.size() / 256) * 16;
+            overwrite_pos += (TileMap.size() / 64) * 8;
         }
     }
 
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 16, 16, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 8, 8, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
 }
 void Renderer::RenderGUIScreen(Scene* scene) {
 
@@ -742,7 +861,7 @@ void Renderer::RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos) {
     GLuint uvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(uvPositionID);
     glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4, MT_UVBuffer[num], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_UVBuffer[num], GL_STATIC_DRAW);
     glVertexAttribPointer(
         uvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
         2,                  // size
@@ -754,7 +873,7 @@ void Renderer::RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos) {
     GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
     glEnableVertexAttribArray(paletteID);
     glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4, MT_PaletteBuffer[num], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer[num], GL_STATIC_DRAW);
     glVertexAttribPointer(
         paletteID,
         1,
@@ -763,7 +882,7 @@ void Renderer::RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos) {
         0,
         (void*)0
     );
-    glDrawArrays(GL_TRIANGLES, 0, 1440); // Starting from vertex 0; 3 vertices total -> 1 triangle
+    glDrawArrays(GL_TRIANGLES, 0, 1440 * 4); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
     glDisableVertexAttribArray(paletteID);
