@@ -77,7 +77,7 @@ private:
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];
 
-	void EditTile(unsigned short tile, int test);
+	void EditTile(unsigned short tile);
 
 	GLuint shaderProgram = 0;
 
@@ -100,6 +100,7 @@ private:
 	void RenderEntity(Entity* entity);
 
 	std::vector<GLubyte>TileMap;
+	float MapSize = 0.0f;
 
 	GLfloat MT_UVBuffer[4][2880 * 4];
 	GLfloat MT_VertexBuffer[4][2880 * 4];
