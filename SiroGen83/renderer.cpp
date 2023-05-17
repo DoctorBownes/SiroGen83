@@ -209,7 +209,6 @@ void Renderer::UpdateGUITile(unsigned short tile) {
     unsigned short stile = (bigpos) * 12;
     unsigned short flip = (GUIScreen->attributes[tile] >> 2) & 1;
     unsigned short color = GUIScreen->attributes[tile] & 3;
-    float MapSize = 1.0f / (TileMap.size() / 64.0f);
 
     GUI_UVBuffer[stile + 0] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
@@ -452,16 +451,12 @@ void Renderer::EditTile(unsigned short tile) {
 }
 
 void Renderer::UpdateMainTile(TileScreen* tilescreen, unsigned short tile) {
-    unsigned short bigpos = (tile * 2 - (tile & 15)) * 2;
-    MainScreen[N]->tiles[bigpos] = tilescreen->tiles[bigpos];
-    bigpos += 1;
-    MainScreen[N]->tiles[bigpos] = tilescreen->tiles[bigpos];
-    bigpos += 31;
-    MainScreen[N]->tiles[bigpos] = tilescreen->tiles[bigpos];
-    bigpos += 1;
-    MainScreen[N]->tiles[bigpos] = tilescreen->tiles[bigpos];
-    MainScreen[N]->attributes[tile] = tilescreen->attributes[tile];
-    EditTile(tile);
+    unsigned short smallpos = (((tile - 32) & 31) + (tile / 64) * 32) / 2;
+
+    MainScreen[N]->tiles[tile] = tilescreen->tiles[tile];
+    MainScreen[N]->attributes[smallpos] = tilescreen->attributes[smallpos];
+    //TODO: N is always 1, fix this.
+    EditTile(smallpos);
 }
 
 void Renderer::UpdatePalettes() {
@@ -631,16 +626,18 @@ void Renderer::SetGUIScreen(TileScreen* guiscreen){
 }
 
 void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
+    unsigned short smallpos = (((posR2L - 32) & 31) + (posR2L / 64) * 32) / 2;
     while (score > 0) {
         int digit = score % 10;
         score /= 10;
         GUIScreen->tiles[posR2L] = digit;
 
-        UpdateGUITile(posR2L);
+        UpdateGUITile(smallpos);
         posR2L--;
+        smallpos = (((posR2L - 32) & 31) + (posR2L / 64) * 32) / 2;
     }
-    GUIScreen->tiles[posR2L+1] = blankdigit;
-    UpdateGUITile(posR2L);
+    GUIScreen->tiles[posR2L] = blankdigit;
+    UpdateGUITile(smallpos);
 }
 
 void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
@@ -686,9 +683,12 @@ void Renderer::RenderScene(Scene* scene) {
  if (split) {
      for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos += 31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
          EditTile(x);
@@ -698,9 +698,12 @@ void Renderer::RenderScene(Scene* scene) {
  
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos += 31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
          EditTile(x);
@@ -709,9 +712,12 @@ void Renderer::RenderScene(Scene* scene) {
  else {
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos+=31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
          EditTile(x);
@@ -723,9 +729,12 @@ void Renderer::RenderScene(Scene* scene) {
  
      for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos+=31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
          EditTile(x);
@@ -746,9 +755,12 @@ void Renderer::RenderScene(Scene* scene) {
  if (split) {
      for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos += 31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
          EditTile(x);
@@ -759,9 +771,12 @@ void Renderer::RenderScene(Scene* scene) {
      // See if can be simplified
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos+=31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
          EditTile(x);
@@ -770,9 +785,12 @@ void Renderer::RenderScene(Scene* scene) {
  else {
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos += 31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
          EditTile(x);
@@ -782,9 +800,12 @@ void Renderer::RenderScene(Scene* scene) {
  
      for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos++];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos += 31];
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos++];
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 1;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 31;
+         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         bigpos += 1;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
          MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
          EditTile(x);

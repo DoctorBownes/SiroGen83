@@ -738,7 +738,7 @@ World1::World1() {
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
 	};
-	//SiroGen->SetGUIScreen(ScoreScreen);
+	SiroGen->SetGUIScreen(ScoreScreen);
 	//SiroGen->UpdateGUITile(14);
 
 	renderpos = 0;
@@ -812,8 +812,8 @@ void World1::update() {
 	}
 	text->position.x = GetCamera()->X;
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-		TileScreens[0]->tiles[2] = 3;
-		SiroGen->UpdateMainTile(TileScreens[0],2);
+		ScoreScreen->tiles[66] = 7;
+		SiroGen->UpdateGUITile(17);
 	}
 	if (GetInput()->KeyDown(KeyCode::Y)) {
 		upscore++;
@@ -822,7 +822,7 @@ void World1::update() {
 		upscore--;
 	}
 
-	//SiroGen->SetTileDigits(downscore, 30);
+	SiroGen->SetTileDigits(upscore, 17, 11);
 	//SiroGen->SetTileDigits(upscore, 13 + 16);
 
 	
