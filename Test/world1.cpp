@@ -813,16 +813,16 @@ void World1::update() {
 	text->position.x = GetCamera()->X;
 	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
 		ScoreScreen->tiles[66] = 7;
-		SiroGen->UpdateGUITile(17);
+		SiroGen->UpdateGUITile(66,0);
 	}
 	if (GetInput()->KeyDown(KeyCode::Y)) {
-		upscore++;
+		upscore+=10;
 	}
 	if (GetInput()->KeyDown(KeyCode::H)) {
-		upscore--;
+		upscore-=10;
 	}
 
-	SiroGen->SetTileDigits(upscore, 17, 11);
+	SiroGen->SetTileDigits(upscore, 16);
 	//SiroGen->SetTileDigits(upscore, 13 + 16);
 
 	

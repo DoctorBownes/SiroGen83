@@ -51,7 +51,7 @@ public:
 
 	void UpdateMainTile(TileScreen* tilescreen, unsigned short tile);
 
-	void UpdateGUITile(unsigned short tile);
+	void UpdateGUITile(unsigned short tile, unsigned char atrib);
 
 	void UpdatePalettes();
 
@@ -77,7 +77,8 @@ private:
 	GLubyte bg_PaletteColors[4 * 4 * 4];
 	GLubyte fg_PaletteColors[4 * 4 * 4];
 
-	void EditTile(unsigned short tile);
+	void EditTile(unsigned short tile, unsigned char atrib);
+	void EditMetaTile(unsigned short tile);
 
 	GLuint shaderProgram = 0;
 
