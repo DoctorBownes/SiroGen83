@@ -13,7 +13,7 @@ public:
 	TileScreen* ScoreScreen = nullptr;
 
 	int downscore = 100;
-	int upscore = 1000;
+	int upscore = 1234;
 
 };
 
