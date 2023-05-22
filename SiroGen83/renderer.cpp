@@ -452,10 +452,9 @@ void Renderer::EditTile(unsigned short tile) {
 
 void Renderer::UpdateMainTile(TileScreen* tilescreen, unsigned short tile) {
     unsigned short smallpos = (((tile - 32) & 31) + (tile / 64) * 32) / 2;
-
+    N = (lo_CamX >> 8) | (lo_CamY >> 8) * 2;
     MainScreen[N]->tiles[tile] = tilescreen->tiles[tile];
     MainScreen[N]->attributes[smallpos] = tilescreen->attributes[smallpos];
-    //TODO: N is always 1, fix this.
     EditTile(smallpos);
 }
 
@@ -549,7 +548,7 @@ void Renderer::UpdatePalettes() {
 }
 
 void Renderer::SetRenderMode(Scene* scene) {
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < 1; j++) {
         for (int i = 0; i < 960; i++) {
             MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
            // MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
@@ -668,8 +667,9 @@ void Renderer::RenderScene(Scene* scene) {
    lo_CamY = scene->GetCamera()->Y & 511;
    overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 272); // 272 MAGIC NUMBER ALERT!
    overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
- 
+
    N = ((overwrite_pos.x >> 8) & 1);
+
    overwrite_pos.x *= 0.0625f;
    overwrite_pos.x &= 0xf;
  
