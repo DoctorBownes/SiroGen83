@@ -555,7 +555,7 @@ void Renderer::SetRenderMode(Scene* scene) {
         }
     }
 
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < 1; j++) {
         for (int i = 0; i < 240; i++) {
             MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
         }
@@ -909,13 +909,13 @@ void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
     entity->palette_buffer = attribute + 1;
 }
 
-void Renderer::AddtoTileMap(Tile* tile, char position) {
+void Renderer::AddtoTileMap(Tile tile, char position) {
     //TileMap.resize(512/*TileMap.size() + 16 * 16*/);
     int overwrite_pos = (position * 8); //change overwrite_pos // + (y * width)
     for (int y = 0; y < 8; y++) {
         overwrite_pos = (position * 8) + y; //change overwrite_pos // + (y * width)
         for (int x = 0 + y; x < 64; x += 8) {
-            TileMap[overwrite_pos] = tile->pixels[x];
+            TileMap[overwrite_pos] = tile.pixels[x];
             overwrite_pos += (TileMap.size() / 64) * 8;
         }
     }

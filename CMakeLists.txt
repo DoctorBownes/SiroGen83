@@ -107,3 +107,17 @@ target_link_libraries(BurgerBoss # g++ -lSiroGen83
 	target_link_libraries(BurgerBoss
 		${ALL_GRAPHICS_LIBS}
 	)
+
+# Another1989
+add_executable(Another1989 # g++ Another1989/main.cpp -o Another1989
+	Another1989/main.cpp
+	Another1989/playground.cpp
+	Another1989/playground.h
+	Another1989/spritefactory.h
+)
+target_link_libraries(Another1989 # g++ -lSiroGen83
+	${ALL_GRAPHICS_LIBS}
+)
+	target_link_libraries(Another1989
+		${ALL_GRAPHICS_LIBS}
+	)

@@ -172,17 +172,17 @@ World1::World1() {
 1,1,1,1,1,1,1,1,
 	};
 
-	SiroGen->AddtoTileMap(&t0, 0);
-	SiroGen->AddtoTileMap(&t1, 1);
-	SiroGen->AddtoTileMap(&t2, 2);
-	SiroGen->AddtoTileMap(&t3, 3);
-	SiroGen->AddtoTileMap(&t4, 4);
-	SiroGen->AddtoTileMap(&t5, 5);
-	SiroGen->AddtoTileMap(&t6, 6);
-	SiroGen->AddtoTileMap(&t7, 7);
-	SiroGen->AddtoTileMap(&t8, 8);
-	SiroGen->AddtoTileMap(&t9, 9);
-	SiroGen->AddtoTileMap(&t11, 11);
+	SiroGen->AddtoTileMap(t0, 0);
+	SiroGen->AddtoTileMap(t1, 1);
+	SiroGen->AddtoTileMap(t2, 2);
+	SiroGen->AddtoTileMap(t3, 3);
+	SiroGen->AddtoTileMap(t4, 4);
+	SiroGen->AddtoTileMap(t5, 5);
+	SiroGen->AddtoTileMap(t6, 6);
+	SiroGen->AddtoTileMap(t7, 7);
+	SiroGen->AddtoTileMap(t8, 8);
+	SiroGen->AddtoTileMap(t9, 9);
+	SiroGen->AddtoTileMap(t11, 11);
 
 	TileScreens[0] = new TileScreen{
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,

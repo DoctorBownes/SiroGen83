@@ -47,7 +47,7 @@ public:
 
 	void SetAttributetoEntity(Entity* entity, GLuint attribute);
 
-	void AddtoTileMap(Tile* tile, char position);
+	void AddtoTileMap(Tile tile, char position);
 
 	void UpdateMainTile(TileScreen* tilescreen, unsigned short tile);
 
