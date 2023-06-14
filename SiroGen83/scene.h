@@ -24,14 +24,14 @@ private:
 	Camera* _camera = new Camera();
 };
 
-#define AddtoScene(entity){ \
-entity->SetScene(this); \
-entities.push_front(entity); \
-}
-
-#define RemovefromScene(entity){ \
-entity->SetScene(nullptr); \
-entities.remove(entity); \
-}
+//#define AddtoScene(entity){ \
+//entity->SetScene(this); \
+//entities.push_front(entity); \
+//}
+//
+//#define RemovefromScene(entity){ \
+//entity->SetScene(nullptr); \
+//entities.remove(entity); \
+//}
 
 #endif

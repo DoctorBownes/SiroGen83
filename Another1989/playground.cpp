@@ -83,7 +83,7 @@ PlayGround::PlayGround() {
 	player->position.x = 64;
 	player->position.y = 64;
 	SiroGen->SetSpritetoEntity(player, 0);
-	AddtoScene(player);
+	entities.push_front(player);
 
 	playerWalkingdown = new Animation{ 10, 1,0, 3,2, 5,4 };
 
@@ -91,6 +91,7 @@ PlayGround::PlayGround() {
 }
 
 unsigned char test = 4;
+unsigned char dir = 1;
 
 void PlayGround::update() {
 	if (GetInput()->KeyDown(KeyCode::Down)) {
@@ -99,25 +100,29 @@ void PlayGround::update() {
 			SiroGen->SetAttributetoEntity(player, test);
 			test = (~test & 4);
 		}
+		dir = 1;
 	}else if (GetInput()->KeyDown(KeyCode::Up)) {
 		player->position.y--;
 		if (SiroGen->PlayAnimation(player, playerWalkingdown, 3, 2)) {
 			SiroGen->SetAttributetoEntity(player, test);
 			test = (~test & 4);
 		}
+		dir = 3;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		player->position.x++;
 		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
 		SiroGen->SetAttributetoEntity(player, 0);
+		dir = 5;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Left)) {
 		player->position.x--;
 		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
 		SiroGen->SetAttributetoEntity(player, 4);
+		dir = 5;
 	}
 	else {
-		SiroGen->PlayAnimation(player, playerWalkingdown, 1, 1);
+		SiroGen->PlayAnimation(player, playerWalkingdown, dir, dir);
 	}
 	printf("%d\n", player->frame);
 }

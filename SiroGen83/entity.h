@@ -17,10 +17,10 @@ public:
 
 	Input* GetInput() { return _instance; };
 
-	void SetScene(Scene* scene) { _currentscene = scene; };
-
-	template <typename T = Scene>
-	T* GetScene() { return (T*)_currentscene; };
+	//void SetScene(Scene* scene) { _currentscene = scene; };
+	//
+	//template <typename T = Scene>
+	//T* GetScene() { return (T*)_currentscene; };
 
 	unsigned char frame = 0;
 
@@ -38,7 +38,7 @@ private:
 
 	unsigned short uv_buffer = 5;
 
-	Scene* _currentscene = nullptr;
+	//Scene* _currentscene = nullptr;
 
 	Input* _instance = _instance->GetInstance();
 };
