@@ -11,7 +11,10 @@ public:
 
 	virtual void update() override;
 	//virtual void BeginPlay() override;
-
+	Entity* player = nullptr;
+	Animation* playerWalkingdown = nullptr;
+	Animation* playerWalkingup = nullptr;
+	Animation* playerWalkingright = nullptr;
 };
 
 #endif

@@ -63,7 +63,7 @@ public:
 
 	void SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit = 0);
 
-	void PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe = 0);
+	unsigned char PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe = 0);
 
 	Color BackgroundColor;
 

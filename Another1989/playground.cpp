@@ -5,20 +5,20 @@ PlayGround::PlayGround() {
 		0,0,0
 	};
 	SiroGen->BackgroundPalette[0] = {
-		137, 93, 35,	216, 167, 99,		224, 200, 170,
+		135, 103, 62,	214, 182, 141,		221, 217, 212,
 	};
 	SiroGen->BackgroundPalette[1] = {
-		96, 65, 25,	178, 198, 234,		255, 255, 232
+		94, 71, 44,	190, 205, 232,		255, 255, 244
 	};
 	SiroGen->BackgroundPalette[2] = {
-		137, 33, 31,		109, 142, 95,		214, 178, 132,
+		135, 59, 58,		127, 140, 122,		211, 194, 173,
 	};
 	SiroGen->BackgroundPalette[3] = {
 		96, 96, 96,	153, 153, 153,	255, 255, 255,
 	};
 
 	SiroGen->ForgroundPalette[0] = {
-		0, 0, 0,	244, 170, 56,		255, 198, 198,
+		0, 0, 0,	211, 176, 116,		255, 249, 249,
 	};
 	SiroGen->ForgroundPalette[1] = {
 		0, 0, 0,	61, 125, 255,		255, 198, 198,
@@ -78,7 +78,46 @@ PlayGround::PlayGround() {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	};
+
+	player = new Entity();
+	player->position.x = 64;
+	player->position.y = 64;
+	SiroGen->SetSpritetoEntity(player, 0);
+	AddtoScene(player);
+
+	playerWalkingdown = new Animation{ 10, 1,0, 3,2, 5,4 };
+
+	printf("%d\n", sizeof(Entity));
 }
 
+unsigned char test = 4;
+
 void PlayGround::update() {
+	if (GetInput()->KeyDown(KeyCode::Down)) {
+		player->position.y++;
+		if (SiroGen->PlayAnimation(player, playerWalkingdown, 1, 0)) {
+			SiroGen->SetAttributetoEntity(player, test);
+			test = (~test & 4);
+		}
+	}else if (GetInput()->KeyDown(KeyCode::Up)) {
+		player->position.y--;
+		if (SiroGen->PlayAnimation(player, playerWalkingdown, 3, 2)) {
+			SiroGen->SetAttributetoEntity(player, test);
+			test = (~test & 4);
+		}
+	}
+	else if (GetInput()->KeyDown(KeyCode::Right)) {
+		player->position.x++;
+		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
+		SiroGen->SetAttributetoEntity(player, 0);
+	}
+	else if (GetInput()->KeyDown(KeyCode::Left)) {
+		player->position.x--;
+		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
+		SiroGen->SetAttributetoEntity(player, 4);
+	}
+	else {
+		SiroGen->PlayAnimation(player, playerWalkingdown, 1, 1);
+	}
+	printf("%d\n", player->frame);
 }

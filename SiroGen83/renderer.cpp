@@ -639,19 +639,24 @@ void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blan
     UpdateGUITile(smallpos);
 }
 
-void Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
-    if (!entity->frame) {
-        entity->frame = beginframe;
-    }
-    if (glfwGetTime() - entity->starttime > animation->framerate) {
+unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
+    if (entity->beginframe != beginframe) {
+        entity->beginframe = beginframe;
+        entity->frame = entity->beginframe;
         SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
+    }
+    if (entity->starttime / animation->framerate) {
 
         if (entity->frame > endframe) {
             entity->frame = beginframe;
+            return 1;
         }
+        SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
 
-        entity->starttime = glfwGetTime();
+        entity->starttime = 0;
     }
+    entity->starttime++;
+    return 0;
 }
 
 //void Renderer::ProcessTileQueue() {
@@ -906,7 +911,7 @@ void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
     entity->uv_buffer = (attribute >> 2) + 5;
     attribute &= 3;
-    entity->palette_buffer = attribute + 1;
+    entity->palette_buffer = attribute + 1; //todo: integrate attribute into entity
 }
 
 void Renderer::AddtoTileMap(Tile tile, char position) {

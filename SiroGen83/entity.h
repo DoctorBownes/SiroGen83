@@ -19,7 +19,7 @@ public:
 
 	void SetScene(Scene* scene) { _currentscene = scene; };
 
-	template <typename T>
+	template <typename T = Scene>
 	T* GetScene() { return (T*)_currentscene; };
 
 	unsigned char frame = 0;
@@ -27,7 +27,8 @@ public:
 	friend class Renderer;
 
 private:
-	float starttime = 0.0f;
+	unsigned char beginframe = 0;
+	unsigned char starttime = 0;
 
 	unsigned short texture_buffer;
 

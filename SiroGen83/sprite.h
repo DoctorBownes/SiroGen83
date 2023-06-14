@@ -8,7 +8,7 @@ struct Sprite {
 };
 
 struct Animation {
-	float framerate;
+	unsigned char framerate;
 	unsigned char sprites[16];
 };
 
