@@ -86,37 +86,47 @@ PlayGround::PlayGround() {
 	entities.push_front(player);
 
 	playerWalking = new Animation{ 10,{ 1,0,1,0, 3,2,3,2, 5,4,5,4 }, 0,0,4,4,0,0,4,4,0,0,4,4};
-	playerFighting = new Animation{ 30, 5,4,3,2,1,0};
+	playerFighting = new Animation{ 6, 6,6};
 
 }
 
-unsigned char dir = 1;
+unsigned char dir = 0;
+unsigned char punch = 0;
 
 void PlayGround::update() {
-	if (GetInput()->KeyDown(KeyCode::Down)) {
-		player->position.y++;
-		SiroGen->PlayAnimation(player, playerWalking, 3, 0);
-		dir = 1;
-	}else if (GetInput()->KeyDown(KeyCode::Up)) {
-		player->position.y--;
-		SiroGen->PlayAnimation(player, playerWalking, 7, 4);
-		dir = 5;
-	}
-	else if (GetInput()->KeyDown(KeyCode::Right)) {
-		player->position.x++;
-		SiroGen->PlayAnimation(player, playerWalking,9, 8);
-		dir = 9;
-	}
-	else if (GetInput()->KeyDown(KeyCode::Left)) {
-		player->position.x--;
-		SiroGen->PlayAnimation(player, playerWalking, 11, 10);
-		dir = 11;
+	if (!punch) {
+		if (GetInput()->KeyDown(KeyCode::Down)) {
+			player->position.y++;
+			SiroGen->PlayAnimation(player, playerWalking, 3, 0);
+			dir = 0;
+		}
+		else if (GetInput()->KeyDown(KeyCode::Up)) {
+			player->position.y--;
+			SiroGen->PlayAnimation(player, playerWalking, 7, 4);
+			dir = 2;
+		}
+		else if (GetInput()->KeyDown(KeyCode::Right)) {
+			player->position.x++;
+			SiroGen->PlayAnimation(player, playerWalking, 9, 8);
+			dir = 4;
+		}
+		else if (GetInput()->KeyDown(KeyCode::Left)) {
+			player->position.x--;
+			SiroGen->PlayAnimation(player, playerWalking, 11, 10);
+			dir = 4;
+		}
+		else {
+			//SiroGen->PlayAnimation(player, playerWalking, dir, dir);
+			SiroGen->SetSpritetoEntity(player, dir);
+		}
 	}
 	else {
-		SiroGen->PlayAnimation(player, playerWalking, dir, dir);
+		if (SiroGen->PlayAnimation(player, playerFighting, 1)) {
+			punch = 0;
+		}
 	}
-	if (GetInput()->KeyDown(KeyCode::Space)) {
-		SiroGen->PlayAnimation(player, playerFighting, 6);
+	if (GetInput()->KeyPressed(KeyCode::Space)) {
+		punch = 1;
 	}
 	/*
 	if (GetInput()->KeyDown(KeyCode::Down)) {

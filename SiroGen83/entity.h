@@ -27,7 +27,6 @@ public:
 	friend class Renderer;
 
 private:
-	unsigned char beginframe = 0;
 	unsigned char starttime = 0;
 
 	unsigned short texture_buffer;
