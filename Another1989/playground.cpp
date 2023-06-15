@@ -85,44 +85,71 @@ PlayGround::PlayGround() {
 	SiroGen->SetSpritetoEntity(player, 0);
 	entities.push_front(player);
 
-	playerWalkingdown = new Animation{ 10, 1,0, 3,2, 5,4 };
+	playerWalking = new Animation{ 10,{ 1,0,1,0, 3,2,3,2, 5,4,5,4 }, 0,0,4,4,0,0,4,4,0,0,4,4};
+	playerFighting = new Animation{ 30, 5,4,3,2,1,0};
 
-	printf("%d\n", sizeof(Entity));
 }
 
-unsigned char test = 4;
 unsigned char dir = 1;
 
 void PlayGround::update() {
 	if (GetInput()->KeyDown(KeyCode::Down)) {
 		player->position.y++;
-		if (SiroGen->PlayAnimation(player, playerWalkingdown, 1, 0)) {
-			SiroGen->SetAttributetoEntity(player, test);
-			test = (~test & 4);
-		}
+		SiroGen->PlayAnimation(player, playerWalking, 3, 0);
 		dir = 1;
 	}else if (GetInput()->KeyDown(KeyCode::Up)) {
 		player->position.y--;
-		if (SiroGen->PlayAnimation(player, playerWalkingdown, 3, 2)) {
-			SiroGen->SetAttributetoEntity(player, test);
-			test = (~test & 4);
+		SiroGen->PlayAnimation(player, playerWalking, 7, 4);
+		dir = 5;
+	}
+	else if (GetInput()->KeyDown(KeyCode::Right)) {
+		player->position.x++;
+		SiroGen->PlayAnimation(player, playerWalking,9, 8);
+		dir = 9;
+	}
+	else if (GetInput()->KeyDown(KeyCode::Left)) {
+		player->position.x--;
+		SiroGen->PlayAnimation(player, playerWalking, 11, 10);
+		dir = 11;
+	}
+	else {
+		SiroGen->PlayAnimation(player, playerWalking, dir, dir);
+	}
+	if (GetInput()->KeyDown(KeyCode::Space)) {
+		SiroGen->PlayAnimation(player, playerFighting, 6);
+	}
+	/*
+	if (GetInput()->KeyDown(KeyCode::Down)) {
+		player->position.y++;
+		if (SiroGen->PlayAnimation(player, playerWalkingdown, 1, 0)) {
+			dir = (~dir & 4);
+			SiroGen->SetAttributetoEntity(player, dir);
 		}
-		dir = 3;
+		dir |= 0b1000;
+	}else if (GetInput()->KeyDown(KeyCode::Up)) {
+		player->position.y--;
+		if (SiroGen->PlayAnimation(player, playerWalkingdown, 3, 2)) {
+			dir = (~dir & 4);
+			SiroGen->SetAttributetoEntity(player, dir);
+		}
+		dir |= 0b11000;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		player->position.x++;
 		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
 		SiroGen->SetAttributetoEntity(player, 0);
-		dir = 5;
+		dir |= 0b101000;
 	}
 	else if (GetInput()->KeyDown(KeyCode::Left)) {
 		player->position.x--;
 		SiroGen->PlayAnimation(player, playerWalkingdown, 5, 4);
 		SiroGen->SetAttributetoEntity(player, 4);
-		dir = 5;
+		dir |= 0b101000;
 	}
 	else {
-		SiroGen->PlayAnimation(player, playerWalkingdown, dir, dir);
-	}
-	printf("%d\n", player->frame);
+		SiroGen->PlayAnimation(player, playerWalkingdown, dir >> 3, dir >> 3);
+		if ((dir & 4)) {
+			SiroGen->SetAttributetoEntity(player, 0);
+		}
+	}*/
 }

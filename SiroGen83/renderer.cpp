@@ -641,17 +641,23 @@ void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blan
 
 unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
     if (entity->beginframe != beginframe) {
+        entity->starttime = 0;
         entity->beginframe = beginframe;
         entity->frame = entity->beginframe;
-        SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
+        SetSpritetoEntity(entity, animation->sprites[entity->frame]); 
+        SetAttributetoEntity(entity, animation->attribs[entity->frame++]);
+        return 1;
     }
+    SetSpritetoEntity(entity, animation->sprites[entity->frame -1]);
+    SetAttributetoEntity(entity, animation->attribs[entity->frame -1]);
     if (entity->starttime / animation->framerate) {
 
         if (entity->frame > endframe) {
             entity->frame = beginframe;
             return 1;
         }
-        SetSpritetoEntity(entity, animation->sprites[entity->frame++]); // PALETTE_FLAG_ZERO | FLIP_FLAG_HOR
+        SetSpritetoEntity(entity, animation->sprites[entity->frame]); 
+        SetAttributetoEntity(entity, animation->attribs[entity->frame++]);
 
         entity->starttime = 0;
     }
