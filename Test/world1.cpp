@@ -5,7 +5,7 @@
 Entity* entity = new Entity();
 Entity* entity2 = new Entity();
 Entity* text = new Entity();
-Animation animation = Animation{ 0.15f, 1, 2, 4,0, 5,6};
+Animation animation = Animation{ 15, 1, 2, 4,0, 5,6};
 
 	Sprite hightext = Sprite{ 72,8,
 0,2,2,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,2,2,2,0,0,0,2,2,0,0,2,2,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,2,0,0,0,0,2,2,2,0,0,0,0,0,2,2,2,2,2,0,

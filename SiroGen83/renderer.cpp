@@ -678,7 +678,7 @@ unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsi
 void Renderer::RenderScene(Scene* scene) {
    lo_CamX = scene->GetCamera()->X & 511;
    lo_CamY = scene->GetCamera()->Y & 511;
-   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 272); // 272 MAGIC NUMBER ALERT!
+   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256); // 272 MAGIC NUMBER ALERT!
    overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
 
    N = ((overwrite_pos.x >> 8) & 1);
@@ -810,8 +810,8 @@ void Renderer::RenderScene(Scene* scene) {
      }
  
      N += 1 - ((2 * (N & 1)));
- 
-     for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
+     // + ((lo_CamX & 15) > 0) fixes "loose tile bug"
+     for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + (overwrite_pos.y + ((lo_CamX & 15) > 0)) * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
          MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 1;
@@ -843,7 +843,7 @@ void Renderer::RenderScene(Scene* scene) {
         glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1),glm::vec3(
 
             (lo_EntX - (((lo_EntX - lo_CamX)) / 256) * 512) - 128.001f,
-           -(lo_EntY - (((lo_EntY - (lo_CamY + 208))) / 256) * 480) + 119.001f, //TODO: Search for better approach (lo_CamY + 208)
+           -(lo_EntY - (((lo_EntY - (lo_CamY + 128))) / 256) * 480) + 119.001f, //TODO: Search for better approach (lo_CamY + 208)
             0.0f));//Maybe change 119 to 120 for collision
 
         glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
