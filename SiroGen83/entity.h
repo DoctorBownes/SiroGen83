@@ -31,11 +31,9 @@ private:
 
 	unsigned short texture_buffer;
 
-	unsigned short palette_buffer = 1;
-
 	unsigned short vertex_buffer;
 
-	unsigned short uv_buffer = 5;
+	unsigned short uv_buffer = 2;
 
 	//Scene* _currentscene = nullptr;
 

@@ -11,28 +11,24 @@ const char* vertex_shader =
 "#version 330 core\n"
 "layout(location = 0) in vec2 vertexPosition;\n"
 "layout(location = 1) in vec2 uvPosition;\n"
-"layout(location = 2) in float PaletteOffset;\n"
 "uniform mat4 MVP;\n"
 "out vec2 UV;\n"
-"out float PL;\n"
 "void main()\n"
 "{\n"
 "	gl_Position = MVP * vec4(vertexPosition.x ,vertexPosition.y,0.0f, 1.0f);\n"
 "	UV = uvPosition;\n"
-"	PL = PaletteOffset;\n"
 "};\0";
 
 const char* fragment_shader = 
 "#version 330 core\n"
 "in vec2 UV;\n"
-"in float PL;\n"
 "out vec4 FragColor;\n"
 "uniform sampler2D myTextureSampler;\n"
 "uniform sampler1D myPaletteSampler;\n"
 "void main()\n"
 "{\n"
 "	float index = texture2D(myTextureSampler, UV).r;\n"
-"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255 + PL * 4), 0);\n"
+"   vec4 texel = texelFetch(myPaletteSampler, int(index * 255), 0);\n"
 "	FragColor = texel;\n"
 "};\0";
 
@@ -57,15 +53,18 @@ Renderer::Renderer() {
     MapSize = 1.0f / (TileMap.size() / 64.0f);
 
     //Initialize forground and background palettes
-    unsigned char PaletteColors[] = {
+    unsigned char tPaletteColors[] = {
         0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
-        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
-        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
-        0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
+        0,0,0,255,    0,0,0,255,  0,0,0,255,  0,0,0,255,
     };
-    for (int i = 0; i < 64; i++) {
-        bg_PaletteColors[i] = PaletteColors[i];
-        fg_PaletteColors[i] = PaletteColors[i];
+    for (int i = 0; i < 128; i++) {
+        PaletteColors[i] = tPaletteColors[i];
     }
 
     //Shader stuff
@@ -125,7 +124,7 @@ Renderer::Renderer() {
     glGenVertexArrays(1, &Init);
     glBindVertexArray(Init);
 
-    for (GLuint i = 1; i < 5; i++) {
+    for (GLuint i = 1; i < 2; i++) {
         PaletteBuffer[0] = (i - 1);
         PaletteBuffer[1] = (i - 1);
         PaletteBuffer[2] = (i - 1);
@@ -180,21 +179,10 @@ Renderer::Renderer() {
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) 0);
-    glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
-
-    glActiveTexture(GL_TEXTURE1);
-    glGenTextures(1, &fg_PaletteSampler);
-    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)0);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 1 * 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) 0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     glGenBuffers(1, &fuv_buffer);
-    glGenBuffers(1, &fpalette_buffer);
 
     glGenBuffers(1, &uv_buffer);
     glGenBuffers(1, &vertex_buffer);
@@ -207,8 +195,7 @@ Renderer::Renderer() {
 void Renderer::UpdateGUITile(unsigned short tile) {
     unsigned short bigpos = (tile * 2 - (tile & 15)) * 2;
     unsigned short stile = (bigpos) * 12;
-    unsigned short flip = (GUIScreen->attributes[tile] >> 2) & 1;
-    unsigned short color = GUIScreen->attributes[tile] & 3;
+    unsigned short flip = (GUIScreen->attributes[tile] & 3) & 1;
 
     GUI_UVBuffer[stile + 0] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
@@ -217,28 +204,15 @@ void Renderer::UpdateGUITile(unsigned short tile) {
     GUI_UVBuffer[stile + 8] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 10] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
 
-    flip = GUIScreen->attributes[tile];
-    (flip >>= 3) &= 1;
-
     GUI_UVBuffer[stile + 1] = flip;
     GUI_UVBuffer[stile + 3] = flip;
     GUI_UVBuffer[stile + 5] = !flip;
     GUI_UVBuffer[stile + 7] = !flip;
     GUI_UVBuffer[stile + 9] = !flip;
     GUI_UVBuffer[stile + 11] = flip;
-
-    stile /= 2;
-
-    GUI_PaletteBuffer[stile + 0] = color;
-    GUI_PaletteBuffer[stile + 1] = color;
-    GUI_PaletteBuffer[stile + 2] = color;
-    GUI_PaletteBuffer[stile + 3] = color;
-    GUI_PaletteBuffer[stile + 4] = color;
-    GUI_PaletteBuffer[stile + 5] = color;
 
     bigpos += 1;
     stile = (bigpos) * 12;
-    flip = (GUIScreen->attributes[tile] >> 2) & 1;
 
     GUI_UVBuffer[stile + 0] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
@@ -247,28 +221,15 @@ void Renderer::UpdateGUITile(unsigned short tile) {
     GUI_UVBuffer[stile + 8] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 10] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
 
-    flip = GUIScreen->attributes[tile];
-    (flip >>= 3) &= 1;
-
     GUI_UVBuffer[stile + 1] = flip;
     GUI_UVBuffer[stile + 3] = flip;
     GUI_UVBuffer[stile + 5] = !flip;
     GUI_UVBuffer[stile + 7] = !flip;
     GUI_UVBuffer[stile + 9] = !flip;
     GUI_UVBuffer[stile + 11] = flip;
-
-    stile /= 2;
-
-    GUI_PaletteBuffer[stile + 0] = color;
-    GUI_PaletteBuffer[stile + 1] = color;
-    GUI_PaletteBuffer[stile + 2] = color;
-    GUI_PaletteBuffer[stile + 3] = color;
-    GUI_PaletteBuffer[stile + 4] = color;
-    GUI_PaletteBuffer[stile + 5] = color;
 
     bigpos += 31;
     stile = (bigpos) * 12;
-    flip = (GUIScreen->attributes[tile] >> 2) & 1;
 
     GUI_UVBuffer[stile + 0] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
@@ -277,28 +238,15 @@ void Renderer::UpdateGUITile(unsigned short tile) {
     GUI_UVBuffer[stile + 8] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 10] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
 
-    flip = GUIScreen->attributes[tile];
-    (flip >>= 3) &= 1;
-
     GUI_UVBuffer[stile + 1] = flip;
     GUI_UVBuffer[stile + 3] = flip;
     GUI_UVBuffer[stile + 5] = !flip;
     GUI_UVBuffer[stile + 7] = !flip;
     GUI_UVBuffer[stile + 9] = !flip;
     GUI_UVBuffer[stile + 11] = flip;
-
-    stile /= 2;
-
-    GUI_PaletteBuffer[stile + 0] = color;
-    GUI_PaletteBuffer[stile + 1] = color;
-    GUI_PaletteBuffer[stile + 2] = color;
-    GUI_PaletteBuffer[stile + 3] = color;
-    GUI_PaletteBuffer[stile + 4] = color;
-    GUI_PaletteBuffer[stile + 5] = color;
 
     bigpos += 1;
     stile = (bigpos) * 12;
-    flip = (GUIScreen->attributes[tile] >> 2) & 1;
 
     GUI_UVBuffer[stile + 0] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 2] = (!flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
@@ -307,31 +255,18 @@ void Renderer::UpdateGUITile(unsigned short tile) {
     GUI_UVBuffer[stile + 8] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
     GUI_UVBuffer[stile + 10] = (flip * MapSize + GUIScreen->tiles[bigpos] * (MapSize));
 
-    flip = GUIScreen->attributes[tile];
-    (flip >>= 3) &= 1;
-
     GUI_UVBuffer[stile + 1] = flip;
     GUI_UVBuffer[stile + 3] = flip;
     GUI_UVBuffer[stile + 5] = !flip;
     GUI_UVBuffer[stile + 7] = !flip;
     GUI_UVBuffer[stile + 9] = !flip;
     GUI_UVBuffer[stile + 11] = flip;
-
-    stile /= 2;
-
-    GUI_PaletteBuffer[stile + 0] = color;
-    GUI_PaletteBuffer[stile + 1] = color;
-    GUI_PaletteBuffer[stile + 2] = color;
-    GUI_PaletteBuffer[stile + 3] = color;
-    GUI_PaletteBuffer[stile + 4] = color;
-    GUI_PaletteBuffer[stile + 5] = color;
 }
 
 void Renderer::EditTile(unsigned short tile) {
     unsigned short bigpos = (tile * 2 - (tile & 15)) * 2;
     unsigned short stile = (bigpos) * 12;
-    unsigned short flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
-    unsigned short color = MainScreen[N]->attributes[tile] & 3;
+    unsigned short flip = (MainScreen[N]->attributes[tile] & 3) & 1;
 
     MT_UVBuffer[N][stile + 0] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
@@ -340,8 +275,6 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 8] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
 
-    flip = MainScreen[N]->attributes[tile];
-    (flip >>= 3) &= 1;
 
     MT_UVBuffer[N][stile + 1] = flip;
     MT_UVBuffer[N][stile + 3] = flip;
@@ -350,18 +283,8 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 9] = !flip;
     MT_UVBuffer[N][stile + 11] = flip;
 
-    stile /= 2;
-
-    MT_PaletteBuffer[N][stile + 0] = color;
-    MT_PaletteBuffer[N][stile + 1] = color;
-    MT_PaletteBuffer[N][stile + 2] = color;
-    MT_PaletteBuffer[N][stile + 3] = color;
-    MT_PaletteBuffer[N][stile + 4] = color;
-    MT_PaletteBuffer[N][stile + 5] = color;
-
     bigpos += 1;
     stile = (bigpos) * 12;
-    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
 
     MT_UVBuffer[N][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
@@ -370,8 +293,6 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
 
-    flip = MainScreen[N]->attributes[tile];
-    (flip >>= 3) &= 1;
 
     MT_UVBuffer[N][stile + 1] = flip;
     MT_UVBuffer[N][stile + 3] = flip;
@@ -379,19 +300,9 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 7] = !flip;
     MT_UVBuffer[N][stile + 9] = !flip;
     MT_UVBuffer[N][stile + 11] = flip;
-
-    stile /= 2;
-
-    MT_PaletteBuffer[N][stile + 0] = color;
-    MT_PaletteBuffer[N][stile + 1] = color;
-    MT_PaletteBuffer[N][stile + 2] = color;
-    MT_PaletteBuffer[N][stile + 3] = color;
-    MT_PaletteBuffer[N][stile + 4] = color;
-    MT_PaletteBuffer[N][stile + 5] = color;
 
     bigpos += 31;
     stile = (bigpos) * 12;
-    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
 
     MT_UVBuffer[N][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
@@ -400,8 +311,6 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
 
-    flip = MainScreen[N]->attributes[tile];
-    (flip >>= 3) &= 1;
 
     MT_UVBuffer[N][stile + 1] = flip;
     MT_UVBuffer[N][stile + 3] = flip;
@@ -409,19 +318,9 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 7] = !flip;
     MT_UVBuffer[N][stile + 9] = !flip;
     MT_UVBuffer[N][stile + 11] = flip;
-
-    stile /= 2;
-
-    MT_PaletteBuffer[N][stile + 0] = color;
-    MT_PaletteBuffer[N][stile + 1] = color;
-    MT_PaletteBuffer[N][stile + 2] = color;
-    MT_PaletteBuffer[N][stile + 3] = color;
-    MT_PaletteBuffer[N][stile + 4] = color;
-    MT_PaletteBuffer[N][stile + 5] = color;
 
     bigpos += 1;
     stile = (bigpos) * 12;
-    flip = (MainScreen[N]->attributes[tile] >> 2) & 1;
 
     MT_UVBuffer[N][stile + 0] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 2] = (!flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
@@ -430,8 +329,6 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 8] = (flip * MapSize + MainScreen[N]->tiles [bigpos] * (MapSize));
     MT_UVBuffer[N][stile + 10] = (flip * MapSize + MainScreen[N]->tiles[bigpos] * (MapSize));
 
-    flip = MainScreen[N]->attributes[tile];
-    (flip >>= 3) &= 1;
 
     MT_UVBuffer[N][stile + 1] = flip;
     MT_UVBuffer[N][stile + 3] = flip;
@@ -439,15 +336,6 @@ void Renderer::EditTile(unsigned short tile) {
     MT_UVBuffer[N][stile + 7] = !flip;
     MT_UVBuffer[N][stile + 9] = !flip;
     MT_UVBuffer[N][stile + 11] = flip;
-
-    stile /= 2;
-
-    MT_PaletteBuffer[N][stile + 0] = color;
-    MT_PaletteBuffer[N][stile + 1] = color;
-    MT_PaletteBuffer[N][stile + 2] = color;
-    MT_PaletteBuffer[N][stile + 3] = color;
-    MT_PaletteBuffer[N][stile + 4] = color;
-    MT_PaletteBuffer[N][stile + 5] = color;
 }
 
 void Renderer::UpdateMainTile(TileScreen* tilescreen, unsigned short tile) {
@@ -460,91 +348,22 @@ void Renderer::UpdateMainTile(TileScreen* tilescreen, unsigned short tile) {
 
 void Renderer::UpdatePalettes() {
 
-    bg_PaletteColors[4]  = BackgroundPalette[0].colors[0].r;
-    bg_PaletteColors[5]  = BackgroundPalette[0].colors[0].g;
-    bg_PaletteColors[6]  = BackgroundPalette[0].colors[0].b;
-    bg_PaletteColors[8]  = BackgroundPalette[0].colors[1].r;
-    bg_PaletteColors[9]  = BackgroundPalette[0].colors[1].g;
-    bg_PaletteColors[10] = BackgroundPalette[0].colors[1].b;
-    bg_PaletteColors[12] = BackgroundPalette[0].colors[2].r;
-    bg_PaletteColors[13] = BackgroundPalette[0].colors[2].g;
-    bg_PaletteColors[14] = BackgroundPalette[0].colors[2].b;
-
-    bg_PaletteColors[20] = BackgroundPalette[1].colors[0].r;
-    bg_PaletteColors[21] = BackgroundPalette[1].colors[0].g;
-    bg_PaletteColors[22] = BackgroundPalette[1].colors[0].b;
-    bg_PaletteColors[24] = BackgroundPalette[1].colors[1].r;
-    bg_PaletteColors[25] = BackgroundPalette[1].colors[1].g;
-    bg_PaletteColors[26] = BackgroundPalette[1].colors[1].b;
-    bg_PaletteColors[28] = BackgroundPalette[1].colors[2].r;
-    bg_PaletteColors[29] = BackgroundPalette[1].colors[2].g;
-    bg_PaletteColors[30] = BackgroundPalette[1].colors[2].b;
-
-    bg_PaletteColors[36] = BackgroundPalette[2].colors[0].r;
-    bg_PaletteColors[37] = BackgroundPalette[2].colors[0].g;
-    bg_PaletteColors[38] = BackgroundPalette[2].colors[0].b;
-    bg_PaletteColors[40] = BackgroundPalette[2].colors[1].r;
-    bg_PaletteColors[41] = BackgroundPalette[2].colors[1].g;
-    bg_PaletteColors[42] = BackgroundPalette[2].colors[1].b;
-    bg_PaletteColors[44] = BackgroundPalette[2].colors[2].r;
-    bg_PaletteColors[45] = BackgroundPalette[2].colors[2].g;
-    bg_PaletteColors[46] = BackgroundPalette[2].colors[2].b;
-
-    bg_PaletteColors[52] = BackgroundPalette[3].colors[0].r;
-    bg_PaletteColors[53] = BackgroundPalette[3].colors[0].g;
-    bg_PaletteColors[54] = BackgroundPalette[3].colors[0].b;
-    bg_PaletteColors[56] = BackgroundPalette[3].colors[1].r;
-    bg_PaletteColors[57] = BackgroundPalette[3].colors[1].g;
-    bg_PaletteColors[58] = BackgroundPalette[3].colors[1].b;
-    bg_PaletteColors[60] = BackgroundPalette[3].colors[2].r;
-    bg_PaletteColors[61] = BackgroundPalette[3].colors[2].g;
-    bg_PaletteColors[62] = BackgroundPalette[3].colors[2].b;
-
-    fg_PaletteColors[4]  = ForgroundPalette[0].colors[0].r;
-    fg_PaletteColors[5]  = ForgroundPalette[0].colors[0].g;
-    fg_PaletteColors[6]  = ForgroundPalette[0].colors[0].b;
-    fg_PaletteColors[8]  = ForgroundPalette[0].colors[1].r;
-    fg_PaletteColors[9]  = ForgroundPalette[0].colors[1].g;
-    fg_PaletteColors[10] = ForgroundPalette[0].colors[1].b;
-    fg_PaletteColors[12] = ForgroundPalette[0].colors[2].r;
-    fg_PaletteColors[13] = ForgroundPalette[0].colors[2].g;
-    fg_PaletteColors[14] = ForgroundPalette[0].colors[2].b;
-
-    fg_PaletteColors[20] = ForgroundPalette[1].colors[0].r;
-    fg_PaletteColors[21] = ForgroundPalette[1].colors[0].g;
-    fg_PaletteColors[22] = ForgroundPalette[1].colors[0].b;
-    fg_PaletteColors[24] = ForgroundPalette[1].colors[1].r;
-    fg_PaletteColors[25] = ForgroundPalette[1].colors[1].g;
-    fg_PaletteColors[26] = ForgroundPalette[1].colors[1].b;
-    fg_PaletteColors[28] = ForgroundPalette[1].colors[2].r;
-    fg_PaletteColors[29] = ForgroundPalette[1].colors[2].g;
-    fg_PaletteColors[30] = ForgroundPalette[1].colors[2].b;
-
-    fg_PaletteColors[36] = ForgroundPalette[2].colors[0].r;
-    fg_PaletteColors[37] = ForgroundPalette[2].colors[0].g;
-    fg_PaletteColors[38] = ForgroundPalette[2].colors[0].b;
-    fg_PaletteColors[40] = ForgroundPalette[2].colors[1].r;
-    fg_PaletteColors[41] = ForgroundPalette[2].colors[1].g;
-    fg_PaletteColors[42] = ForgroundPalette[2].colors[1].b;
-    fg_PaletteColors[44] = ForgroundPalette[2].colors[2].r;
-    fg_PaletteColors[45] = ForgroundPalette[2].colors[2].g;
-    fg_PaletteColors[46] = ForgroundPalette[2].colors[2].b;
-
-    fg_PaletteColors[52] = ForgroundPalette[3].colors[0].r;
-    fg_PaletteColors[53] = ForgroundPalette[3].colors[0].g;
-    fg_PaletteColors[54] = ForgroundPalette[3].colors[0].b;
-    fg_PaletteColors[56] = ForgroundPalette[3].colors[1].r;
-    fg_PaletteColors[57] = ForgroundPalette[3].colors[1].g;
-    fg_PaletteColors[58] = ForgroundPalette[3].colors[1].b;
-    fg_PaletteColors[60] = ForgroundPalette[3].colors[2].r;
-    fg_PaletteColors[61] = ForgroundPalette[3].colors[2].g;
-    fg_PaletteColors[62] = ForgroundPalette[3].colors[2].b;
+    int i = 4;
+    int j = 0;
+    while (i < 128) {
+        PaletteColors[i] = MainPalette.colors[j].r;
+        i++;
+        PaletteColors[i] = MainPalette.colors[j].g;
+        i++;
+        PaletteColors[i] = MainPalette.colors[j].b;
+        i++;
+        i++;
+        j++;
+    }
 
     glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
-    glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 4 * 4, GL_RGBA, GL_UNSIGNED_BYTE, bg_PaletteColors);
+    glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 1 * 32, GL_RGBA, GL_UNSIGNED_BYTE, PaletteColors);
 
-    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
-    glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 4 * 4, GL_RGBA, GL_UNSIGNED_BYTE, fg_PaletteColors);
 }
 
 void Renderer::SetRenderMode(Scene* scene) {
@@ -601,7 +420,6 @@ void Renderer::SetRenderMode(Scene* scene) {
     glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer[0], GL_STATIC_DRAW);
 }
 
 void Renderer::SetGUIScreen(TileScreen* guiscreen){
@@ -619,9 +437,6 @@ void Renderer::SetGUIScreen(TileScreen* guiscreen){
 
     glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
     glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, GUI_UVBuffer, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, GUI_PaletteBuffer, GL_STATIC_DRAW);
 }
 
 void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
@@ -912,14 +727,12 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
 }
 
 void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
-    entity->texture_buffer = position + 4;
+    entity->texture_buffer = position + 3;
     entity->vertex_buffer = position + 14;
 }
 
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
-    entity->uv_buffer = (attribute >> 2) + 5;
-    attribute &= 3;
-    entity->palette_buffer = attribute + 1; //todo: integrate attribute into entity
+    entity->uv_buffer = (attribute & 3) + 2;
 }
 
 void Renderer::AddtoTileMap(Tile tile, char position) {
@@ -968,22 +781,9 @@ void Renderer::RenderGUIScreen(Scene* scene) {
         0,                  // stride
         (void*)0            // array buffer offset
     );
-    GLuint fpaletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
-    glEnableVertexAttribArray(fpaletteID);
-    glBindBuffer(GL_ARRAY_BUFFER, fpalette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, GUI_PaletteBuffer, GL_STATIC_DRAW);
-    glVertexAttribPointer(
-        fpaletteID,
-        1,
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        (void*)0
-    );
     glDrawArrays(GL_TRIANGLES, 0, 1440 * 4); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(fvertexPositionID);
     glDisableVertexAttribArray(fuvPositionID);
-    glDisableVertexAttribArray(fpaletteID);
 }
 
 
@@ -1019,22 +819,9 @@ void Renderer::RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos) {
         0,                  // stride
         (void*)0            // array buffer offset
     );
-    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
-    glEnableVertexAttribArray(paletteID);
-    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer[num], GL_STATIC_DRAW);
-    glVertexAttribPointer(
-        paletteID,
-        1,
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        (void*)0
-    );
     glDrawArrays(GL_TRIANGLES, 0, 1440 * 4); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
-    glDisableVertexAttribArray(paletteID);
 }
 
 void Renderer::RenderEntity(Entity* entity) {
@@ -1044,7 +831,7 @@ void Renderer::RenderEntity(Entity* entity) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myTextureSampler"), 0);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_1D, fg_PaletteSampler);
+    glBindTexture(GL_TEXTURE_1D, bg_PaletteSampler);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     GLuint vertexPositionID = glGetAttribLocation(shaderProgram, "vertexPosition");
@@ -1070,19 +857,7 @@ void Renderer::RenderEntity(Entity* entity) {
         0,                  // stride
         (void*)0            // array buffer offset
     );
-    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
-    glEnableVertexAttribArray(paletteID);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->palette_buffer);
-    glVertexAttribPointer(
-        paletteID,
-        1,
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        (void*)0
-    );
     glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
-    glDisableVertexAttribArray(paletteID);
 }
