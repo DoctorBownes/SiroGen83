@@ -12,8 +12,11 @@ public:
 	virtual void update() override;
 	//virtual void BeginPlay() override;
 	Entity* player = nullptr;
-	Animation* playerWalking = nullptr;
-	Animation* playerFighting = nullptr;
+	Entity* barfly = nullptr;
+	Entity* glass = nullptr;
+	Entity* SpawnBeer();
+	std::vector<Entity*> Tap;
+	Animation* BeerFilling = nullptr;
 };
 
 #endif

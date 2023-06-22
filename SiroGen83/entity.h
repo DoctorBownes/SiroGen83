@@ -23,15 +23,15 @@ public:
 	//T* GetScene() { return (T*)_currentscene; };
 
 	unsigned char frame = 0;
+	unsigned char starttime = 0;
 
 	friend class Renderer;
 
+	unsigned short texture_buffer = 0;
+
+	unsigned short vertex_buffer = 0;
+
 private:
-	unsigned char starttime = 0;
-
-	unsigned short texture_buffer;
-
-	unsigned short vertex_buffer;
 
 	unsigned short uv_buffer = 2;
 

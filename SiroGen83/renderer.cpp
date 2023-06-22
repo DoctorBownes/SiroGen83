@@ -466,8 +466,6 @@ unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsi
     if (entity->frame < beginframe || entity->frame > endframe) {
         entity->frame = beginframe;
     }
-    SetSpritetoEntity(entity, animation->sprites[entity->frame]);
-    SetAttributetoEntity(entity, animation->attribs[entity->frame]);
     if (entity->starttime / animation->framerate) {
 
         entity->frame++;
@@ -478,6 +476,8 @@ unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsi
             return 1;
         }
     }
+    SetSpritetoEntity(entity, animation->sprites[entity->frame]);
+    SetAttributetoEntity(entity, animation->attribs[entity->frame]);
     entity->starttime++;
     return 0;
 }
@@ -704,14 +704,12 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     VertexBuffer[11] = 1.0f * sprite->height;
 
 
-    position += 4;
-
+    position += 3;
     glDeleteTextures(1, &position);
 
-    position += 10;
+    position += 7;
 
     glDeleteBuffers(1, &position);
-
 
     glGenBuffers(1, &position);
     glBindBuffer(GL_ARRAY_BUFFER, position);
@@ -728,7 +726,7 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
 
 void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
     entity->texture_buffer = position + 3;
-    entity->vertex_buffer = position + 14;
+    entity->vertex_buffer = position + 10;
 }
 
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
