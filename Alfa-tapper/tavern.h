@@ -4,6 +4,8 @@
 #include <SiroGen83/scene.h>
 #include <Alfa-tapper/tavern.h>
 
+struct Beer : public Entity {};
+
 class Tavern : public Scene {
 
 public:
@@ -14,8 +16,9 @@ public:
 	Entity* player = nullptr;
 	Entity* barfly = nullptr;
 	Entity* glass = nullptr;
-	Entity* SpawnBeer();
-	std::vector<Entity*> Tap;
+	Entity* SpawnBeer(unsigned char bar);
+	std::vector<Beer*> Bar[4];
+	std::vector<Entity*> Line[4];
 	Animation* BeerFilling = nullptr;
 };
 
