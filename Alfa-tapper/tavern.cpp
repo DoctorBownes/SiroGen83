@@ -71,14 +71,17 @@ Tavern::Tavern() {
 	glass->position.x = player->position.x + 16;
 	glass->position.y = player->position.y - 24;
 
-	barfly = new Entity();
-	barfly->position.x = 16;
-	barfly->position.y = 60;
-	SiroGen->SetSpritetoEntity(barfly, 5);
-	Line[0].push_back(barfly);
+	mc = new Barfly();
+	mc->position.x = 16;
+	mc->position.y = 60;
+	mc->id = 0;
+	SiroGen->SetSpritetoEntity(mc, 5);
+	People[mc->id] = mc;
+	WaitLine[0].push_back(mc);
+
 	entities.push_front(player);
 	entities.push_front(glass);
-	entities.push_front(barfly);
+	entities.push_front(mc);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
 }
 
@@ -146,20 +149,29 @@ void Tavern::update() {
 			}
 		}
 	}
-	for (unsigned char x = 0; x < 4; x++) {
-		for (int i = 0; i < Line[x].size(); i++) {
-			std::vector<Beer*>::iterator it = Bar[x].begin();
-			while (it != Bar[x].end()) {
-				signed char difx = Line[x][i]->position.x - (*it)->position.x;
+	for (unsigned char j = 0; j < 4; j++) {
+		for (int i = 0; i < WaitLine[j].size(); i++) {
+			std::vector<Beer*>::iterator it = Bar[j].begin();
+			while (it != Bar[j].end()) {
+				signed char difx = WaitLine[j][i]->position.x - (*it)->position.x;
 				if (difx < 10 && difx > -10) {
+					//caught
 					entities.remove(*it);
 					delete* it;
-					it = Bar[x].erase(it);
+					it = Bar[j].erase(it);
+					DrinkLine->push_back(WaitLine[j][i]);
 				}
 				else {
 					it++;
 				}
 			}
+		}
+	}
+
+	for (unsigned char j = 0; j < 4; j++) {
+		for (int i = 0; i < DrinkLine[j].size(); i++) {
+
+			DrinkLine[j][i];
 		}
 	}
 }
