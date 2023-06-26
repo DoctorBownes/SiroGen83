@@ -4,7 +4,9 @@
 #include <SiroGen83/scene.h>
 #include <Alfa-tapper/tavern.h>
 
-struct Beer : public Entity {};
+struct Beer : public Entity {
+	unsigned char full = true;
+};
 
 struct Barfly : public Entity {
 	unsigned char id = 0;
@@ -19,14 +21,16 @@ public:
 	//virtual void BeginPlay() override;
 	Entity* player = nullptr;
 	Entity* glass = nullptr;
-	Entity* SpawnBeer(unsigned char bar);
+	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
 
 	Barfly* People[7];
+	Animation* drinkanim[7];
+	Animation* walkanim[7];
 	Barfly* mc = nullptr;
 
 	std::vector<Beer*> Bar[4];
-	std::vector<Entity*> WaitLine[4];
-	std::vector<Entity*> DrinkLine[4];
+	std::vector<Barfly*> WaitLine[4];
+	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
 };
 

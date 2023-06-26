@@ -27,14 +27,16 @@ public:
 
 	friend class Renderer;
 
+private:
+
+
 	unsigned short texture_buffer = 0;
 
 	unsigned short vertex_buffer = 0;
 
-private:
+	unsigned short uv_buffer = 5;
 
-	unsigned short uv_buffer = 2;
-
+	unsigned short palette_buffer = 1;
 	//Scene* _currentscene = nullptr;
 
 	Input* _instance = _instance->GetInstance();
