@@ -64,15 +64,15 @@ Tavern::Tavern() {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
 	player = new Entity();
@@ -91,13 +91,14 @@ Tavern::Tavern() {
 	SiroGen->SetSpritetoEntity(mc, 5);
 	People[mc->id] = mc;
 	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,6 };
-	walkanim[mc->id] = new Animation{ 7, 11,12,13,14 };
+	walkanim[mc->id] = new Animation{ 8, 11,12,11,12,13,14 };
 	WaitLine[0].push_back(mc);
 
 	entities.push_front(player);
 	entities.push_front(glass);
 	entities.push_front(mc);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
+	barspeeds[0] = 160;
 }
 
 Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
@@ -164,8 +165,19 @@ void Tavern::update() {
 		std::vector<Barfly*>::iterator bit = WaitLine[j].begin();
 		while (bit != WaitLine[j].end()) {
 			bool caught = false;
-			SiroGen->PlayAnimation((*bit), walkanim[(*bit)->id], 3);
-			if ((*bit)->frame < 2) {
+			if (!(*bit)->yellmeter) {
+				if (SiroGen->PlayAnimation((*bit), walkanim[(*bit)->id], 3,0)) {
+					(*bit)->yellmeter = true;
+				}
+			}
+			if ((*bit)->yellmeter > 0) {
+				SiroGen->PlayAnimation((*bit), walkanim[(*bit)->id], 5, 4);
+				(*bit)->yellmeter++;
+				if ((*bit)->yellmeter >= barspeeds[j]) {
+					(*bit)->yellmeter = false;
+				}
+			}
+			if ((*bit)->frame < 4) {
 				(*bit)->position.x++;
 			}
 			std::vector<Beer*>::iterator it = Bar[j].begin();
@@ -176,6 +188,7 @@ void Tavern::update() {
 					entities.remove(*it);
 					delete* it;
 					it = Bar[j].erase(it);
+					it = Bar[j].end();
 
 					caught = true;
 				}
@@ -184,6 +197,8 @@ void Tavern::update() {
 				}
 			}
 			if (caught) {
+
+				(*bit)->frame = 0;
 				DrinkLine->push_back(*bit);
 				bit = WaitLine[j].erase(bit);
 			}

@@ -10,6 +10,7 @@ struct Beer : public Entity {
 
 struct Barfly : public Entity {
 	unsigned char id = 0;
+	unsigned char yellmeter = 0;
 };
 
 class Tavern : public Scene {
@@ -30,6 +31,7 @@ public:
 
 	std::vector<Beer*> Bar[4];
 	std::vector<Barfly*> WaitLine[4];
+	unsigned char barspeeds[4];
 	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
 };
