@@ -91,7 +91,7 @@ Tavern::Tavern() {
 	SiroGen->SetSpritetoEntity(mc, 5);
 	People[mc->id] = mc;
 	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,6 };
-	walkanim[mc->id] = new Animation{ 7, 11,12, };
+	walkanim[mc->id] = new Animation{ 7, 11,12,13,14 };
 	WaitLine[0].push_back(mc);
 
 	entities.push_front(player);
@@ -164,8 +164,10 @@ void Tavern::update() {
 		std::vector<Barfly*>::iterator bit = WaitLine[j].begin();
 		while (bit != WaitLine[j].end()) {
 			bool caught = false;
-			SiroGen->PlayAnimation((*bit), walkanim[(*bit)->id], 1);
-			(*bit)->position.x++;
+			SiroGen->PlayAnimation((*bit), walkanim[(*bit)->id], 3);
+			if ((*bit)->frame < 2) {
+				(*bit)->position.x++;
+			}
 			std::vector<Beer*>::iterator it = Bar[j].begin();
 			while (it != Bar[j].end()) {
 				signed char difx = (*bit)->position.x - (*it)->position.x;
