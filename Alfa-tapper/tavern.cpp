@@ -1,4 +1,5 @@
 #include "tavern.h"
+#include <stdlib.h>
 
 Tavern::Tavern() {
 	SiroGen->BackgroundColor = {
@@ -89,22 +90,37 @@ Tavern::Tavern() {
 	mc->position.y = 60;
 	mc->id = 0;
 	SiroGen->SetSpritetoEntity(mc, 5);
-	People[mc->id] = mc;
-	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,11 };
+	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,11,11,11 };
 	walkanim[mc->id] = new Animation{ 8, 12,13,12,13,14,15 };
-	WaitLine[0].push_back(mc);
+	People[mc->id] = mc;
 
 	entities.push_front(player);
 	entities.push_front(glass);
-	entities.push_front(mc);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
 	barspeeds[0] = 100;
+	barspeeds[1] = 100;
+	barspeeds[2] = 100;
+	barspeeds[3] = 100;
+}
+
+Entity* Tavern::SpawnPeople()
+{
+	unsigned char randbar = std::rand() & 3;
+	Barfly* ghost = new Barfly();
+	ghost->id = People[0]->id;
+	ghost->position.x = 16;
+	ghost->position.y = 60 + randbar * 48;
+
+
+	WaitLine[randbar].push_back(ghost);
+	entities.push_front(ghost);
+	return ghost;
 }
 
 Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
 	Beer* beer = new Beer();
 	beer->position.x = near->position.x + 16;
-	beer->position.y = 60 + bar * 60;
+	beer->position.y = 60 + bar * 48;
 	if (full) {
 		SiroGen->SetSpritetoEntity(beer, 4);
 		beer->full = true;
@@ -159,7 +175,9 @@ void Tavern::update() {
 	else if (GetInput()->KeyDown(KeyCode::Right)) {
 		player->position.x++;
 	}
-
+	if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
+		SpawnPeople();
+	}
 	//WaitingLine
 	for (unsigned char j = 0; j < 4; j++) {
 		std::vector<Barfly*>::iterator bit = WaitLine[j].begin();
@@ -214,8 +232,11 @@ void Tavern::update() {
 		while (it != DrinkLine[j].end()) {
 			
 			if ((*it)->yellmeter < 1) {
-				if (SiroGen->PlayAnimation(*it, drinkanim[(*it)->id], 5)) {
+				if ((*it)->frame == 5) {
 					SpawnBeer(((*it)->position.y - 60) / 48, *it, false);
+					(*it)->frame++;
+				}
+				if (SiroGen->PlayAnimation(*it, drinkanim[(*it)->id], 6)) {
 
 					WaitLine->push_back(*it);
 					it = DrinkLine[j].erase(it);
@@ -226,6 +247,7 @@ void Tavern::update() {
 			}
 			else if ((*it)->position.x < 16) {
 				entities.remove(*it);
+				delete (*it);
 				it = DrinkLine[j].erase(it);
 			}
 			else {

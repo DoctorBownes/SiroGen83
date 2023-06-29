@@ -23,6 +23,7 @@ public:
 	Entity* player = nullptr;
 	Entity* glass = nullptr;
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
+	Entity* SpawnPeople();
 
 	Barfly* People[7];
 	Animation* drinkanim[7];
