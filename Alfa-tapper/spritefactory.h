@@ -271,7 +271,26 @@ void process(void) {
 0,0,1,9,9,9,9,10,9,9,10,9,9,9,1,0,0,0,0,0,
 0,0,0,1,9,9,9,9,9,9,9,9,1,1,0,0,0,0,0,0,
 	};
-	Sprite MCCatch = Sprite{
+	Sprite MCCatchFull = Sprite{
+		24,16,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,1,8,8,8,8,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,1,8,2,2,2,8,2,1,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,8,2,2,2,8,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,8,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1,2,8,2,12,1,2,12,1,2,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,1,2,8,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,8,8,8,8,2,2,8,8,1,0,0,0,0,12,0,12,0,12,0,0,
+0,0,0,1,8,8,1,8,8,8,8,8,1,0,0,0,0,0,12,12,12,12,12,0,
+0,0,0,0,1,8,8,1,1,1,8,1,0,0,0,0,0,13,14,12,14,12,14,0,
+0,0,0,0,1,1,8,8,8,8,8,1,1,1,1,1,1,0,14,14,14,14,14,0,
+0,0,0,1,9,9,1,1,1,1,1,9,9,9,1,2,2,1,14,14,14,14,14,0,
+0,0,1,9,9,9,9,10,9,9,10,1,9,9,1,2,2,1,14,15,14,15,14,0,
+0,0,1,9,9,1,9,10,9,9,10,9,1,1,1,1,1,0,14,15,14,15,14,0,
+0,0,1,9,9,1,9,9,9,9,9,9,1,0,0,0,0,0,0,14,14,14,0,0,
+	};
+	Sprite MCCatchEmpty = Sprite{
 		20,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,		  0,0,
 0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,		  0,0,
@@ -379,15 +398,16 @@ void process(void) {
 	SiroGen->AddSpritetoMemory(&BeerTwoThird, 3);
 	SiroGen->AddSpritetoMemory(&BeerFull, 4);
 	SiroGen->AddSpritetoMemory(&nothing, 5);
-	SiroGen->AddSpritetoMemory(&MCCatch, 6);
+	SiroGen->AddSpritetoMemory(&MCCatchFull, 6);
 	SiroGen->AddSpritetoMemory(&MCDrinkFull, 7);
 	SiroGen->AddSpritetoMemory(&MCDrinkTwoThird, 8);
 	SiroGen->AddSpritetoMemory(&MCDrinkOneThird, 9);
 	SiroGen->AddSpritetoMemory(&MCDrinkEmpty, 10);
-	SiroGen->AddSpritetoMemory(&MCWalk1, 11);
-	SiroGen->AddSpritetoMemory(&MCWalk2, 12);
-	SiroGen->AddSpritetoMemory(&MCYell1, 13);
-	SiroGen->AddSpritetoMemory(&MCYell2, 14);
+	SiroGen->AddSpritetoMemory(&MCCatchEmpty, 11);
+	SiroGen->AddSpritetoMemory(&MCWalk1, 12);
+	SiroGen->AddSpritetoMemory(&MCWalk2, 13);
+	SiroGen->AddSpritetoMemory(&MCYell1, 14);
+	SiroGen->AddSpritetoMemory(&MCYell2, 15);
 
 
 	return;

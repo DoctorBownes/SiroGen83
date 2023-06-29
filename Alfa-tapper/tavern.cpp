@@ -90,15 +90,15 @@ Tavern::Tavern() {
 	mc->id = 0;
 	SiroGen->SetSpritetoEntity(mc, 5);
 	People[mc->id] = mc;
-	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,6 };
-	walkanim[mc->id] = new Animation{ 8, 11,12,11,12,13,14 };
+	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,11 };
+	walkanim[mc->id] = new Animation{ 8, 12,13,12,13,14,15 };
 	WaitLine[0].push_back(mc);
 
 	entities.push_front(player);
 	entities.push_front(glass);
 	entities.push_front(mc);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
-	barspeeds[0] = 160;
+	barspeeds[0] = 100;
 }
 
 Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
@@ -197,8 +197,8 @@ void Tavern::update() {
 				}
 			}
 			if (caught) {
-
-				(*bit)->frame = 0;
+				(*bit)->yellmeter = 40;
+				SiroGen->PlayAnimation(*bit, drinkanim[(*bit)->id], 0,0);
 				DrinkLine->push_back(*bit);
 				bit = WaitLine[j].erase(bit);
 			}
@@ -212,15 +212,28 @@ void Tavern::update() {
 	for (unsigned char j = 0; j < 4; j++) {
 		std::vector<Barfly*>::iterator it = DrinkLine[j].begin();
 		while (it != DrinkLine[j].end()) {
-			if (SiroGen->PlayAnimation(*it, drinkanim[(*it)->id], 5)) {
-				SpawnBeer(((*it)->position.y - 60) / 48, *it, false);
+			
+			if ((*it)->yellmeter < 1) {
+				if (SiroGen->PlayAnimation(*it, drinkanim[(*it)->id], 5)) {
+					SpawnBeer(((*it)->position.y - 60) / 48, *it, false);
 
-				WaitLine->push_back(*it);
+					WaitLine->push_back(*it);
+					it = DrinkLine[j].erase(it);
+				}
+				else {
+					it++;
+				}
+			}
+			else if ((*it)->position.x < 16) {
+				entities.remove(*it);
 				it = DrinkLine[j].erase(it);
 			}
 			else {
+				(*it)->yellmeter--;
+				(*it)->position.x-=2;
 				it++;
 			}
+
 		}
 	}
 
@@ -257,4 +270,5 @@ void Tavern::update() {
 			}
 		}
 	}
+
 }
