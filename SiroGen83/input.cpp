@@ -7,13 +7,14 @@ void Input::Init(GLFWwindow* window)
 {
 	_window = window;
 	GetMousePos();
+
 }
 
 Input::Input()
 {
 	_window = nullptr;
-	keypressed[117] = { 0 };
-	keyreleased[117] = { 0 };
+	keypressed[347] = { 0 };
+	keyreleased[347] = { 0 };
 	mousepressed[7] = { 0 };
 	mousereleased[7] = { 0 };
 }
@@ -25,13 +26,14 @@ Input::~Input()
 
 bool Input::KeyPressed(KeyCode key)
 {
-	if (glfwGetKey(_window, (int)key) == GLFW_RELEASE)
+	int keycode = (int)key;
+	if (!glfwGetKey(_window, keycode))
 	{
-		keypressed[(int)key] = 0;
+		keypressed[keycode] = false;
 	}
-	if (glfwGetKey(_window, (int)key) == GLFW_PRESS && !keypressed[(int)key])
+	if (glfwGetKey(_window, keycode) && !keypressed[keycode])
 	{
-		keypressed[(int)key] = 1;
+		keypressed[keycode] = true;
 		return true;
 	}
 	return false;
@@ -43,7 +45,7 @@ bool Input::KeyReleased(KeyCode key)
 	{
 		keyreleased[(int)key] = 1;
 	}
-	if (glfwGetKey(_window, (int)key) == GLFW_RELEASE && keyreleased[(int)key])
+	if (!glfwGetKey(_window, (int)key) && keyreleased[(int)key])
 	{
 		keyreleased[(int)key] = 0;
 		return true;

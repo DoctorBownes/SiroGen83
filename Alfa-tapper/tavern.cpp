@@ -1,5 +1,4 @@
 #include "tavern.h"
-#include <stdlib.h>
 
 Tavern::Tavern() {
 	SiroGen->BackgroundColor = {
@@ -105,6 +104,7 @@ Tavern::Tavern() {
 
 Entity* Tavern::SpawnPeople()
 {
+	std::srand(randomnumber);
 	unsigned char randbar = std::rand() & 3;
 	Barfly* ghost = new Barfly();
 	ghost->id = People[0]->id;
@@ -158,6 +158,7 @@ void Tavern::update() {
 	if (GetInput()->KeyPressed(KeyCode::Up) && player->position.y > 80) {
 		player->position.y -= 48;
 		player->position.x = 176;
+		done = false;
 		glass->frame = 0;
 		glass->starttime = 0;
 		SiroGen->SetSpritetoEntity(glass, 5);
@@ -165,6 +166,7 @@ void Tavern::update() {
 	else if (GetInput()->KeyPressed(KeyCode::Down) && player->position.y < 224) {
 		player->position.y += 48;
 		player->position.x = 176;
+		done = false;
 		glass->frame = 0;
 		glass->starttime = 0;
 		SiroGen->SetSpritetoEntity(glass, 5);
@@ -201,7 +203,7 @@ void Tavern::update() {
 			std::vector<Beer*>::iterator it = Bar[j].begin();
 			while (it != Bar[j].end()) {
 				signed char difx = (*bit)->position.x - (*it)->position.x;
-				if (difx < 10 && difx > -10) {
+				if (difx < 10 && difx > -10 && (*it)->full) {
 					//caught
 					entities.remove(*it);
 					delete* it;
@@ -217,7 +219,7 @@ void Tavern::update() {
 			if (caught) {
 				(*bit)->yellmeter = 40;
 				SiroGen->PlayAnimation(*bit, drinkanim[(*bit)->id], 0,0);
-				DrinkLine->push_back(*bit);
+				DrinkLine[j].push_back(*bit);
 				bit = WaitLine[j].erase(bit);
 			}
 			else {
@@ -238,7 +240,7 @@ void Tavern::update() {
 				}
 				if (SiroGen->PlayAnimation(*it, drinkanim[(*it)->id], 6)) {
 
-					WaitLine->push_back(*it);
+					WaitLine[j].push_back(*it);
 					it = DrinkLine[j].erase(it);
 				}
 				else {
@@ -292,5 +294,5 @@ void Tavern::update() {
 			}
 		}
 	}
-
+	randomnumber++;
 }

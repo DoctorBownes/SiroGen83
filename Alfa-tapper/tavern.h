@@ -33,6 +33,7 @@ public:
 	std::vector<Beer*> Bar[4];
 	std::vector<Barfly*> WaitLine[4];
 	unsigned char barspeeds[4];
+	unsigned char randomnumber = 0;
 	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
 };

@@ -171,8 +171,8 @@ private:
 	GLFWwindow* _window;
 	bool mousereleased[8];
 	bool mousepressed[8];
-	bool keyreleased[118];
-	bool keypressed[118];
+	bool keyreleased[348];
+	bool keypressed[348];
 	double mousex = 0;
 	double mousey = 0;
 };
