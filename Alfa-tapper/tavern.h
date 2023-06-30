@@ -22,6 +22,9 @@ public:
 	//virtual void BeginPlay() override;
 	Entity* player = nullptr;
 	Entity* glass = nullptr;
+	Animation* glassshattering = nullptr;
+	Barfly* gameoverman = nullptr;
+	Entity* shatterglass = nullptr;
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
 	Entity* SpawnPeople();
 
@@ -36,6 +39,9 @@ public:
 	unsigned char randomnumber = 0;
 	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
+
+	bool done = 0;
+	unsigned char status = 0;
 };
 
 #endif

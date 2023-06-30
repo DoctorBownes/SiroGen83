@@ -140,6 +140,8 @@ enum class MouseButton
 	MouseButton8 = 7
 };
 
+#include <map>
+
 class Input
 {
 public:
@@ -164,6 +166,8 @@ public:
 	double GetMousePosX() { return mousex; };
 	double GetMousePosY() { return mousey; };
 private:
+	std::map<KeyCode, bool>keypressed;
+	std::map<KeyCode, bool>keyreleased;
 	Input();
 	~Input();
 	static Input *_instance;
@@ -171,8 +175,6 @@ private:
 	GLFWwindow* _window;
 	bool mousereleased[8];
 	bool mousepressed[8];
-	bool keyreleased[348];
-	bool keypressed[348];
 	double mousex = 0;
 	double mousey = 0;
 };

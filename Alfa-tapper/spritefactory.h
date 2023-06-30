@@ -391,6 +391,28 @@ void process(void) {
 		1,1,
 0,
 	};
+	Sprite GlassShatter1 = Sprite{
+		8,8,
+		0,0,0,13,13,0,0,0,
+		0,13,14,13,13,13,14,0,
+		0,13,13,14,0,13,14,0,
+		0,14,14,13,14,14,0,0,
+		13,13,13,14,14,14,14,13,
+		0,0,14,14,14,13,14,14,
+		0,14,14,13,14,0,13,14,
+		13,13,0,0,14,14,0,0,
+	};
+	Sprite GlassShatter2 = Sprite{
+		8,8,
+		0,13,0,13,0,13,0,0,
+		0,0,13,13,0,14,0,0,
+		13,14,0,13,14,14,14,14,
+		0,14,14,14,14,14,13,13,
+		0,0,14,14,13,13,0,0,
+		0,14,14,14,14,13,13,0,
+		13,13,14,13,14,14,13,13,
+		13,0,13,0,0,14,0,0,
+	};
 
 	SiroGen->AddSpritetoMemory(&BartenderStand, 0);
 	SiroGen->AddSpritetoMemory(&BeerEmpty, 1);
@@ -408,6 +430,8 @@ void process(void) {
 	SiroGen->AddSpritetoMemory(&MCWalk2, 13);
 	SiroGen->AddSpritetoMemory(&MCYell1, 14);
 	SiroGen->AddSpritetoMemory(&MCYell2, 15);
+	SiroGen->AddSpritetoMemory(&GlassShatter1, 16);
+	SiroGen->AddSpritetoMemory(&GlassShatter2, 17);
 
 
 	return;

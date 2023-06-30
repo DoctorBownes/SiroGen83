@@ -1,5 +1,6 @@
 #include "input.h"
 #include <GLFW/glfw3.h>
+#include <stdio.h>
 
 Input* Input::_instance = 0;
 
@@ -13,8 +14,6 @@ void Input::Init(GLFWwindow* window)
 Input::Input()
 {
 	_window = nullptr;
-	keypressed[347] = { 0 };
-	keyreleased[347] = { 0 };
 	mousepressed[7] = { 0 };
 	mousereleased[7] = { 0 };
 }
@@ -29,11 +28,11 @@ bool Input::KeyPressed(KeyCode key)
 	int keycode = (int)key;
 	if (!glfwGetKey(_window, keycode))
 	{
-		keypressed[keycode] = false;
+		keypressed[key] = false;
 	}
-	if (glfwGetKey(_window, keycode) && !keypressed[keycode])
+	if (glfwGetKey(_window, keycode) && !keypressed[key])
 	{
-		keypressed[keycode] = true;
+		keypressed[key] = true;
 		return true;
 	}
 	return false;
@@ -43,11 +42,11 @@ bool Input::KeyReleased(KeyCode key)
 {
 	if (glfwGetKey(_window, (int)key))
 	{
-		keyreleased[(int)key] = 1;
+		keyreleased[key] = true;
 	}
-	if (!glfwGetKey(_window, (int)key) && keyreleased[(int)key])
+	if (!glfwGetKey(_window, (int)key) && keyreleased[key])
 	{
-		keyreleased[(int)key] = 0;
+		keyreleased[key] = false;
 		return true;
 	}
 	return false;
@@ -55,11 +54,7 @@ bool Input::KeyReleased(KeyCode key)
 
 bool Input::KeyDown(KeyCode key)
 {
-	if (glfwGetKey(_window, (int)key) == GLFW_PRESS)
-	{
-		return true;
-	}
-	return false;
+	return glfwGetKey(_window, (int)key);
 }
 
 bool Input::MousePressed(MouseButton button)
@@ -92,11 +87,7 @@ bool Input::MouseReleased(MouseButton button)
 
 bool Input::MouseDown(MouseButton button)
 {
-	if (glfwGetMouseButton(_window, (int)button) == GLFW_PRESS)
-	{
-		return true;
-	}
-	return false;
+	return glfwGetMouseButton(_window, (int)button);
 }
 
 //bool Input::MouseOver(Entity* collider)
