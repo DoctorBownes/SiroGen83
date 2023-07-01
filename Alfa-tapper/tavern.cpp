@@ -97,10 +97,10 @@ Tavern::Tavern() {
 	entities.push_front(player);
 	entities.push_front(glass);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
-	barspeeds[0] = 100;
+	barspeeds[0] = 150;
 	barspeeds[1] = 100;
-	barspeeds[2] = 100;
-	barspeeds[3] = 100;
+	barspeeds[2] = 70;
+	barspeeds[3] = 50;
 }
 
 Entity* Tavern::SpawnPeople()
@@ -323,10 +323,15 @@ void Tavern::update() {
 		
 		break;
 	case 2://PeopleOver
-		player->position.x = gameoverman->position.x - 16;
-		player->position.y = gameoverman->position.y;
-		gameoverman->position.x-=4;
-		if (player->position.x < 4) {
+		if (gameoverman->position.x > 32) {
+			player->position.x = gameoverman->position.x - 16;
+			player->position.y = gameoverman->position.y;
+			gameoverman->position.x -= 2;
+		}
+		else {
+			player->position.x-=2;
+		}
+		if ((player->position.x & 511) > 256 && (player->position.x & 511) <= 300) {
 			status = 3;
 		}
 		break;
@@ -353,6 +358,7 @@ void Tavern::update() {
 			}
 		}
 		barpos = 0;
+		player->position.y = 80;
 		player->position.x = 176;
 		SiroGen->SetSpritetoEntity(glass, 5);
 		status = 0;
