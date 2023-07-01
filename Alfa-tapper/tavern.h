@@ -5,7 +5,8 @@
 #include <Alfa-tapper/tavern.h>
 
 struct Beer : public Entity {
-	unsigned char full = true;
+	bool full = true;
+	unsigned char barpos = 0;
 };
 
 struct Barfly : public Entity {
@@ -24,7 +25,7 @@ public:
 	Entity* glass = nullptr;
 	Animation* glassshattering = nullptr;
 	Barfly* gameoverman = nullptr;
-	Entity* shatterglass = nullptr;
+	Beer* shatterglass = nullptr;
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
 	Entity* SpawnPeople();
 
@@ -42,6 +43,7 @@ public:
 
 	bool done = 0;
 	unsigned char status = 0;
+	unsigned char barpos = 0;
 };
 
 #endif

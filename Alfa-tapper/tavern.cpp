@@ -76,14 +76,14 @@ Tavern::Tavern() {
 	};
 
 	player = new Entity();
-	player->position.y = 80;
+	player->position.y = 80 + barpos * 48;
 	player->position.x = 176;
 	SiroGen->SetSpritetoEntity(player, 0);
 
 	glass = new Entity();
 	glass->position.x = player->position.x + 16;
 	glass->position.y = player->position.y - 24;
-	glassshattering = new Animation{10, 4,4,16,17,16,17,1,1,16,17,16,17 };
+	glassshattering = new Animation{5, 16,17,16,17,16,17,16,17,16,17,16,17, };
 
 	mc = new Barfly();
 	mc->position.x = 16;
@@ -122,6 +122,7 @@ Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
 	Beer* beer = new Beer();
 	beer->position.x = near->position.x + 16;
 	beer->position.y = 60 + bar * 48;
+	beer->barpos = bar;
 	if (full) {
 		SiroGen->SetSpritetoEntity(beer, 4);
 		beer->full = true;
@@ -138,6 +139,7 @@ Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
 void Tavern::update() {
 	switch (status) {
 	case 0://GameRunning
+		player->position.y = 80 + barpos * 48;
 		//PlayerMovement
 		if (GetInput()->KeyDown(KeyCode::Space)) {
 			player->position.x = 176;
@@ -156,16 +158,18 @@ void Tavern::update() {
 			SiroGen->SetSpritetoEntity(glass, 5);
 			SpawnBeer((player->position.y - 80) / 48, player);
 		}
-		if (GetInput()->KeyPressed(KeyCode::Up) && player->position.y > 80) {
-			player->position.y -= 48;
+		if (GetInput()->KeyPressed(KeyCode::Up)) {
+			barpos--;
+			barpos &= 3;
 			player->position.x = 176;
 			done = false;
 			glass->frame = 0;
 			glass->starttime = 0;
 			SiroGen->SetSpritetoEntity(glass, 5);
 		}
-		else if (GetInput()->KeyPressed(KeyCode::Down) && player->position.y < 224) {
-			player->position.y += 48;
+		else if (GetInput()->KeyPressed(KeyCode::Down)) {
+			barpos++;
+			barpos &= 3;
 			player->position.x = 176;
 			done = false;
 			glass->frame = 0;
@@ -289,7 +293,7 @@ void Tavern::update() {
 				else {
 					(*it)->position.x += 1;
 					signed char difx = player->position.x - (*it)->position.x;
-					if (difx < 10 && difx > -10) {
+					if (difx < 10 && difx > -10 && barpos == (*it)->barpos) {
 						entities.remove(*it);
 						delete* it;
 						it = Bar[x].erase(it);
@@ -297,6 +301,7 @@ void Tavern::update() {
 					else if ((*it)->position.x > 176) {
 						shatterglass = (*it);
 						status = 1;
+						it++;
 					}
 					else {
 						it++;
@@ -307,12 +312,13 @@ void Tavern::update() {
 		randomnumber++;
 		break;
 	case 1://GlassOver
-		if (shatterglass->frame < 2) {
+		if (shatterglass->position.y < 80 + shatterglass->barpos * 48) {
 			shatterglass->position.y++;
 		}
-		if (SiroGen->PlayAnimation(shatterglass, glassshattering, 4)) {
-			//Insert Game Reset here
-			status = 3;
+		else {
+			if (SiroGen->PlayAnimation(shatterglass, glassshattering, 11)) {
+				status = 3;
+			}
 		}
 		
 		break;
@@ -346,7 +352,7 @@ void Tavern::update() {
 				sit = Bar[j].erase(sit);
 			}
 		}
-		player->position.y = 80;
+		barpos = 0;
 		player->position.x = 176;
 		SiroGen->SetSpritetoEntity(glass, 5);
 		status = 0;
