@@ -117,6 +117,30 @@ Tavern::Tavern() {
 	walkanim[dp->id] = new Animation{ 10, {38,39,38,39,40,41},{1,1,1,1,1,1} };
 	People[dp->id] = dp;
 
+	gw = new Barfly();
+	gw->position.x = 16;
+	gw->position.y = 60;
+	gw->id = 4;
+	drinkanim[gw->id] = new Animation{ 20, {52,53,54,55,56,57,57,57},{1,1,1,1,1,1,1,1} };
+	walkanim[gw->id] = new Animation{ 10, {48,49,48,49,50,51},{1,1,1,1,1,1} };
+	People[gw->id] = gw;
+
+	ep = new Barfly();
+	ep->position.x = 16;
+	ep->position.y = 60;
+	ep->id = 5;
+	drinkanim[ep->id] = new Animation{ 20, {62,63,64,65,66,67,67,67},{1,1,1,1,1,1,1,1} };
+	walkanim[ep->id] = new Animation{ 10, {58,59,58,59,60,61},{1,1,1,1,1,1} };
+	People[ep->id] = ep;
+
+	rt = new Barfly();
+	rt->position.x = 16;
+	rt->position.y = 60;
+	rt->id = 6;
+	drinkanim[rt->id] = new Animation{ 20, {72,73,74,75,76,77,77,77},{1,1,1,1,1,1,1,1} };
+	walkanim[rt->id] = new Animation{ 10, {68,69,68,69,70,71},{1,1,1,1,1,1} };
+	People[rt->id] = rt;
+
 	entities.push_front(player);
 	entities.push_front(glass);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
@@ -130,8 +154,9 @@ Entity* Tavern::SpawnPeople()
 {
 	std::srand(randomnumber);
 	unsigned char randbar = std::rand() & 3;
+	unsigned char randpeep = std::rand() % 7;
 	Barfly* ghost = new Barfly();
-	ghost->id = People[3]->id;
+	ghost->id = People[randpeep]->id;
 	ghost->position.x = 16;
 	ghost->position.y = 60 + randbar * 48;
 
