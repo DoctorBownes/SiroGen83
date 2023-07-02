@@ -452,6 +452,8 @@ void Renderer::UpdatePalettes() {
         i++;
         j++;
     }
+    i = 68;
+    j = 0;
     while (i < 128) {
         fg_PaletteColors[i] = ForgroundPalette[1].colors[j].r;
         i++;
@@ -462,6 +464,8 @@ void Renderer::UpdatePalettes() {
         i++;
         j++;
     }
+    i = 132;
+    j = 0;
     while (i < 192) {
         fg_PaletteColors[i] = ForgroundPalette[2].colors[j].r;
         i++;

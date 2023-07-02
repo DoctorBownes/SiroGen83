@@ -89,10 +89,33 @@ Tavern::Tavern() {
 	mc->position.x = 16;
 	mc->position.y = 60;
 	mc->id = 0;
-	SiroGen->SetSpritetoEntity(mc, 5);
 	drinkanim[mc->id] = new Animation{ 20, 6,7,8,9,10,11,11,11 };
-	walkanim[mc->id] = new Animation{ 8, 12,13,12,13,14,15 };
+	walkanim[mc->id] = new Animation{ 10, 12,13,12,13,14,15 };
 	People[mc->id] = mc;
+
+	jk = new Barfly();
+	jk->position.x = 16;
+	jk->position.y = 60;
+	jk->id = 1;
+	drinkanim[jk->id] = new Animation{ 20, {22,23,24,25,26,27,27,27},{1,1,1,1,1,1,1,1} };
+	walkanim[jk->id] = new Animation{ 10, {18,19,18,19,20,21},{1,1,1,1,1,1} };
+	People[jk->id] = jk;
+
+	st = new Barfly();
+	st->position.x = 16;
+	st->position.y = 60;
+	st->id = 2;
+	drinkanim[st->id] = new Animation{ 20, {32,33,34,35,36,37,37,37},{1,1,1,1,1,1,1,1} };
+	walkanim[st->id] = new Animation{ 10, {28,29,28,29,30,31},{1,1,1,1,1,1} };
+	People[st->id] = st;
+
+	dp = new Barfly();
+	dp->position.x = 16;
+	dp->position.y = 60;
+	dp->id = 3;
+	drinkanim[dp->id] = new Animation{ 20, {42,43,44,45,46,47,47,47},{1,1,1,1,1,1,1,1} };
+	walkanim[dp->id] = new Animation{ 10, {38,39,38,39,40,41},{1,1,1,1,1,1} };
+	People[dp->id] = dp;
 
 	entities.push_front(player);
 	entities.push_front(glass);
@@ -108,7 +131,7 @@ Entity* Tavern::SpawnPeople()
 	std::srand(randomnumber);
 	unsigned char randbar = std::rand() & 3;
 	Barfly* ghost = new Barfly();
-	ghost->id = People[0]->id;
+	ghost->id = People[3]->id;
 	ghost->position.x = 16;
 	ghost->position.y = 60 + randbar * 48;
 

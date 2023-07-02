@@ -33,6 +33,12 @@ public:
 	Animation* drinkanim[7];
 	Animation* walkanim[7];
 	Barfly* mc = nullptr;
+	Barfly* jk = nullptr;
+	Barfly* st = nullptr;
+	Barfly* dp = nullptr;
+	Barfly* gw = nullptr;
+	Barfly* ep = nullptr;
+	Barfly* rt = nullptr;
 
 	std::vector<Beer*> Bar[4];
 	std::vector<Barfly*> WaitLine[4];
