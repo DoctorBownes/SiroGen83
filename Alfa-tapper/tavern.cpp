@@ -191,7 +191,6 @@ void Tavern::update() {
 	case 0://GameRunning
 		if (!moving) {
 			SiroGen->PlayAnimation(player, playerwalking, 1);
-			player->position.y = 80 + barpos * 48;
 			//PlayerMovement
 			if (GetInput()->KeyDown(KeyCode::Space)) {
 				player->position.x = 176;
@@ -245,6 +244,7 @@ void Tavern::update() {
 					barpos--;
 				}
 				barpos &= 3;
+				player->position.y = 80 + barpos * 48;
 				player->position.x = 176;
 				moving = false;
 				playerwalking->framerate = 20;
