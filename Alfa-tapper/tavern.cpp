@@ -79,11 +79,12 @@ Tavern::Tavern() {
 	player->position.y = 80 + barpos * 48;
 	player->position.x = 176;
 	SiroGen->SetSpritetoEntity(player, 0);
+	playerwalking = new Animation{20, 0,78,79,79,80,81,82};
 
 	glass = new Entity();
 	glass->position.x = player->position.x + 16;
 	glass->position.y = player->position.y - 24;
-	glassshattering = new Animation{5, 16,17,16,17,16,17,16,17,16,17,16,17, };
+	glassshattering = new Animation{8, 16,17,16,17,16,17,16,17,16,17,16,17, };
 
 	mc = new Barfly();
 	mc->position.x = 16;
@@ -148,6 +149,7 @@ Tavern::Tavern() {
 	barspeeds[1] = 100;
 	barspeeds[2] = 70;
 	barspeeds[3] = 50;
+	spawntimer = 121;
 }
 
 Entity* Tavern::SpawnPeople()
@@ -187,52 +189,69 @@ Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
 void Tavern::update() {
 	switch (status) {
 	case 0://GameRunning
-		player->position.y = 80 + barpos * 48;
-		//PlayerMovement
-		if (GetInput()->KeyDown(KeyCode::Space)) {
-			player->position.x = 176;
-			glass->position.x = player->position.x + 16;
-			glass->position.y = player->position.y - 24;
-			if (!done) {
-				if (SiroGen->PlayAnimation(glass, BeerFilling, 3) || glass->frame == 3) {
-					done = true;
+		if (!moving) {
+			SiroGen->PlayAnimation(player, playerwalking, 1);
+			player->position.y = 80 + barpos * 48;
+			//PlayerMovement
+			if (GetInput()->KeyDown(KeyCode::Space)) {
+				player->position.x = 176;
+				glass->position.x = player->position.x + 16;
+				glass->position.y = player->position.y - 24;
+				if (!done) {
+					if (SiroGen->PlayAnimation(glass, BeerFilling, 3) || glass->frame == 3) {
+						done = true;
+					}
 				}
 			}
+			if (GetInput()->KeyReleased(KeyCode::Space) && done) {
+				done = false;
+				glass->frame = 0;
+				glass->starttime = 0;
+				SiroGen->SetSpritetoEntity(glass, 5);
+				SpawnBeer((player->position.y - 80) / 48, player);
+			}
+			if (GetInput()->KeyPressed(KeyCode::Up)) {
+				glass->frame = 0;
+				glass->starttime = 0;
+				SiroGen->SetSpritetoEntity(glass, 5);
+				done = false;
+				moving = 1;
+				player->starttime = 0;
+			}
+			else if (GetInput()->KeyPressed(KeyCode::Down)) {
+				glass->frame = 0;
+				glass->starttime = 0;
+				SiroGen->SetSpritetoEntity(glass, 5);
+				done = false;
+				moving = 2;
+				player->starttime = 0;
+			}
+			else if (GetInput()->KeyDown(KeyCode::Left)) {
+				player->position.x--;
+			}
+			else if (GetInput()->KeyDown(KeyCode::Right)) {
+				player->position.x++;
+			}
 		}
-		if (GetInput()->KeyReleased(KeyCode::Space) && done) {
-			done = false;
-			glass->frame = 0;
-			glass->starttime = 0;
-			SiroGen->SetSpritetoEntity(glass, 5);
-			SpawnBeer((player->position.y - 80) / 48, player);
+
+
+		if (moving) {
+			playerwalking->framerate = 3;
+			if (SiroGen->PlayAnimation(player, playerwalking, 6, 2)) {
+				if (moving > 1) {
+					barpos++;
+				}
+				else {
+					barpos--;
+				}
+				barpos &= 3;
+				player->position.x = 176;
+				moving = false;
+				playerwalking->framerate = 20;
+			}
 		}
-		if (GetInput()->KeyPressed(KeyCode::Up)) {
-			barpos--;
-			barpos &= 3;
-			player->position.x = 176;
-			done = false;
-			glass->frame = 0;
-			glass->starttime = 0;
-			SiroGen->SetSpritetoEntity(glass, 5);
-		}
-		else if (GetInput()->KeyPressed(KeyCode::Down)) {
-			barpos++;
-			barpos &= 3;
-			player->position.x = 176;
-			done = false;
-			glass->frame = 0;
-			glass->starttime = 0;
-			SiroGen->SetSpritetoEntity(glass, 5);
-		}
-		else if (GetInput()->KeyDown(KeyCode::Left)) {
-			player->position.x--;
-		}
-		else if (GetInput()->KeyDown(KeyCode::Right)) {
-			player->position.x++;
-		}
-		if (GetInput()->KeyPressed(KeyCode::LeftControl)) {
-			SpawnPeople();
-		}
+
+
 		//WaitingLine
 		for (unsigned char j = 0; j < 4; j++) {
 			std::vector<Barfly*>::iterator bit = WaitLine[j].begin();
@@ -254,14 +273,13 @@ void Tavern::update() {
 					(*bit)->position.x++;
 					if ((*bit)->position.x > 176) {
 						gameoverman = (*bit);
-						SiroGen->SetAttributetoEntity(gameoverman, 4);
 						status = 2;
 					}
 				}
 				std::vector<Beer*>::iterator it = Bar[j].begin();
 				while (it != Bar[j].end()) {
 					signed char difx = (*bit)->position.x - (*it)->position.x;
-					if (difx < 10 && difx > -10 && (*it)->full) {
+					if (difx < 14 && difx > -10 && (*it)->full) {
 						//caught
 						entities.remove(*it);
 						delete* it;
@@ -358,8 +376,14 @@ void Tavern::update() {
 			}
 		}
 		randomnumber++;
+		spawncounter++;
+		if (spawncounter / spawntimer) {
+			spawncounter = 0;
+			SpawnPeople();
+		}
 		break;
 	case 1://GlassOver
+		SiroGen->SetSpritetoEntity(player, 83);
 		if (shatterglass->position.y < 80 + shatterglass->barpos * 48) {
 			shatterglass->position.y++;
 		}
@@ -371,9 +395,18 @@ void Tavern::update() {
 		
 		break;
 	case 2://PeopleOver
+		SiroGen->PlayAnimation(gameoverman, walkanim[gameoverman->id], 3, 0);
+		if (gameoverman->id) {
+			SiroGen->SetAttributetoEntity(gameoverman, 5);
+		}
+		else {
+			SiroGen->SetAttributetoEntity(gameoverman, 4);
+		}
+		SiroGen->SetSpritetoEntity(player, 84);
+		SiroGen->SetAttributetoEntity(player, 4);
 		if (gameoverman->position.x > 32) {
 			player->position.x = gameoverman->position.x - 16;
-			player->position.y = gameoverman->position.y;
+			player->position.y = gameoverman->position.y + 8;
 			gameoverman->position.x -= 2;
 		}
 		else {

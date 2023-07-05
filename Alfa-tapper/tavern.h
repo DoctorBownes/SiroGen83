@@ -24,6 +24,7 @@ public:
 	Entity* player = nullptr;
 	Entity* glass = nullptr;
 	Animation* glassshattering = nullptr;
+	Animation* playerwalking = nullptr;
 	Barfly* gameoverman = nullptr;
 	Beer* shatterglass = nullptr;
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
@@ -43,11 +44,14 @@ public:
 	std::vector<Beer*> Bar[4];
 	std::vector<Barfly*> WaitLine[4];
 	unsigned char barspeeds[4];
+	unsigned short spawncounter = 0;
+	unsigned short spawntimer = 0;
 	unsigned char randomnumber = 0;
 	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
 
 	bool done = 0;
+	unsigned char moving = 0;
 	unsigned char status = 0;
 	unsigned char barpos = 0;
 };

@@ -4,7 +4,7 @@
 struct Sprite {
 	unsigned char width;
 	unsigned char height;
-	unsigned char pixels[24 * 24];
+	unsigned char pixels[32 * 32];
 };
 
 struct Animation {

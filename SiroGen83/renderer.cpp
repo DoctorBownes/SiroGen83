@@ -804,6 +804,12 @@ void Renderer::RenderScene(Scene* scene) {
 }
 
 void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
+    if (sprite->width > 32) {
+        sprite->width = 32;
+    }
+    if (sprite->height > 32) {
+        sprite->height = 32;
+    }
     VertexBuffer[0] = 0.0f * sprite->width;
     VertexBuffer[1] = 1.0f * sprite->height;
 
