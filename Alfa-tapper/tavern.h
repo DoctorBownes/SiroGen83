@@ -31,6 +31,8 @@ public:
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
 	Entity* SpawnPeople();
 
+	Entity* Taps[4];
+
 	Barfly* People[7];
 	Animation* drinkanim[7];
 	Animation* walkanim[7];

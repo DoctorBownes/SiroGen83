@@ -77,7 +77,7 @@ Tavern::Tavern() {
 
 	player = new Entity();
 	player->position.y = 80 + barpos * 48;
-	player->position.x = 176;
+	player->position.x = 165;
 	SiroGen->SetSpritetoEntity(player, 0);
 	playerwalking = new Animation{20, 0,78,79,79,80,81,82, 85,86,87,88};
 	playertapping = new Animation{20, 91,91,91};
@@ -143,8 +143,20 @@ Tavern::Tavern() {
 	walkanim[rt->id] = new Animation{ 10, {68,69,68,69,70,71},{1,1,1,1,1,1} };
 	People[rt->id] = rt;
 
+	for (int i = 0; i < 4; i++) {
+		Taps[i] = new Entity();
+		Taps[i]->position.x = 189;
+		Taps[i]->position.y = 58 + i * 48;
+		SiroGen->SetSpritetoEntity(Taps[i], 92);
+	}
+
+
 	entities.push_front(player);
 	entities.push_front(glass);
+	entities.push_front(Taps[0]);
+	entities.push_front(Taps[1]);
+	entities.push_front(Taps[2]);
+	entities.push_front(Taps[3]);
 	BeerFilling = new Animation{ 5, 1,2,3,4 };
 	barspeeds[0] = 150;
 	barspeeds[1] = 100;
@@ -196,11 +208,12 @@ void Tavern::update() {
 				idle = false;
 				SiroGen->SetAttributetoEntity(player, 0);
 				dir = 0;
-				player->position.x = 176;
-				glass->position.x = player->position.x + 16;
-				glass->position.y = player->position.y - 24;
+				player->position.x = 165;
+				glass->position.x = player->position.x + 27;
+				glass->position.y = player->position.y - 15;
 				if (!done) {
 					SiroGen->SetSpritetoEntity(player, 90);
+					SiroGen->SetSpritetoEntity(Taps[barpos], 93);
 					if (SiroGen->PlayAnimation(glass, BeerFilling, 3) || glass->frame == 3) {
 						done = true;
 					}
@@ -208,6 +221,7 @@ void Tavern::update() {
 			}
 			if (GetInput()->KeyReleased(KeyCode::Space)) {
 				SiroGen->SetSpritetoEntity(player, 89);
+				SiroGen->SetSpritetoEntity(Taps[barpos], 92);
 				if (done) {
 					SiroGen->SetSpritetoEntity(player, 91);
 					glass->frame = 0;
@@ -221,6 +235,7 @@ void Tavern::update() {
 				idle = true;
 				glass->frame = 0;
 				glass->starttime = 0;
+				SiroGen->SetSpritetoEntity(Taps[barpos], 92);
 				SiroGen->SetSpritetoEntity(glass, 5);
 				done = false;
 				moving = 1;
@@ -231,6 +246,7 @@ void Tavern::update() {
 				idle = true;
 				glass->frame = 0;
 				glass->starttime = 0;
+				SiroGen->SetSpritetoEntity(Taps[barpos], 92);
 				SiroGen->SetSpritetoEntity(glass, 5);
 				done = false;
 				moving = 2;
@@ -244,6 +260,7 @@ void Tavern::update() {
 				}
 				dir = 4;
 				playerwalking->framerate = 8;
+				SiroGen->SetSpritetoEntity(Taps[barpos], 92);
 				SiroGen->SetSpritetoEntity(glass, 5);
 				SiroGen->PlayAnimation(player, playerwalking, 10, 7);
 				SiroGen->SetAttributetoEntity(player, 4);
@@ -255,6 +272,7 @@ void Tavern::update() {
 				}
 				dir = 0;
 				playerwalking->framerate = 8;
+				SiroGen->SetSpritetoEntity(Taps[barpos], 92);
 				SiroGen->SetSpritetoEntity(glass, 5);
 				SiroGen->PlayAnimation(player, playerwalking, 10, 7);
 				SiroGen->SetAttributetoEntity(player, 0);
@@ -278,7 +296,7 @@ void Tavern::update() {
 				}
 				barpos &= 3;
 				player->position.y = 80 + barpos * 48;
-				player->position.x = 176;
+				player->position.x = 165;
 				moving = false;
 				playerwalking->framerate = 20;
 			}
@@ -473,7 +491,9 @@ void Tavern::update() {
 		}
 		barpos = 0;
 		player->position.y = 80;
-		player->position.x = 176;
+		player->position.x = 165;
+		idle = true;
+		done = false;
 		SiroGen->SetSpritetoEntity(glass, 5);
 		status = 0;
 		break;
