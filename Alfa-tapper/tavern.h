@@ -25,6 +25,7 @@ public:
 	Entity* glass = nullptr;
 	Animation* glassshattering = nullptr;
 	Animation* playerwalking = nullptr;
+	Animation* playertapping = nullptr;
 	Barfly* gameoverman = nullptr;
 	Beer* shatterglass = nullptr;
 	Entity* SpawnBeer(unsigned char bar, Entity* near, bool full = true);
@@ -51,7 +52,9 @@ public:
 	Animation* BeerFilling = nullptr;
 
 	bool done = 0;
+	bool idle = 1;
 	unsigned char moving = 0;
+	unsigned char dir = 0;
 	unsigned char status = 0;
 	unsigned char barpos = 0;
 };

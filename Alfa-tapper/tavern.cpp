@@ -79,7 +79,8 @@ Tavern::Tavern() {
 	player->position.y = 80 + barpos * 48;
 	player->position.x = 176;
 	SiroGen->SetSpritetoEntity(player, 0);
-	playerwalking = new Animation{20, 0,78,79,79,80,81,82};
+	playerwalking = new Animation{20, 0,78,79,79,80,81,82, 85,86,87,88};
+	playertapping = new Animation{20, 91,91,91};
 
 	glass = new Entity();
 	glass->position.x = player->position.x + 16;
@@ -190,46 +191,78 @@ void Tavern::update() {
 	switch (status) {
 	case 0://GameRunning
 		if (!moving) {
-			SiroGen->PlayAnimation(player, playerwalking, 1);
 			//PlayerMovement
 			if (GetInput()->KeyDown(KeyCode::Space)) {
+				idle = false;
+				SiroGen->SetAttributetoEntity(player, 0);
+				dir = 0;
 				player->position.x = 176;
 				glass->position.x = player->position.x + 16;
 				glass->position.y = player->position.y - 24;
 				if (!done) {
+					SiroGen->SetSpritetoEntity(player, 90);
 					if (SiroGen->PlayAnimation(glass, BeerFilling, 3) || glass->frame == 3) {
 						done = true;
 					}
 				}
 			}
-			if (GetInput()->KeyReleased(KeyCode::Space) && done) {
-				done = false;
-				glass->frame = 0;
-				glass->starttime = 0;
-				SiroGen->SetSpritetoEntity(glass, 5);
-				SpawnBeer((player->position.y - 80) / 48, player);
+			if (GetInput()->KeyReleased(KeyCode::Space)) {
+				SiroGen->SetSpritetoEntity(player, 89);
+				if (done) {
+					SiroGen->SetSpritetoEntity(player, 91);
+					glass->frame = 0;
+					glass->starttime = 0;
+					SiroGen->SetSpritetoEntity(glass, 5);
+					SpawnBeer((player->position.y - 80) / 48, player);
+					done = false;
+				}
 			}
 			if (GetInput()->KeyPressed(KeyCode::Up)) {
+				idle = true;
 				glass->frame = 0;
 				glass->starttime = 0;
 				SiroGen->SetSpritetoEntity(glass, 5);
 				done = false;
 				moving = 1;
+				dir = 0;
 				player->starttime = 0;
 			}
 			else if (GetInput()->KeyPressed(KeyCode::Down)) {
+				idle = true;
 				glass->frame = 0;
 				glass->starttime = 0;
 				SiroGen->SetSpritetoEntity(glass, 5);
 				done = false;
 				moving = 2;
+				dir = 0;
 				player->starttime = 0;
 			}
 			else if (GetInput()->KeyDown(KeyCode::Left)) {
-				player->position.x--;
+				idle = true;
+				if (player->position.x > 16) {
+					player->position.x--;
+				}
+				dir = 4;
+				playerwalking->framerate = 8;
+				SiroGen->SetSpritetoEntity(glass, 5);
+				SiroGen->PlayAnimation(player, playerwalking, 10, 7);
+				SiroGen->SetAttributetoEntity(player, 4);
 			}
 			else if (GetInput()->KeyDown(KeyCode::Right)) {
-				player->position.x++;
+				idle = true;
+				if (player->position.x < 176) {
+					player->position.x++;
+				}
+				dir = 0;
+				playerwalking->framerate = 8;
+				SiroGen->SetSpritetoEntity(glass, 5);
+				SiroGen->PlayAnimation(player, playerwalking, 10, 7);
+				SiroGen->SetAttributetoEntity(player, 0);
+			}
+			else if (idle) {
+				playerwalking->framerate = 20;
+				SiroGen->PlayAnimation(player, playerwalking, 1);
+				SiroGen->SetAttributetoEntity(player, dir);
 			}
 		}
 
