@@ -267,7 +267,7 @@ void Tavern::update() {
 			}
 			else if (GetInput()->KeyDown(KeyCode::Right)) {
 				idle = true;
-				if (player->position.x < 176) {
+				if (player->position.x < 166) {
 					player->position.x++;
 				}
 				dir = 0;
