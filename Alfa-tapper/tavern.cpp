@@ -232,6 +232,7 @@ Entity* Tavern::SpawnPeople()
 
 	WaitLine[randbar].push_back(ghost);
 	entities.push_front(ghost);
+	peopleamount++;
 	return ghost;
 }
 
@@ -435,6 +436,7 @@ void Tavern::update() {
 					entities.remove(*it);
 					delete (*it);
 					it = DrinkLine[j].erase(it);
+					peopleamount--;
 					score += 50;
 				}
 				else {
@@ -483,7 +485,7 @@ void Tavern::update() {
 		}
 		randomnumber++;
 		spawncounter++;
-		if (spawncounter / (spawntimer / ((score+5000) / 5000))) {
+		if (spawncounter / (spawntimer / ((score+4000) / 4000)) && peopleamount < 7) {
 			spawncounter = 0;
 			SpawnPeople();
 		}
@@ -579,6 +581,7 @@ void Tavern::update() {
 				SiroGen->SetSpritetoEntity(Taps[i], 92);
 			}
 			barpos = 0;
+			peopleamount = 0;
 			player->position.y = 88;
 			player->position.x = 189;
 			idle = true;
