@@ -94,7 +94,7 @@ Tavern::Tavern() {
 
 	TileScreens[2] = new TileScreen{
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
-86,87,88,89,90,10,00,00,00,00,00,00,10,10,10,91,92,93,86,87,88,89,90,10,00,00,00,00,00,00,10,10,
+10,86,87,88,89,90,10,10,10,10,10,10,10,10,10,91,92,93,86,87,88,89,90,10,10,10,10,10,10,10,10,10,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -126,7 +126,7 @@ Tavern::Tavern() {
 	};
 
 	SiroGen->SetGUIScreen(TileScreens[2]);
-	SiroGen->SetTileDigits(score, 43);
+	SiroGen->SetTileDigits(score, 44,10);
 
 	player = new Entity();
 	player->position.y = 88 + barpos * 48;
@@ -489,9 +489,9 @@ void Tavern::update() {
 		}
 		if (score >= hiscore) {
 			hiscore = score;
-			SiroGen->SetTileDigits(hiscore, 61);
+			SiroGen->SetTileDigits(hiscore, 61,10);
 		}
-		SiroGen->SetTileDigits(score, 43);
+		SiroGen->SetTileDigits(score, 44,10);
 		break;
 	case 1://GlassOver
 		SiroGen->SetSpritetoEntity(player, 83);
@@ -542,15 +542,17 @@ void Tavern::update() {
 		SiroGen->SetSpritetoEntity(player, 79);
 		SiroGen->SetAttributetoEntity(player, 0);
 		score = 0;
-		TileScreens[2]->tiles[38] = 0;
-		TileScreens[2]->tiles[39] = 0;
-		TileScreens[2]->tiles[40] = 0;
-		TileScreens[2]->tiles[41] = 0;
-		TileScreens[2]->tiles[42] = 0;
-		TileScreens[2]->tiles[43] = 0;
+		TileScreens[2]->tiles[38] = 10;
+		TileScreens[2]->tiles[39] = 10;
+		TileScreens[2]->tiles[40] = 10;
+		TileScreens[2]->tiles[41] = 10;
+		TileScreens[2]->tiles[42] = 10;
+		TileScreens[2]->tiles[43] = 10;
+		TileScreens[2]->tiles[44] = 10;
 		SiroGen->UpdateGUITile(3);
 		SiroGen->UpdateGUITile(4);
 		SiroGen->UpdateGUITile(5);
+		SiroGen->UpdateGUITile(6);
 		if (randomnumber / 160) {
 
 			for (unsigned char j = 0; j < 4; j++) {
