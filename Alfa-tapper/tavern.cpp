@@ -184,11 +184,11 @@ Entity* Tavern::SpawnPeople()
 Entity* Tavern::SpawnBeer(unsigned char bar, Entity* near, bool full) {
 	Beer* beer = new Beer();
 	beer->position.x = near->position.x + 16;
-	beer->position.y = 58 + bar * 48;
+	beer->position.y = 59 + bar * 48;
 	beer->barpos = bar;
 	if (full) {
 		SiroGen->SetSpritetoEntity(beer, 4);
-		beer->position.x = near->position.x - 8;
+		beer->position.x = near->position.x - 4;
 		beer->full = true;
 	}
 	else {
@@ -323,7 +323,7 @@ void Tavern::update() {
 				}
 				if ((*bit)->frame < 4) {
 					(*bit)->position.x++;
-					if ((*bit)->position.x > 176) {
+					if ((*bit)->position.x > 180) {
 						gameoverman = (*bit);
 						status = 2;
 					}
@@ -432,7 +432,7 @@ void Tavern::update() {
 		break;
 	case 1://GlassOver
 		SiroGen->SetSpritetoEntity(player, 83);
-		if (shatterglass->position.y < 80 + shatterglass->barpos * 48) {
+		if (shatterglass->position.y < 88 + shatterglass->barpos * 48) {
 			shatterglass->position.y++;
 		}
 		else {
@@ -485,6 +485,9 @@ void Tavern::update() {
 				delete* sit;
 				sit = Bar[j].erase(sit);
 			}
+		}
+		for (int i = 0; i < 4; i++) {
+			SiroGen->SetSpritetoEntity(Taps[i], 92);
 		}
 		barpos = 0;
 		player->position.y = 88;
