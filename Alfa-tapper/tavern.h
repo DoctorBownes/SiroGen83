@@ -59,6 +59,8 @@ public:
 	unsigned char dir = 0;
 	unsigned char status = 0;
 	unsigned char barpos = 0;
+	int score = 0;
+	int hiscore = 0;
 };
 
 #endif

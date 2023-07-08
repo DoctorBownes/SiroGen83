@@ -485,7 +485,7 @@ void Renderer::UpdatePalettes() {
 }
 
 void Renderer::SetRenderMode(Scene* scene) {
-    for (int j = 0; j < 1; j++) {
+    for (int j = 0; j < 2; j++) {
         for (int i = 0; i < 960; i++) {
             MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
            // MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
