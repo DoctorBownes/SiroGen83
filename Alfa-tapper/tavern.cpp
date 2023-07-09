@@ -1,4 +1,5 @@
 #include "tavern.h"
+#include "time.h"
 
 Tavern::Tavern() {
 	SiroGen->BackgroundColor = {
@@ -133,7 +134,6 @@ Tavern::Tavern() {
 	player->position.x = 189;
 	SiroGen->SetSpritetoEntity(player, 0);
 	playerwalking = new Animation{20, 0,78,79,79,80,81,82, 85,86,87,88};
-	playertapping = new Animation{20, 91,91,91};
 
 	glass = new Entity();
 	glass->position.x = player->position.x + 16;
@@ -210,18 +210,20 @@ Tavern::Tavern() {
 	entities.push_front(Taps[1]);
 	entities.push_front(Taps[2]);
 	entities.push_front(Taps[3]);
-	BeerFilling = new Animation{ 5, 1,2,3,4 };
+	BeerFilling = new Animation{ 2, 1,2,3,4 };
 	barspeeds[0] = 150;
 	barspeeds[1] = 100;
 	barspeeds[2] = 70;
 	barspeeds[3] = 50;
-	spawntimer = 201;
+	spawntimer = 160;
+	multiplier = 800;
+	std::srand(time(0));
 	status = 3;
 }
 
 Entity* Tavern::SpawnPeople()
 {
-	std::srand(randomnumber);
+	std::srand(randomnumber * time(0));
 	unsigned char randbar = std::rand() & 3;
 	unsigned char randpeep = std::rand() % 7;
 	Barfly* ghost = new Barfly();
@@ -485,7 +487,11 @@ void Tavern::update() {
 		}
 		randomnumber++;
 		spawncounter++;
-		if (spawncounter / (spawntimer / ((score+4000) / 4000)) && peopleamount < 7) {
+		if ((score) >= multiplier) {
+			multiplier *= 2;
+			spawntimer *= 0.77f;
+		}
+		if ((spawncounter / spawntimer) && peopleamount < 7) {
 			spawncounter = 0;
 			SpawnPeople();
 		}
@@ -588,6 +594,8 @@ void Tavern::update() {
 			done = false;
 			SiroGen->SetSpritetoEntity(glass, 5);
 			GetCamera()->X = 0;
+			spawntimer = 160;
+			multiplier = 800;
 			status = 0;
 		}
 		else {
