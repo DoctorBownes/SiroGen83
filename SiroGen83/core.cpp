@@ -54,9 +54,11 @@ void Core::Run(Scene* scene) {
         it->BeginPlay();
     }
 
+    _instance->LoadedScene = scene;
+
     _instance->UpdatePalettes();
 
-    _instance->SetRenderMode(scene);
+    _instance->LoadTileScreen(_instance->LoadedScene->renderpos);
 
     do {
 
@@ -72,7 +74,7 @@ void Core::Run(Scene* scene) {
             }
 
             scene->GetCamera()->update();
-            _instance->RenderScene(scene);
+            _instance->RenderScene();
 
 
             glfwSwapBuffers(_window);

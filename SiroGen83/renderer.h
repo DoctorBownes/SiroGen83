@@ -39,15 +39,13 @@ public:
 		return _instance;
 	}
 
-	void RenderScene(Scene* scene);
-
 	void AddSpritetoMemory(Sprite* sprite, GLuint position);
 
 	void SetSpritetoEntity(Entity* entity, GLuint position);
 
 	void SetAttributetoEntity(Entity* entity, GLuint attribute);
 
-	void AddtoTileMap(Tile tile, char position);
+	void AddtoTileMap(Tile tile, short position);
 
 	void UpdateMainTile(TileScreen* tilescreen, unsigned short tile);
 
@@ -55,7 +53,7 @@ public:
 
 	void UpdatePalettes();
 
-	void SetRenderMode(Scene* scene);
+	void LoadTileScreen(unsigned char pos);
 
 	void SetGUIScreen(TileScreen* tilescreen);
 
@@ -70,14 +68,19 @@ public:
 	Palette BackgroundPalette;
 	Palette ForgroundPalette[3];
 
+	friend class Core;
+
 private:
 
 	TileScreen* GUIScreen = nullptr;
+	Scene* LoadedScene = nullptr;
 
 	GLubyte bg_PaletteColors[4 * 1 * 16];
 	GLubyte fg_PaletteColors[4 * 3 * 16];
 
 	void EditTile(unsigned short tile);
+
+	void RenderScene();
 
 	GLuint shaderProgram = 0;
 
@@ -93,9 +96,9 @@ private:
 
 	TileScreen* MainScreen[4];
 
-	void RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos);
+	void RenderMainScreens(unsigned char num, Vector2 pos);
 
-	void RenderGUIScreen(Scene* scene);
+	void RenderGUIScreen();
 
 	void RenderEntity(Entity* entity);
 

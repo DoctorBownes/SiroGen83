@@ -205,6 +205,33 @@ Renderer::Renderer() {
     glGenBuffers(1, &palette_buffer);
 
 
+
+
+    int i = 0;
+    for (N = 0; N < 4; N++) {
+        for (int y = 0; y < 30; y++) {
+            for (int x = 0 + 32 * N; x < 32 + 32 * N; x++) {
+                MT_VertexBuffer[0][(i * 12) + 0] = ((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 5] = ((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 7] = ((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 8] = ((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 9] = ((-0.5f - y) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 10] = ((-0.5f + x) * 8.0f);
+                MT_VertexBuffer[0][(i * 12) + 11] = ((0.5f - y) * 8.0f);
+                i++;
+            }
+        }
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
+    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer, GL_STATIC_DRAW);
     N = 0;
 }
 
@@ -484,61 +511,29 @@ void Renderer::UpdatePalettes() {
     glTexSubImage1D(GL_TEXTURE_1D, 0, 0, 3 * 16, GL_RGBA, GL_UNSIGNED_BYTE, fg_PaletteColors);
 }
 
-void Renderer::SetRenderMode(Scene* scene) {
-    for (int j = 0; j < 2; j++) {
-        for (int i = 0; i < 960; i++) {
-            MainScreen[j]->tiles[i] = scene->TileScreens[scene->renderpos + (j)]->tiles[i];
-           // MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
-        }
+void Renderer::LoadTileScreen(unsigned char pos) {
+    LoadedScene->GetCamera()->X = 0 + ((pos & 15) * 256);
+    LoadedScene->GetCamera()->Y = 0 + (((pos / 16) & 15) * 256);
+
+    N = (((LoadedScene->GetCamera()->X >> 8) & 1) + ((LoadedScene->GetCamera()->Y >> 8) * 2)) & 3;
+    
+    for (int i = 0; i < 960; i++) {
+        MainScreen[N]->tiles[i] = LoadedScene->TileScreens[pos]->tiles[i];
     }
 
-    for (int j = 0; j < 1; j++) {
-        for (int i = 0; i < 240; i++) {
-            MainScreen[j]->attributes[i] = scene->TileScreens[scene->renderpos + (j)]->attributes[i];
-        }
+    for (int i = 0; i < 240; i++) {
+        MainScreen[N]->attributes[i] = LoadedScene->TileScreens[pos]->attributes[i];
     }
 
-    int i = 0;
-    for (N = 0; N < 4; N++) {
-        for (int y = 0; y < 30; y++) {
-            for (int x = 0 + 32 * N; x < 32 + 32 * N; x++) {
-                MT_VertexBuffer[0][(i * 12) + 0] =((-0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 1] = ((0.5f - y) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 2] = ((0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 3] = ((0.5f - y) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 4] = ((0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 5] =((-0.5f - y) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 6] = ((0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 7] =((-0.5f - y) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 8] =((-0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) + 9] =((-0.5f - y) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) +10] =((-0.5f + x) * 8.0f);
-                MT_VertexBuffer[0][(i * 12) +11] = ((0.5f - y) * 8.0f);
-                i++;
-            }
+    int z = 0;
+    for (int y = 0; y < 15; y++) {
+
+        for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
+
+            EditTile(z);
+            z++;
         }
     }
-
-   for (N = 0; N < 4; N++) {
-       int z = 0;
-       for (int y = 0; y < 15; y++) {
-   
-           for (int x = 0 + 16 * N; x < 16 + 16 * N; x++) {
-   
-               EditTile(z);
-               z++;
-           }
-       }
-   }
-
-    glBindBuffer(GL_ARRAY_BUFFER, uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_UVBuffer[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer, GL_STATIC_DRAW);
 }
 
 void Renderer::SetGUIScreen(TileScreen* guiscreen){
@@ -609,11 +604,11 @@ unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsi
 //    }
 //}
 
-void Renderer::RenderScene(Scene* scene) {
-   lo_CamX = scene->GetCamera()->X & 511;
-   lo_CamY = scene->GetCamera()->Y & 511;
-   overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256); // 272 MAGIC NUMBER ALERT!
-   overwrite_pos.x = (lo_CamX + scene->GetCamera()->scrolldir.x * 256);
+void Renderer::RenderScene() {
+   lo_CamX = LoadedScene->GetCamera()->X & 511;
+   lo_CamY = LoadedScene->GetCamera()->Y & 511;
+   overwrite_pos.y = (lo_CamY + LoadedScene->GetCamera()->scrolldir.y * 256); // 272 MAGIC NUMBER ALERT!
+   overwrite_pos.x = (lo_CamX + LoadedScene->GetCamera()->scrolldir.x * 256);
 
    N = ((overwrite_pos.x >> 8) & 1);
 
@@ -624,20 +619,20 @@ void Renderer::RenderScene(Scene* scene) {
    overwrite_pos.y &= 0xf;
 
  unsigned char split = (N & 2 | (lo_CamY / 256));
- scene->renderpos = ((scene->GetCamera()->X + scene->GetCamera()->scrolldir.x * 256) >> 8) + ((((scene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
+ LoadedScene->renderpos = ((LoadedScene->GetCamera()->X + LoadedScene->GetCamera()->scrolldir.x * 256) >> 8) + ((((LoadedScene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
  //printf("%d\n", split);
  
  if (split) {
      for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
          EditTile(x);
      }
  
@@ -645,28 +640,28 @@ void Renderer::RenderScene(Scene* scene) {
  
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
          EditTile(x);
      }
  }
  else {
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
          EditTile(x);
  
      }
@@ -676,20 +671,20 @@ void Renderer::RenderScene(Scene* scene) {
  
      for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + (16 - 32 * split)]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
          EditTile(x);
  
      }
  }
  
- overwrite_pos.y = (lo_CamY + scene->GetCamera()->scrolldir.y * 256);
+ overwrite_pos.y = (lo_CamY + LoadedScene->GetCamera()->scrolldir.y * 256);
  
  N = ((overwrite_pos.y >> 8) * 2 & 3);
  
@@ -697,19 +692,19 @@ void Renderer::RenderScene(Scene* scene) {
  overwrite_pos.y &= 0xf;
  
  split = (N & 1 | (lo_CamX / 256));
- scene->renderpos = (((scene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((scene->GetCamera()->Y + scene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
+ LoadedScene->renderpos = (((LoadedScene->GetCamera()->X + split * 256) >> 8) / 2) * 2 + (((LoadedScene->GetCamera()->Y + LoadedScene->GetCamera()->scrolldir.y * 256) >> 8) * 16);
     
  if (split) {
      for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
          EditTile(x);
      }
  
@@ -718,28 +713,28 @@ void Renderer::RenderScene(Scene* scene) {
      // See if can be simplified
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->attributes[x];
          EditTile(x);
      }
  }
  else {
      for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < (16 - overwrite_pos.x) + overwrite_pos.x + overwrite_pos.y * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
          EditTile(x);
      }
  
@@ -747,14 +742,14 @@ void Renderer::RenderScene(Scene* scene) {
      // + ((lo_CamX & 15) > 0) fixes "loose tile bug"
      for (int x = overwrite_pos.y * 16; x < overwrite_pos.x + (overwrite_pos.y + ((lo_CamX & 15) > 0)) * 16; x++) {
          unsigned short bigpos = (x * 2 - (x & 15)) * 2;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 31;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
          bigpos += 1;
-         MainScreen[N]->tiles[bigpos] = scene->TileScreens[scene->renderpos + 1 - split * 2]->tiles[bigpos];
-         MainScreen[N]->attributes[x] = scene->TileScreens[scene->renderpos + 1 - split * 2]->attributes[x];
+         MainScreen[N]->tiles[bigpos] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->tiles[bigpos];
+         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + 1 - split * 2]->attributes[x];
          EditTile(x);
      }
  }
@@ -762,14 +757,14 @@ void Renderer::RenderScene(Scene* scene) {
     unsigned short MainScreenPos_X = (lo_CamX / 256) * 512;
     unsigned short MainScreenPos_Y = (lo_CamY / 256) * 480;
 
-    RenderMainScreens(scene, 0, Vector2{ MainScreenPos_X, MainScreenPos_Y });
-    RenderMainScreens(scene, 1, Vector2{ 256,MainScreenPos_Y });
-    RenderMainScreens(scene, 2, Vector2{ MainScreenPos_X,240 });
-    RenderMainScreens(scene, 3, Vector2{ 256,240 });
+    RenderMainScreens(0, Vector2{ MainScreenPos_X, MainScreenPos_Y });
+    RenderMainScreens(1, Vector2{ 256,MainScreenPos_Y });
+    RenderMainScreens(2, Vector2{ MainScreenPos_X,240 });
+    RenderMainScreens(3, Vector2{ 256,240 });
 
-    for (Entity* it : scene->entities) {
+    for (Entity* it : LoadedScene->entities) {
         if (((it->position.y) & 0x1ff) > 479) {
-            it->position.y += -32 + scene->GetCamera()->scrolldir.y * 64;
+            it->position.y += -32 + LoadedScene->GetCamera()->scrolldir.y * 64;
         }
         lo_EntX = it->position.x & 511;
         lo_EntY = it->position.y & 511;
@@ -780,7 +775,7 @@ void Renderer::RenderScene(Scene* scene) {
            -(lo_EntY - (((lo_EntY - (lo_CamY + 128))) / 256) * 480) + 119.001f, //TODO: Search for better approach (lo_CamY + 208)
             0.0f));//Maybe change 119 to 120 for collision
 
-        glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
+        glm::mat4 MVP = LoadedScene->GetCamera()->GetProMat() * LoadedScene->GetCamera()->GetCamMat() * TranslationMatrix;
 
         GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -799,7 +794,7 @@ void Renderer::RenderScene(Scene* scene) {
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
     if (GUIScreen) {
-        RenderGUIScreen(scene);
+        RenderGUIScreen();
     }
 }
 
@@ -861,7 +856,7 @@ void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
     entity->palette_buffer = attribute + 1; //todo: integrate attribute into entity
 }
 
-void Renderer::AddtoTileMap(Tile tile, char position) {
+void Renderer::AddtoTileMap(Tile tile, short position) {
     //TileMap.resize(512/*TileMap.size() + 16 * 16*/);
     int overwrite_pos = (position * 8); //change overwrite_pos // + (y * width)
     for (int y = 0; y < 8; y++) {
@@ -875,7 +870,7 @@ void Renderer::AddtoTileMap(Tile tile, char position) {
     glBindTexture(GL_TEXTURE_2D, tilemap_texture_buffer);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TileMap.size() / 8, 8, GL_RED, GL_UNSIGNED_BYTE, TileMap.data());
 }
-void Renderer::RenderGUIScreen(Scene* scene) {
+void Renderer::RenderGUIScreen() {
 
     glm::mat4 fMVP = glm::scale(glm::mat4(1), glm::vec3(0.0078125f, 0.0083333f,1.0f)) * glm::translate(glm::mat4(1), glm::vec3(-124.001f, 116.001f, 0.0f));
 
@@ -914,10 +909,10 @@ void Renderer::RenderGUIScreen(Scene* scene) {
 }
 
 
-void Renderer::RenderMainScreens(Scene* scene, unsigned char num, Vector2 pos) {
+void Renderer::RenderMainScreens(unsigned char num, Vector2 pos) {
     glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(pos.x -124.001f,-pos.y + 116.001f, 0.0f));
 
-    glm::mat4 MVP = scene->GetCamera()->GetProMat() * scene->GetCamera()->GetCamMat() * TranslationMatrix;
+    glm::mat4 MVP = LoadedScene->GetCamera()->GetProMat() * LoadedScene->GetCamera()->GetCamMat() * TranslationMatrix;
 
     GLuint MatrixID = glGetUniformLocation(shaderProgram, "MVP");
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
