@@ -48,7 +48,7 @@ public:
 	unsigned char barspeeds[4];
 	unsigned short spawncounter = 0;
 	unsigned short spawntimer = 0;
-	unsigned char randomnumber = 0;
+	unsigned short randomnumber = 0;
 	std::vector<Barfly*> DrinkLine[4];
 	Animation* BeerFilling = nullptr;
 

@@ -250,7 +250,6 @@ Tavern::Tavern() {
 	barspeeds[3] = 50;
 	spawntimer = 160;
 	multiplier = 800;
-	std::srand(time(0));
 	status = 3;
 }
 
@@ -615,6 +614,7 @@ void Tavern::update() {
 		SiroGen->UpdateGUITile(6);
 		player->position.x = 320;
 		status = 5;
+		randomnumber = 0;
 		break;
 	case 4://GetReady
 		SiroGen->LoadTileScreen(1);
@@ -639,6 +639,8 @@ void Tavern::update() {
 		}
 		break;
 	case 5://Title
+
+		playerwalking->framerate = 8;
 		SiroGen->LoadTileScreen(16);
 		player->position.y = 376;
 		SiroGen->PlayAnimation(player, playerwalking, 10, 7);
