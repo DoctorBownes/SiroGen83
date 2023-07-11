@@ -114,7 +114,7 @@ Tavern::Tavern() {
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
-75,75,75,75,75,75,75,151,89,90,86,86,75,90,148,78,90,89,75,78,83,75,86,78,80,89,78,75,75,75,75,75,
+75,75,75,75,75,75,75,151,89,90,86,86,75,86,151,80,87,90,75,78,83,75,86,78,80,89,78,75,75,75,75,75,
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
 75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,
@@ -251,7 +251,7 @@ Tavern::Tavern() {
 	spawntimer = 160;
 	multiplier = 800;
 	std::srand(time(0));
-	status = 4;
+	status = 3;
 }
 
 Entity* Tavern::SpawnPeople()
@@ -577,11 +577,30 @@ void Tavern::update() {
 		}
 		break;
 	case 3://GameReset
-		SiroGen->LoadTileScreen(1);
-		player->position.x = 368;
-		player->position.y = 128;
-		SiroGen->SetSpritetoEntity(player, 79);
-		SiroGen->SetAttributetoEntity(player, 0);
+		for (unsigned char j = 0; j < 4; j++) {
+			std::vector<Barfly*>::iterator bit = DrinkLine[j].begin();
+			while (bit != DrinkLine[j].end()) {
+				entities.remove(*bit);
+				delete* bit;
+				bit = DrinkLine[j].erase(bit);
+			}
+			std::vector<Barfly*>::iterator it = WaitLine[j].begin();
+			while (it != WaitLine[j].end()) {
+				entities.remove(*it);
+				delete* it;
+				it = WaitLine[j].erase(it);
+			}
+			std::vector<Beer*>::iterator sit = Bar[j].begin();
+			while (sit != Bar[j].end()) {
+				entities.remove(*sit);
+				delete* sit;
+				sit = Bar[j].erase(sit);
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			SiroGen->SetSpritetoEntity(Taps[i], 92);
+		}
+		SiroGen->SetSpritetoEntity(glass, 5);
 		score = 0;
 		TileScreens[3]->tiles[38] = 10;
 		TileScreens[3]->tiles[39] = 10;
@@ -594,38 +613,22 @@ void Tavern::update() {
 		SiroGen->UpdateGUITile(4);
 		SiroGen->UpdateGUITile(5);
 		SiroGen->UpdateGUITile(6);
+		player->position.x = 320;
+		status = 5;
+		break;
+	case 4://GetReady
+		SiroGen->LoadTileScreen(1);
+		player->position.x = 368;
+		player->position.y = 128;
+		SiroGen->SetSpritetoEntity(player, 79);
+		SiroGen->SetAttributetoEntity(player, 0);
 		if (randomnumber / 160) {
-
-			for (unsigned char j = 0; j < 4; j++) {
-				std::vector<Barfly*>::iterator bit = DrinkLine[j].begin();
-				while (bit != DrinkLine[j].end()) {
-					entities.remove(*bit);
-					delete* bit;
-					bit = DrinkLine[j].erase(bit);
-				}
-				std::vector<Barfly*>::iterator it = WaitLine[j].begin();
-				while (it != WaitLine[j].end()) {
-					entities.remove(*it);
-					delete* it;
-					it = WaitLine[j].erase(it);
-				}
-				std::vector<Beer*>::iterator sit = Bar[j].begin();
-				while (sit != Bar[j].end()) {
-					entities.remove(*sit);
-					delete* sit;
-					sit = Bar[j].erase(sit);
-				}
-			}
-			for (int i = 0; i < 4; i++) {
-				SiroGen->SetSpritetoEntity(Taps[i], 92);
-			}
 			barpos = 0;
 			peopleamount = 0;
 			player->position.y = 88;
 			player->position.x = 189;
 			idle = true;
 			done = false;
-			SiroGen->SetSpritetoEntity(glass, 5);
 			SiroGen->LoadTileScreen(0);
 			spawntimer = 160;
 			multiplier = 800;
@@ -635,10 +638,18 @@ void Tavern::update() {
 			randomnumber++;
 		}
 		break;
-	case 4:
+	case 5://Title
 		SiroGen->LoadTileScreen(16);
-		if (GetInput()->KeyPressed(KeyCode::Enter)) {
-			status = 3;
+		player->position.y = 376;
+		SiroGen->PlayAnimation(player, playerwalking, 10, 7);
+		SiroGen->SetSpritetoEntity(glass, 1);
+		player->position.x++;
+		glass->position.x = player->position.x + 64;
+		glass->position.y = player->position.y - 16;
+		player->position.x &= 511;
+		//player->position.x &= 255;
+		if (GetInput()->KeyPressed(KeyCode::Space)) {
+			status = 4;
 		}
 		break;
 	}
