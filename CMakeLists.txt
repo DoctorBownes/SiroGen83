@@ -74,55 +74,6 @@ add_library(SiroGen83 # ar rcs libSiroGen83.a
 	SiroGen83/vector2.h
 	SiroGen83/sprite.h
 )
-
-# Test
-add_executable(Test # g++ Test/main.cpp -o Test
-	Test/main.cpp
-	Test/world1.cpp
-	Test/world1.h
-)
-target_link_libraries(Test # g++ -lSiroGen83
-	${ALL_GRAPHICS_LIBS}
-)
-	target_link_libraries(Test
-		${ALL_GRAPHICS_LIBS}
-	)
-
-
-# BurgerBoss
-add_executable(BurgerBoss # g++ BurgerBoss/main.cpp -o BurgerBoss
-	BurgerBoss/main.cpp
-	BurgerBoss/world1.cpp
-	BurgerBoss/world1.h
-	BurgerBoss/spritefactory.h
-	BurgerBoss/character.cpp
-	BurgerBoss/character.h
-	BurgerBoss/player.cpp
-	BurgerBoss/player.h
-	BurgerBoss/checkpoint.h
-)
-target_link_libraries(BurgerBoss # g++ -lSiroGen83
-	${ALL_GRAPHICS_LIBS}
-)
-	target_link_libraries(BurgerBoss
-		${ALL_GRAPHICS_LIBS}
-	)
-
-# Another1989
-add_executable(Another1989 # g++ Another1989/main.cpp -o Another1989
-	Another1989/main.cpp
-	Another1989/playground.cpp
-	Another1989/playground.h
-	Another1989/spritefactory.h
-)
-target_link_libraries(Another1989 # g++ -lSiroGen83
-	${ALL_GRAPHICS_LIBS}
-)
-	target_link_libraries(Another1989
-		${ALL_GRAPHICS_LIBS}
-	)
-
-
 # Alfa-tapper
 add_executable(Alfa-tapper # g++ Alfa-tapper/main.cpp -o Alfa-tapper
 	Alfa-tapper/main.cpp
