@@ -22,7 +22,7 @@ class Scene;
 class Entity;
 
 struct Palette {
-	Color colors[15];
+	Color colors[3];
 };
 
 class Renderer {
@@ -65,8 +65,8 @@ public:
 
 	Color BackgroundColor;
 
-	Palette BackgroundPalette;
-	Palette ForgroundPalette[3];
+	Palette BackgroundPalette[4];
+	Palette ForgroundPalette[4];
 
 	friend class Core;
 
@@ -75,8 +75,8 @@ private:
 	TileScreen* GUIScreen = nullptr;
 	Scene* LoadedScene = nullptr;
 
-	GLubyte bg_PaletteColors[4 * 1 * 16];
-	GLubyte fg_PaletteColors[4 * 3 * 16];
+	GLubyte bg_PaletteColors[4 * 4 * 4];
+	GLubyte fg_PaletteColors[4 * 4 * 4];
 
 	void EditTile(unsigned short tile);
 
@@ -107,10 +107,10 @@ private:
 
 	GLfloat MT_UVBuffer[4][2880 * 4];
 	GLfloat MT_VertexBuffer[4][2880 * 4];
-	GLfloat MT_PaletteBuffer[1440 * 4];
+	GLfloat MT_PaletteBuffer[4][1440 * 4];
 
 	GLfloat GUI_UVBuffer[2880 * 4];
-	//GLfloat GUI_PaletteBuffer[1440 * 4];
+	GLfloat GUI_PaletteBuffer[1440 * 4];
 
 	Renderer();
 

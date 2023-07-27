@@ -121,18 +121,3 @@ target_link_libraries(Another1989 # g++ -lSiroGen83
 	target_link_libraries(Another1989
 		${ALL_GRAPHICS_LIBS}
 	)
-
-
-# Alfa-tapper
-add_executable(Alfa-tapper # g++ Alfa-tapper/main.cpp -o Alfa-tapper
-	Alfa-tapper/main.cpp
-	Alfa-tapper/tavern.cpp
-	Alfa-tapper/tavern.h
-	Alfa-tapper/spritefactory.h
-)
-target_link_libraries(Alfa-tapper # g++ -lSiroGen83
-	${ALL_GRAPHICS_LIBS}
-)
-	target_link_libraries(Alfa-tapper
-		${ALL_GRAPHICS_LIBS}
-	)
