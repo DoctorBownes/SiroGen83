@@ -63,11 +63,9 @@ Renderer::Renderer() {
         0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
         0,0,0,0,    0,0,0,255,  0,0,0,255,  0,0,0,255,
     };
-    for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 64; i++) {
-            bg_PaletteColors[i] = PaletteColors[i];
-            fg_PaletteColors[i] = PaletteColors[i];
-        }
+    for (int i = 0; i < 64; i++) {
+        bg_PaletteColors[i] = PaletteColors[i];
+        fg_PaletteColors[i] = PaletteColors[i];
     }
 
     //Shader stuff
@@ -127,19 +125,6 @@ Renderer::Renderer() {
     glGenVertexArrays(1, &Init);
     glBindVertexArray(Init);
 
-    for (GLuint i = 1; i < 5; i++) {
-        PaletteBuffer[0] = (i - 1);
-        PaletteBuffer[1] = (i - 1);
-        PaletteBuffer[2] = (i - 1);
-        PaletteBuffer[3] = (i - 1);
-        PaletteBuffer[4] = (i - 1);
-        PaletteBuffer[5] = (i - 1);
-
-        glGenBuffers(1, &i);
-        glBindBuffer(GL_ARRAY_BUFFER, i);
-        glBufferData(GL_ARRAY_BUFFER, (sizeof(PaletteBuffer) / sizeof(PaletteBuffer[0])) * 4, PaletteBuffer, GL_STATIC_DRAW);
-
-    }
     for (float y = 0.0f; y < 2.0f; y++) {
         for (float x = 0.0f; x < 2.0f; x++) {
             GLuint uv_buffer = 0;
@@ -195,13 +180,11 @@ Renderer::Renderer() {
     glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, 4 * 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)0);
     glUniform1i(glGetUniformLocation(shaderProgram, "myPaletteSampler"), 1);
 
-    glGenBuffers(1, &fuv_buffer);
+    glGenBuffers(1, &gui_uv_buffer);
 
     glGenBuffers(1, &uv_buffer);
     glGenBuffers(1, &vertex_buffer);
     glGenBuffers(1, &palette_buffer);
-
-
 
 
     int i = 0;
@@ -225,10 +208,8 @@ Renderer::Renderer() {
         }
     }
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, palette_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 1440 * 4 * 4, MT_PaletteBuffer, GL_STATIC_DRAW);
     N = 0;
 }
 
@@ -613,7 +594,7 @@ void Renderer::SetGUIScreen(TileScreen* guiscreen){
         }
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, gui_uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, GUI_UVBuffer, GL_STATIC_DRAW);
 }
 
@@ -891,10 +872,9 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
     position += 4;
     glDeleteTextures(1, &position);
 
-    position += 9;
+    position += 5;
 
     glDeleteBuffers(1, &position);
-
 
     glGenBuffers(1, &position);
     glBindBuffer(GL_ARRAY_BUFFER, position);
@@ -911,13 +891,13 @@ void Renderer::AddSpritetoMemory(Sprite* sprite, GLuint position) {
 
 void Renderer::SetSpritetoEntity(Entity* entity, GLuint position) {
     entity->texture_buffer = position + 4;
-    entity->vertex_buffer = position + 13;
+    entity->vertex_buffer = position + 9;
 }
 
 void Renderer::SetAttributetoEntity(Entity* entity, GLuint attribute) {
-    entity->uv_buffer = (attribute >> 2) + 5;
+    entity->uv_buffer = (attribute >> 2) + 1;
     attribute &= 3;
-    entity->palette_buffer = attribute + 1; //todo: integrate attribute into entity
+    entity->palette = attribute;
 }
 
 void Renderer::AddtoTileMap(Tile tile, short position) {
@@ -956,7 +936,7 @@ void Renderer::RenderGUIScreen() {
 
     GLuint fuvPositionID = glGetAttribLocation(shaderProgram, "uvPosition");
     glEnableVertexAttribArray(fuvPositionID);
-    glBindBuffer(GL_ARRAY_BUFFER, fuv_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, gui_uv_buffer);
     glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, GUI_UVBuffer, GL_STATIC_DRAW);
     glVertexAttribPointer(
         fuvPositionID,       // attribute 0. No particular reason for 0, but must match the layout in the shader.
@@ -1068,19 +1048,10 @@ void Renderer::RenderEntity(Entity* entity) {
         0,                  // stride
         (void*)0            // array buffer offset
     );
-    GLuint paletteID = glGetAttribLocation(shaderProgram, "PaletteOffset");
-    glEnableVertexAttribArray(paletteID);
-    glBindBuffer(GL_ARRAY_BUFFER, entity->palette_buffer);
-    glVertexAttribPointer(
-        paletteID,
-        1,
-        GL_FLOAT,
-        GL_FALSE,
-        0,
-        (void*)0
-    );
+    GLfloat myUniformLocation = glGetAttribLocation(shaderProgram, "PaletteOffset");
+    glVertexAttrib1f(myUniformLocation, entity->palette);
+
     glDrawArrays(GL_TRIANGLES, 0, 6); // Starting from vertex 0; 3 vertices total -> 1 triangle
     glDisableVertexAttribArray(vertexPositionID);
     glDisableVertexAttribArray(uvPositionID);
-    glDisableVertexAttribArray(paletteID);
 }

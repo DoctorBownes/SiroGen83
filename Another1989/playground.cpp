@@ -227,11 +227,11 @@ PlayGround::PlayGround() {
 	player->position.x = 128;
 	player->position.y = 120;
 	SiroGen->SetSpritetoEntity(player, 0);
+	SiroGen->SetAttributetoEntity(player, 3);
 	entities.push_front(player);
 
 	playerWalking = new Animation{ 10,{ 1,0,1,0, 3,2,3,2, 5,4,5,4 }, 0,0,4,4,0,0,4,4,0,0,4,4};
 	playerFighting = new Animation{ 6, 6,6};
-	printf("%d\n", sizeof(Entity));
 }
 
 unsigned char dir = 0;

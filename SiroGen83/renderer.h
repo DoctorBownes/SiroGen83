@@ -92,7 +92,7 @@ private:
 
 	GLfloat UVBuffer[12];
 
-	GLfloat PaletteBuffer[6];
+	GLfloat PaletteBuffer;
 
 	TileScreen* MainScreen[4];
 
@@ -122,7 +122,7 @@ private:
 	GLuint vertex_buffer;
 	GLuint palette_buffer;
 
-	GLuint fuv_buffer;
+	GLuint gui_uv_buffer;
 
 	GLubyte N = 0;
 
