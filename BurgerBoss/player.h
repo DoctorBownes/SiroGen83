@@ -2,7 +2,6 @@
 #define PLAYER_H_
 
 #include <BurgerBoss/character.h>
-#include <SiroGen83/sprite.h>
 
 class Player : public Character {
 

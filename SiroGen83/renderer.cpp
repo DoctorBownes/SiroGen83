@@ -208,7 +208,7 @@ Renderer::Renderer() {
         }
     }
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 2880 * 4 * 4, MT_VertexBuffer, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2880 * 4, MT_VertexBuffer, GL_STATIC_DRAW);
 
     N = 0;
 }
@@ -414,18 +414,16 @@ void Renderer::SetGUIScreen(TileScreen* guiscreen){
 }
 
 void Renderer::SetTileDigits(int score, unsigned char posR2L, unsigned char blankdigit) {
-    unsigned short smallpos = (((posR2L - 32) & 31) + (posR2L / 64) * 32) / 2;
     while (score > 0) {
         int digit = score % 10;
         score /= 10;
         GUIScreen->tiles[posR2L] = digit;
 
-        UpdateGUITile(smallpos);
+        UpdateGUITile(posR2L);
         posR2L--;
-        smallpos = (((posR2L - 32) & 31) + (posR2L / 64) * 32) / 2;
     }
-    GUIScreen->tiles[posR2L] = blankdigit;
-    UpdateGUITile(smallpos);
+    GUIScreen->tiles[posR2L + 1] = blankdigit;
+    UpdateGUITile(posR2L);
 }
 
 unsigned char Renderer::PlayAnimation(Entity* entity, Animation* animation, unsigned char endframe, unsigned char beginframe) {
@@ -725,7 +723,7 @@ void Renderer::RenderGUIScreen() {
 
 
 void Renderer::RenderMainScreens(unsigned char num, Vector2 pos) {
-    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(pos.x -124.001f,-pos.y + 116.001f, 0.0f));
+    glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1), glm::vec3(pos.x -120.001f,-pos.y + 112.001f, 0.0f));
 
     glm::mat4 MVP = LoadedScene->GetCamera()->GetProMat() * LoadedScene->GetCamera()->GetCamMat() * TranslationMatrix;
 

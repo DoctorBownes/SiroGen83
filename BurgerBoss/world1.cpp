@@ -90,7 +90,7 @@ World1::World1() {
 	};
 
 	TileScreens[0] = new TileScreen{
-		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
+		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,14,
@@ -156,7 +156,7 @@ World1::World1() {
 		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
 		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
 	};
-	TileScreens[16] = new TileScreen{
+	TileScreens[2] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -190,7 +190,7 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,
 	};
 
-	TileScreens[17] = new TileScreen{
+	TileScreens[3] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -295,7 +295,15 @@ void World1::update() {
 	//	echkp->flag = 0;
 	//}
 	//printf("%s", barney[onoff]);
-	
+	if (input->KeyDown(KeyCode::Left)) {
+		GetCamera()->scrolldir.x = 0;
+		GetCamera()->X--;
+	}
+	else if (input->KeyDown(KeyCode::Right)) {
+		GetCamera()->scrolldir.x = 1;
+		GetCamera()->X++;
+
+	}
 	//unsigned char playpage = player->position.x >> 8;
 	//for (unsigned char i = 0; i < 2; i++) {
 	//	for (Entity* enemy : checkpoints[playpage + i]) {
@@ -321,6 +329,8 @@ void World1::update() {
 	//	SiroGen->SetAttributetoEntity(enemies[pagepos][i], 1 + 4 * (test - 1));
 	//}
 	//SiroGen->PlayAnimation(enemies[pagepos][i], &enemywalk, 1);
+
+
 }
 
 unsigned char World1::TileCol(Character* chr, unsigned char tiletype)

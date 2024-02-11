@@ -2,6 +2,7 @@
 #define CHARACTER_H_
 
 #include <SiroGen83/entity.h>
+#include <SiroGen83/sprite.h>
 
 struct sc_Vector2 {
 	signed char x;

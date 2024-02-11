@@ -24,6 +24,8 @@ public:
 
 	Animation enemywalk;
 
+	Input* input = input->GetInstance();
+
 	//std::vector<Character*> enemies[5];
 
 	unsigned char TileCol(Character* chr, unsigned char tiletype);
