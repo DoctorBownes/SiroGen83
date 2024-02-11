@@ -156,7 +156,7 @@ World1::World1() {
 		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
 		0,1,0,1,0,4,0,2,2,2,2,2,2,2,2,0,
 	};
-	TileScreens[2] = new TileScreen{
+	TileScreens[16] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -190,7 +190,7 @@ World1::World1() {
 		0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,
 	};
 
-	TileScreens[3] = new TileScreen{
+	TileScreens[17] = new TileScreen{
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 		10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
@@ -224,56 +224,56 @@ World1::World1() {
 		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
 	};
 
-	player = new Player();
-	player->hitbox.x = 6;
-	player->hitbox.y = 0;
-	player->hitbox.width = 4;
-	player->hitbox.height = 16;
-	player->position = { 7 * 16, 7 * 16 };
-	SiroGen->SetSpritetoEntity(player, 0);
-	AddtoScene(player);
-
-	pickle = new Character();
-	pickle->hitbox.x = 0;
-	pickle->hitbox.y = 0;
-	pickle->hitbox.width = 16;
-	pickle->hitbox.height = 24;
-	pickle->position = { 0, 5 * 16 };
-	SiroGen->SetAttributetoEntity(pickle, 1);
-	SiroGen->SetSpritetoEntity(pickle, 7);
-	//AddtoScene(pickle);
-
-	pickletoo = new Character();
-	pickletoo->hitbox.x = 0;
-	pickletoo->hitbox.y = 0;
-	pickletoo->hitbox.width = 16;
-	pickletoo->hitbox.height = 24;
-	pickletoo->position = { 400, 8 * 16 };
-	SiroGen->SetAttributetoEntity(pickletoo, 1);
-	SiroGen->SetSpritetoEntity(pickletoo, 7);
-
-	enemywalk = Animation{0.2f, 7,6};
-	gravity = 1;
-	player->velocity = {2,0};
-	player->gravity_damper = 4;
-	pickle->gravity_damper = 4;
-	pickletoo->gravity_damper = 4;
-	pickle->velocity = { 1,0 };
-	pickletoo->velocity = { 1,0 };
-
-	//checkpoints[pickle->position.x >> 8].push_front(pickle);
-	//checkpoints[pickletoo->position.x >> 8].push_front(pickletoo);
-	Entitiy_CheckPoint* chkp1 = new Entitiy_CheckPoint();
-	chkp1->posx = 400;
-	chkp1->heldentity = pickle;
-	enemy_chkp[chkp1->posx >> 8].push_front(chkp1);
-	CheckPoint* chkp2 = new CheckPoint{300,0};
-	CheckPoint* chkp3 = new CheckPoint{100,0};
-	array_chkp[chkp2->posx >> 8].push_front(chkp2);
-	array_chkp[chkp3->posx >> 8].push_front(chkp3);
-	barney[0] = "Mario\n";
-	barney[1] = "Luigi\n";
-	onoff = 0;
+//	player = new Player();
+//	player->hitbox.x = 6;
+//	player->hitbox.y = 0;
+//	player->hitbox.width = 4;
+//	player->hitbox.height = 16;
+//	player->position = { 7 * 16, 7 * 16 };
+//	SiroGen->SetSpritetoEntity(player, 0);
+//	//AddtoScene(player);
+//
+//	pickle = new Character();
+//	pickle->hitbox.x = 0;
+//	pickle->hitbox.y = 0;
+//	pickle->hitbox.width = 16;
+//	pickle->hitbox.height = 24;
+//	pickle->position = { 0, 5 * 16 };
+//	SiroGen->SetAttributetoEntity(pickle, 1);
+//	SiroGen->SetSpritetoEntity(pickle, 7);
+//	//AddtoScene(pickle);
+//
+//	pickletoo = new Character();
+//	pickletoo->hitbox.x = 0;
+//	pickletoo->hitbox.y = 0;
+//	pickletoo->hitbox.width = 16;
+//	pickletoo->hitbox.height = 24;
+//	pickletoo->position = { 400, 8 * 16 };
+//	SiroGen->SetAttributetoEntity(pickletoo, 1);
+//	SiroGen->SetSpritetoEntity(pickletoo, 7);
+//
+//	enemywalk = Animation{30, 7,6};
+//	gravity = 1;
+//	player->velocity = {2,0};
+//	player->gravity_damper = 4;
+//	pickle->gravity_damper = 4;
+//	pickletoo->gravity_damper = 4;
+//	pickle->velocity = { 1,0 };
+//	pickletoo->velocity = { 1,0 };
+//
+//	//checkpoints[pickle->position.x >> 8].push_front(pickle);
+//	//checkpoints[pickletoo->position.x >> 8].push_front(pickletoo);
+//	Entitiy_CheckPoint* chkp1 = new Entitiy_CheckPoint();
+//	chkp1->posx = 400;
+//	chkp1->heldentity = pickle;
+//	enemy_chkp[chkp1->posx >> 8].push_front(chkp1);
+//	CheckPoint* chkp2 = new CheckPoint{300,0};
+//	CheckPoint* chkp3 = new CheckPoint{100,0};
+//	array_chkp[chkp2->posx >> 8].push_front(chkp2);
+//	array_chkp[chkp3->posx >> 8].push_front(chkp3);
+//	barney[0] = "Mario\n";
+//	barney[1] = "Luigi\n";
+//	onoff = 0;
 	//enemies[pickle->position.x >> 8].push_back(pickle);
 	//enemies[pickletoo->position.x >> 8].push_back(pickletoo);
 }

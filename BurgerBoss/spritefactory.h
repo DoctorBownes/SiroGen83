@@ -188,16 +188,16 @@ void process(void) {
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	};
 
-	SiroGen->AddtoTileMap(&t00, 0);
-	SiroGen->AddtoTileMap(&t01, 1);
-	SiroGen->AddtoTileMap(&t02, 2);
-	SiroGen->AddtoTileMap(&t03, 3);
-	SiroGen->AddtoTileMap(&t04, 4);
-	SiroGen->AddtoTileMap(&t05, 5);
-	SiroGen->AddtoTileMap(&t06, 6);
-	SiroGen->AddtoTileMap(&t07, 7);
-	SiroGen->AddtoTileMap(&t08, 8);
-	SiroGen->AddtoTileMap(&t09, 9);
+	SiroGen->AddtoTileMap(t00, 0);
+	SiroGen->AddtoTileMap(t01, 1);
+	SiroGen->AddtoTileMap(t02, 2);
+	SiroGen->AddtoTileMap(t03, 3);
+	SiroGen->AddtoTileMap(t04, 4);
+	SiroGen->AddtoTileMap(t05, 5);
+	SiroGen->AddtoTileMap(t06, 6);
+	SiroGen->AddtoTileMap(t07, 7);
+	SiroGen->AddtoTileMap(t08, 8);
+	SiroGen->AddtoTileMap(t09, 9);
 
 	Tile t11 = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -308,12 +308,12 @@ void process(void) {
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 	};
 
-	SiroGen->AddtoTileMap(&t11, 11);
-	SiroGen->AddtoTileMap(&t12, 12);
-	SiroGen->AddtoTileMap(&t13, 13);
-	SiroGen->AddtoTileMap(&t14, 14);
-	SiroGen->AddtoTileMap(&t15, 15);
-	SiroGen->AddtoTileMap(&t20, 20);
+	SiroGen->AddtoTileMap(t11, 11);
+	SiroGen->AddtoTileMap(t12, 12);
+	SiroGen->AddtoTileMap(t13, 13);
+	SiroGen->AddtoTileMap(t14, 14);
+	SiroGen->AddtoTileMap(t15, 15);
+	SiroGen->AddtoTileMap(t20, 20);
 
 	Sprite manny1 = Sprite{ 16,16,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
