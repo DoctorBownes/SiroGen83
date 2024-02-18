@@ -224,14 +224,14 @@ World1::World1() {
 		0,1,0,1,0,4,0,0,0,0,0,0,0,0,0,0,
 	};
 
-//	player = new Player();
+	player = new Entity();
 //	player->hitbox.x = 6;
 //	player->hitbox.y = 0;
 //	player->hitbox.width = 4;
 //	player->hitbox.height = 16;
-//	player->position = { 7 * 16, 7 * 16 };
-//	SiroGen->SetSpritetoEntity(player, 0);
-//	//AddtoScene(player);
+	player->position = { 7 * 16, 7 * 16 };
+	SiroGen->SetSpritetoEntity(player, 0);
+	entities.push_front(player);
 //
 //	pickle = new Character();
 //	pickle->hitbox.x = 0;
@@ -296,13 +296,10 @@ void World1::update() {
 	//}
 	//printf("%s", barney[onoff]);
 	if (input->KeyDown(KeyCode::Left)) {
-		GetCamera()->scrolldir.x = 0;
-		GetCamera()->X--;
+		player->position.x = GetCamera()->MovCamHor(-2) + 120;
 	}
 	else if (input->KeyDown(KeyCode::Right)) {
-		GetCamera()->scrolldir.x = 1;
-		GetCamera()->X++;
-
+		player->position.x = GetCamera()->MovCamHor(2) + 120;
 	}
 	//unsigned char playpage = player->position.x >> 8;
 	//for (unsigned char i = 0; i < 2; i++) {

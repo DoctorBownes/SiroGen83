@@ -12,7 +12,7 @@ public:
 
 	virtual void update() override;
 
-	Player* player = nullptr;
+	Entity* player = nullptr;
 
 	Character* pickle = nullptr;
 	Character* pickletoo = nullptr;

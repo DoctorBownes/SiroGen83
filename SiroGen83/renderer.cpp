@@ -476,43 +476,43 @@ void Renderer::RenderScene() {
    overwrite_pos.y *= 0.0625f;
    overwrite_pos.y &= 0xf;
 
- unsigned char split = (N & 2 | (lo_CamY / 256));
- LoadedScene->renderpos = ((LoadedScene->GetCamera()->X + LoadedScene->GetCamera()->scrolldir.x * 256) >> 8) + ((((LoadedScene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
- //printf("%d\n", split);
- 
- if (split) {
-     for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-         MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[x];
-         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
-         EditTile(x);
-     }
- 
-     N += 2 - ((2 * (N & 2)));
- 
-     for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-         MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[x];
-         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
-         EditTile(x);
-     }
- }
- else {
-     for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
-         MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[x];
-         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
-         EditTile(x);
- 
-     }
- 
-     N += 2 - ((2 * (N & 2)));
- 
- 
-     for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
-         MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[x];
-         MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
-         EditTile(x);
- 
-     }
- }
+    unsigned char split = (N & 2 | (lo_CamY / 256));
+    LoadedScene->renderpos = ((LoadedScene->GetCamera()->X + LoadedScene->GetCamera()->scrolldir.x * 256) >> 8) + ((((LoadedScene->GetCamera()->Y + split * 256) >> 8) * 16) / 32) * 32;
+    //printf("%d\n", split);
+    
+    if (split) {
+        for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
+            MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
+            EditTile(x);
+        }
+    
+        N += 2 - ((2 * (N & 2)));
+    
+        for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
+            MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[x];
+            MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
+            EditTile(x);
+        }
+    }
+    else {
+        for (int x = overwrite_pos.x + overwrite_pos.y * 16; x < 240; x += 16) {
+            MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->tiles[x];
+            MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos]->attributes[x];
+            EditTile(x);
+    
+        }
+    
+        N += 2 - ((2 * (N & 2)));
+    
+    
+        for (int x = overwrite_pos.x; x < overwrite_pos.y * 16; x += 16) {
+            MainScreen[N]->tiles[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->tiles[x];
+            MainScreen[N]->attributes[x] = LoadedScene->TileScreens[LoadedScene->renderpos + (16 - 32 * split)]->attributes[x];
+            EditTile(x);
+    
+        }
+    }
  
     overwrite_pos.y = (lo_CamY + LoadedScene->GetCamera()->scrolldir.y * 256);
     

@@ -17,6 +17,9 @@ public:
 
 	glm::mat4 GetProMat() { return projectionMatrix; };
 
+	unsigned short MovCamHor(signed char speed);
+	unsigned short MovCamVer(signed char speed);
+
 	unsigned short X = 0;
 
 	unsigned short Y = 0;
